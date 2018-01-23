@@ -1,0 +1,23 @@
+{
+	"minimum-stability" : "RC",
+	"autoload" : {
+		"psr-4" : {
+			"Weby\\Sloth\\" : "src"
+		}
+	},
+	"config" : {
+		"vendor-dir" : "vendor"
+	},
+	"name" : "weby/sloth",
+	"description" : "Data manipulaton tools (something remotely resembled Python's Pandas)",
+	"homepage" : "https://github.com/maximiliamus/weby-sloth",
+	"keywords" : [
+		"php",
+		"data manipulation",
+		"reporting",
+		"data analysis"
+	],
+	"require-dev" : {
+		"phpunit/phpunit" : "^6.5"
+	}
+}
