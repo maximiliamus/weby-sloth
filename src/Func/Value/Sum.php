@@ -12,6 +12,6 @@ class Sum extends Base
 	
 	public function onUpdateGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
 	{
-		$currValue = $currValue + $nextValue;
+		$currValue += $nextValue;
 	}
 }
