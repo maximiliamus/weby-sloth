@@ -141,7 +141,7 @@ class Pivot extends Base
 			$value = null;
 			if (is_array($values)) {
 				// TODO
-			} elseif (is_callable($values)) {
+			} elseif ($values instanceof \Closure) {
 				$value = call_user_func($values, $result);
 			} else {
 				$value = $values;
@@ -199,7 +199,7 @@ class Pivot extends Base
 			$value = null;
 			if (is_array($values)) {
 				// TODO
-			} elseif (is_callable($values)) {
+			} elseif ($values instanceof \Closure) {
 				$value = call_user_func($values, $result);
 			} else {
 				$value = $values;

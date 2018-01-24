@@ -7,7 +7,6 @@ abstract class Base
 {
 	const OUTPUT_ARRAY  = 1;
 	const OUTPUT_ASSOC  = 2;
-	const OUTPUT_OBJECT = 3;
 	
 	protected $sloth = null;
 	protected $data = null;
@@ -16,11 +15,14 @@ abstract class Base
 	protected $groupColsAliases = array();
 	
 	protected $valueCols = array();
-	protected $valueColAlias = array();
+	protected $valueColsAliases = array();
 	
 	protected $output = array();
 	
 	protected $outputFormat = self::OUTPUT_ARRAY;
+	
+	private $assocKeyFieldName = null;
+	private $assocValueFieldName = null;
 	
 	public function __construct(Sloth $sloth, $groupCols, $valueCols)
 	{

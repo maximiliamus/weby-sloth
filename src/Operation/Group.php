@@ -1,7 +1,7 @@
 <?php
 namespace Weby\Sloth\Operation;
 
-use Weby\Sloth\Sloth;
+use Weby\Sloth\Exception;
 use Weby\Sloth\Func\Group\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
@@ -14,11 +14,6 @@ class Group extends Base
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
-	
-	public function __construct(Sloth $sloth, $groupCols, $valueCols = null)
-	{
-		parent::__construct($sloth, $groupCols, $valueCols);
-	}
 	
 	/**
 	 * Whether to count records in groups.
@@ -118,26 +113,41 @@ class Group extends Base
 	}
 	
 	/**
-	 * @param mixed $key
+	 * Whether to convert the output into the assoc array.
+	 * Keys of the assoc array will be values of $keyColumn.
+	 * Values of the assoc array will be values of $valueColumn.
+	 * If $key is omitted then first group column will be used.
+	 * If $value is omitted then first non-group (value or func) column will be used.
+	 * If $value is specified as '*' then value will be entire output row.
+	 * 
+	 * @param mixed $keyColumn
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function toAssocArray($key, $value)
+	public function asAssoc($keyColumn = null, $valueColumn = null)
 	{
-		// TODO: Check existanse of $key, $value columns.
 		$this->outputFormat = self::OUTPUT_ASSOC;
-		if ($key) {
-			if (is_callable($key)) {
-				$this->assocKeyFieldName = $key;
+		
+		if ($keyColumn) {
+			if ($keyColumn instanceof \Closure) {
+				$this->assocKeyFieldName = $keyColumn;
 			} else {
-				$this->assocKeyFieldName = (string) $key;
+				$this->assocKeyFieldName = (string) $keyColumn;
 			}
 		} else {
 			$this->assocKeyFieldName = $this->groupColsAliases[$this->groupCols[0]];
 		}
-		if ($value) {
-			$this->assocValueFieldName = (string) $value;
+		
+		if ($valueColumn) {
+			if ($valueColumn  instanceof \Closure) {
+				$this->assocValueFieldName = $valueColumn;
+			} else {
+				$this->assocValueFieldName = (string) $valueColumn;
+			}
 		} else {
-			$this->assocValueFieldName = null;
+			$this->assocValueFieldName = ($this->valueCols
+				? $this->valueColsAliases[$this->valueCols[0]]
+				: null
+			);
 		}
 		
 		return $this;
@@ -161,33 +171,74 @@ class Group extends Base
 		return $this->output;
 	}
 	
-	private function buildOutput(&$group)
+	private function buildOutput(&$row)
 	{
 		switch ($this->outputFormat) {
 			case self::OUTPUT_ARRAY:
-				$this->output[] = &$group;
+				$this->output[] = &$row;
 				
 				break;
 				
 			case self::OUTPUT_ASSOC:
-				if ($this->assocKeyFieldName) {
-					if (is_callable($this->assocKeyFieldName)) {
-						$assocKey = (string) call_user_func($this->assocKeyFieldName, $group);
-					} else {
-						$assocKey = $group[$this->assocKeyFieldName];
-					}
+				if ($this->assocKeyFieldName instanceof \Closure) {
+					$assocKey = call_user_func(
+						$this->assocKeyFieldName, $row
+					);
 				} else {
-					$assocKey = count($this->output);
+					$assocKey = $row[$this->assocKeyFieldName];
 				}
 				
-				if ($this->assocValueFieldName) {
-					$this->output[$assocKey] = &$group[$this->assocValueFieldName];
-				} else {
-					$this->output[$assocKey] = &$group;
+				if (array_key_exists($assocKey, $this->output)) {
+					throw new Exception(
+						sprintf('Duplicate key "%s" for assoc output.', $assocKey)
+					);
 				}
+				
+				$assocValue = null;
+				if ($this->assocValueFieldName) {
+					if ($this->assocValueFieldName instanceof \Closure) {
+						print_r($this->assocValueFieldName);
+						$assocValue = call_user_func(
+							$this->assocValueFieldName, $assocKey, $row
+						);
+					} elseif ($this->assocValueFieldName == '*') {
+						$assocValue = &$row;
+					} else {
+						$assocValue = &$row[$this->assocValueFieldName];
+					}
+				} else {
+					if ($this->searchAssocValueFieldName($row)) {
+						$assocValue = &$row[$this->assocValueFieldName];
+					}
+				}
+				$this->output[$assocKey] = &$assocValue;
 				
 				break;
 		}
+	}
+	
+	/**
+	 * Searches first non-group column to use it as
+	 * value column for the output assoc array.
+	 * 
+	 * @param array $row Output row
+	 * @return boolean
+	 */
+	private function searchAssocValueFieldName(&$row)
+	{
+		$availableCols = array_keys($row);
+		$groupColsAliases = array_flip($this->groupColsAliases);
+		
+		$result = false;
+		foreach ($availableCols as $col) {
+			if (!isset($groupColsAliases[$col])) {
+				$this->assocValueFieldName = $col;
+				$result = true;
+				break;
+			};
+		}
+		
+		return $result;
 	}
 	
 	private function getGroupKey($row)
