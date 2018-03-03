@@ -17,24 +17,24 @@ TBD
 namespace Weby\Sloth;
 
 $data = array(
-	array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
-	array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
-	array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
-	array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
-	array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
-	array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
+    array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
+    array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
+    array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
+    array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
+    array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
+    array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
 );
 
 $result = Sloth::from($data)
-	->group('foo', 'baz')
-	->count()
-	->select();
+    ->group('foo', 'baz')
+    ->count()
+    ->select();
 
 foreach ($result as $row) {
-	foreach ($row as $col) {
-		echo $col, "\t";
-	}
-	echo "\n";
+    foreach ($row as $col) {
+        echo $col, "\t";
+    }
+    echo "\n";
 }
 
 // Outputs:
@@ -48,23 +48,23 @@ foreach ($result as $row) {
 namespace Weby\Sloth;
 
 $data = array(
-	array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
-	array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
-	array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
-	array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
-	array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
-	array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
+    array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
+    array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
+    array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
+    array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
+    array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
+    array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
 );
 
 $result = Sloth::from($data)
-	->pivot('foo', 'baz', 'bar')
-	->select();
+    ->pivot('foo', 'baz', 'bar')
+    ->select();
 
 foreach ($result as $row) {
-	foreach ($row as $col) {
-		echo $col, "\t";
-	}
-	echo "\n";
+    foreach ($row as $col) {
+        echo $col, "\t";
+    }
+    echo "\n";
 }
 
 // Outputs:
