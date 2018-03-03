@@ -72,9 +72,10 @@ foreach ($result as $row) {
 // one     1       2       3
 // two     4       5       6
 ```
+
 ## Contributing
 
-Weby\Sloth is distributed under the MIT license.
+Any contribution will be appreciated.
 
 ## Tests
 
@@ -83,3 +84,8 @@ Running the tests is simple:
 ```bash
 vendor/bin/phpunit
 ```
+
+## License
+
+Weby\Sloth is distributed under the MIT license.
+
