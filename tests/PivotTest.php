@@ -52,8 +52,8 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$goupedData = $sloth
 			->pivot(
-				array(array('group' => 'groupA')),
-				array(array('integer' => '')),
+				array('group' => 'groupA'),
+				array('integer' => ''),
 				array('date')
 			)
 			->sum('')

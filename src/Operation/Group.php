@@ -2,6 +2,7 @@
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Exception;
+use Weby\Sloth\Utils;
 use Weby\Sloth\Func\Group\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
@@ -87,29 +88,34 @@ class Group extends Base
 		return $this;
 	}
 	
+	/**
+	 * Returns list of functions.
+	 * 
+	 * @return array[\Weby\Sloth\Func\Base]
+	 */
 	public function getFuncs()
 	{
 		return $this->funcs;
 	}
 	
+	/**
+	 * Returns list of group columns.
+	 * 
+	 * @return array
+	 */
 	public function getGroupCols()
 	{
 		return $this->groupCols;
 	}
 	
+	/**
+	 * Returns list of column aliases.
+	 * 
+	 * @return array
+	 */
 	public function getGroupColsAliases()
 	{
 		return $this->groupColsAliases;
-	}
-	
-	/**
-	 * @return \Weby\Sloth\Operation\Group
-	 */
-	public function toArray()
-	{
-		$this->outputFormat = self::OUTPUT_ARRAY;
-		
-		return $this;
 	}
 	
 	/**
@@ -153,12 +159,17 @@ class Group extends Base
 		return $this;
 	}
 	
+	/**
+	 * Performs a data manipulation and returns a result.
+	 * 
+	 * @return array
+	 */
 	public function select()
 	{
 		$this->output = array();
 		
 		$this->resetGroups();
-		foreach ($this->data as $row) {
+		foreach ($this->sloth->data as $row) {
 			$key = $this->getGroupKey($row);
 			if (!$this->isGroup($key)) {
 				$group = &$this->addGroup($key, $row);
@@ -246,7 +257,7 @@ class Group extends Base
 		$result = '';
 		
 		if (is_object($row)) {
-			$row = $this->convertRowToArray($row);
+			$row = Utils::toArray($row);
 		}
 		
 		foreach ($this->groupCols as $groupCol) {
@@ -263,7 +274,7 @@ class Group extends Base
 		$result = array();
 		
 		if (is_object($row)) {
-			$row = $this->convertRowToArray($row);
+			$row = Utils::toArray($row);
 		}
 		
 		foreach ($this->groupCols as $group) {
@@ -306,7 +317,7 @@ class Group extends Base
 		$result = &$this->groups[$key];
 		
 		if (is_object($row)) {
-			$row = $this->convertRowToArray($row);
+			$row = Utils::toArray($row);
 		}
 		
 		foreach ($this->funcs as $func) {

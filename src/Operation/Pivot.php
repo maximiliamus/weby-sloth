@@ -34,6 +34,12 @@ class Pivot extends Base
 		);
 	}
 	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::count()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
 	public function count($fieldName = null, $options = null)
 	{
 		$this->group->count($fieldName, $options);
@@ -41,6 +47,12 @@ class Pivot extends Base
 		return $this;
 	}
 	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::sum()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
 	public function sum($fieldName = null, $options = null)
 	{
 		$this->group->sum($fieldName, $options);
@@ -48,6 +60,12 @@ class Pivot extends Base
 		return $this;
 	}
 	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::accum()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
 	public function accum($fieldName = null, $options = null)
 	{
 		$this->group->accum($fieldName, $options);
@@ -55,6 +73,12 @@ class Pivot extends Base
 		return $this;
 	}
 	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::first()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
 	public function first($fieldName = null, $options = null)
 	{
 		$this->group->first($fieldName, $options);
@@ -69,6 +93,11 @@ class Pivot extends Base
 		return $this;
 	}
 	
+	/**
+	 * Performs a data manipulation and returns a result.
+	 * 
+	 * @return array
+	 */
 	public function select()
 	{
 		$this->output = array();
@@ -106,6 +135,8 @@ class Pivot extends Base
 						: $row[$columnCol]
 					);
 					
+					// If there are different number of cols
+					// in rows then add missed ones.
 					$this->propagateColumns($result);
 					if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 						$this->columnColsAliases[$fieldNameAlias] = true;
@@ -125,6 +156,8 @@ class Pivot extends Base
 							: $row[$columnCol]
 						);
 						
+						// If there are different number of cols
+						// in rows then add missed ones.
 						$this->propagateColumns($result);
 						if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 							$this->columnColsAliases[$fieldNameAlias] = true;

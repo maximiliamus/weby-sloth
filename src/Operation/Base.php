@@ -8,8 +8,12 @@ abstract class Base
 	const OUTPUT_ARRAY  = 1;
 	const OUTPUT_ASSOC  = 2;
 	
+	/**
+	 * Reference to Sloth object.
+	 * 
+	 * @var Sloth
+	 */
 	protected $sloth = null;
-	protected $data = null;
 	
 	protected $groupCols = array();
 	protected $groupColsAliases = array();
@@ -27,78 +31,61 @@ abstract class Base
 	public function __construct(Sloth $sloth, $groupCols, $valueCols)
 	{
 		$this->sloth = $sloth;
-		$this->data = &$sloth->data;
 		
-		$this->processGroupCols($groupCols);
+		$this->assignGroupCols($groupCols);
 		if (empty($this->groupCols))
 			throw new \Weby\Sloth\Exception('No group columns.');
 		
-		$this->processValueCols($valueCols);
+		$this->assignValueCols($valueCols);
 	}
 	
-	protected function processGroupCols($groupCols)
+	protected function assignGroupCols($groupCols)
 	{
-		$firstRow = $this->getFirstRow();
-		
-		foreach ((array) $groupCols as $groupCol) {
-			if (is_array($groupCol)) {
-				$fieldName = key($groupCol);
-				$fieldValue = current($groupCol);
+		foreach ((array) $groupCols as $colName => $colDef) {
+			if ($this->sloth->isArray) {
+				if (!is_string($colDef)) {
+					// If this is not aliased column.
+					$colName = $colDef;
+				}
 			} else {
-				$fieldName = $groupCol;
-				$fieldValue = $groupCol;
+				if (is_numeric($colName)) {
+					$colName = $colDef;
+				}
 			}
 			
-			if (!array_key_exists($fieldName, $firstRow)) {
-				throw new \Weby\Sloth\Exception(sprintf('Unknown group column "%s".', $fieldName));
+			if (!$this->sloth->isColExists($colName)) {
+				throw new \Weby\Sloth\Exception(
+					sprintf('Unknown group column "%s".', $colName)
+				);
 			}
 			
-			$this->groupCols[] = $fieldName;
-			$this->groupColsAliases[$fieldName] = $fieldValue;
+			$this->groupCols[] = $colName;
+			$this->groupColsAliases[$colName] = $colDef;
 		}
 	}
 	
-	protected function processValueCols($valueCols)
+	protected function assignValueCols($valueCols)
 	{
-		$firstRow = $this->getFirstRow();
-		
-		foreach ((array) $valueCols as $valueCol) {
-			if (is_array($valueCol)) {
-				$fieldName = key($valueCol);
-				$fieldValue = current($valueCol);
+		foreach ((array) $valueCols as $colName => $colDef) {
+			if ($this->sloth->isArray) {
+				if (!is_string($colDef)) {
+					// If this is not aliased column.
+					$colName = $colDef;
+				}
 			} else {
-				$fieldName = $valueCol;
-				$fieldValue = $valueCol;
+				if (is_numeric($colName)) {
+					$colName = $colDef;
+				}
 			}
 			
-			if (!array_key_exists($fieldName, $firstRow)) {
-				throw new \Weby\Sloth\Exception(sprintf('Unknown value column "%s".', $valueCol));
+			if (!$this->sloth->isColExists($colName)) {
+				throw new \Weby\Sloth\Exception(
+					sprintf('Unknown value column "%s".', $colDef)
+				);
 			}
 			
-			$this->valueCols[] = $fieldName;
-			$this->valueColsAliases[$fieldName] = $fieldValue;
+			$this->valueCols[] = $colName;
+			$this->valueColsAliases[$colName] = $colDef;
 		}
-	}
-	
-	protected function getFirstRow()
-	{
-		$firstRow = $this->data[0];
-		if (!is_array($firstRow)) {
-			$firstRow = $this->convertRowToArray($firstRow);
-		}
-		return $firstRow;
-	}
-	
-	protected function convertRowToArray($row)
-	{
-		if ($row instanceof \stdClass) {
-			$row = (array) $row;
-		} elseif (method_exists($row, 'toArray')) {
-			$row = $row->toArray();
-		} else {
-			throw new \Weby\Sloth\Exception('Unsupported input format.');
-		}
-		
-		return $row;
 	}
 }

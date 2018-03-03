@@ -9,13 +9,15 @@
 		"vendor-dir" : "vendor"
 	},
 	"name" : "weby/sloth",
-	"description" : "Data manipulaton tools (something remotely resembled Python's Pandas)",
+	"description" : "Data manipulaton tool",
 	"homepage" : "https://github.com/maximiliamus/weby-sloth",
 	"keywords" : [
 		"php",
 		"data manipulation",
 		"reporting",
-		"data analysis"
+		"data analysis",
+		"pivot array",
+		"group by array"
 	],
 	"require-dev" : {
 		"phpunit/phpunit" : "^6.5"
