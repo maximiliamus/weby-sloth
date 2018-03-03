@@ -58,7 +58,7 @@ $data = array(
 );
 
 $result = Sloth::from($data)
-    ->pivot('foo', 'baz', 'bar')
+    ->pivot('foo', 'bar', 'baz')
     ->select();
 
 foreach ($result as $row) {

@@ -1,6 +1,7 @@
 <?php
 namespace Weby\Sloth\Operation;
 
+use Weby\Sloth\Sloth;
 use Weby\Sloth\Exception;
 use Weby\Sloth\Utils;
 use Weby\Sloth\Func\Group\Count;
@@ -15,6 +16,11 @@ class Group extends Base
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
+	
+	public function __construct(Sloth $sloth, $groupCols, $valueCols)
+	{
+		parent::__construct($sloth, $groupCols, $valueCols);
+	}
 	
 	/**
 	 * Whether to count records in groups.

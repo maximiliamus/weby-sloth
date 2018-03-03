@@ -31,7 +31,7 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 	{
 		$sloth = Sloth::from($data);
 		$goupedData = $sloth
-			->pivot('group', 'integer', 'date')
+			->pivot('group', 'date', 'integer')
 			->sum()
 			->select();
 		
@@ -53,8 +53,8 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 		$goupedData = $sloth
 			->pivot(
 				array('group' => 'groupA'),
-				array('integer' => ''),
-				array('date')
+				array('date'),
+				array('integer' => '')
 			)
 			->sum('')
 			->select();

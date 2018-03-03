@@ -48,7 +48,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
 		);
 		
 		$result = Sloth::from($data)
-			->pivot('foo', 'baz', 'bar')
+			->pivot('foo', 'bar', 'baz')
 			->select();
 		
 		/* Uncomment to perform:

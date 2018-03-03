@@ -18,13 +18,12 @@ class Pivot extends Base
 	 */
 	private $group = null;
 	
-	public function __construct(Sloth $sloth, $groupCols, $valueCols, $columnCols)
+	public function __construct(Sloth $sloth, $groupCols, $columnCols, $valueCols)
 	{
 		parent::__construct($sloth, $groupCols, $valueCols);
 		
 		$this->columnCols = (array) $columnCols;
-		
-		if (empty($this->columnCols))
+		if (!$this->columnCols)
 			throw new \Weby\Sloth\Exception('No column columns.');
 		
 		$this->group = new Group(
