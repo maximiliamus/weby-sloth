@@ -17,6 +17,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
 		$result = Sloth::from($data)
 			->group('foo', 'baz')
 			->count()
+			->sum()
 			->select();
 		
 		/* Uncomment to perform:
@@ -29,8 +30,8 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
 		//*/
 		
 		// Outputs:
-		// one     3
-		// two     3
+		// one     3       6
+		// two     3       15
 		
 		$this->assertTrue(true);
 	}

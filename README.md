@@ -28,6 +28,7 @@ $data = array(
 $result = Sloth::from($data)
     ->group('foo', 'baz')
     ->count()
+    ->sum()
     ->select();
 
 foreach ($result as $row) {
@@ -38,8 +39,8 @@ foreach ($result as $row) {
 }
 
 // Outputs:
-// one     3
-// two     3
+// one     3       6
+// two     3       15
 ```
 
 ### "Pivot" operation
