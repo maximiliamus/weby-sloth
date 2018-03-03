@@ -1,4 +1,84 @@
-# Weby\Sloth
+## Weby\Sloth
 
-This PHP's library provides simple data manipulaton tools (something remotely resembled
-Python's Pandas) and may be used for simple data analysis, transforming and reporting.
+This PHP's library provides simple data manipulaton tools and may be used
+for simple data analysis, transforming and reporting. For example, it provides
+such operations for input data as "group by", "pivot" and additional aggregate
+functions that may be applied to this operations.
+
+## Installation
+
+TBD
+
+## Usage
+
+### "Goup" operation
+
+```php
+namespace Weby\Sloth;
+
+$data = array(
+	array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
+	array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
+	array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
+	array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
+	array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
+	array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
+);
+
+$result = Sloth::from($data)
+	->group('foo', 'baz')
+	->count()
+	->select();
+
+foreach ($result as $row) {
+	foreach ($row as $col) {
+		echo $col, "\t";
+	}
+	echo "\n";
+}
+
+// Outputs:
+// one     3
+// two     3
+```
+
+### "Pivot" operation
+
+```php
+namespace Weby\Sloth;
+
+$data = array(
+	array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
+	array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
+	array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
+	array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
+	array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
+	array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
+);
+
+$result = Sloth::from($data)
+	->pivot('foo', 'baz', 'bar')
+	->select();
+
+foreach ($result as $row) {
+	foreach ($row as $col) {
+		echo $col, "\t";
+	}
+	echo "\n";
+}
+
+// Outputs:
+// one     1       2       3
+// two     4       5       6
+```
+## Contributing
+
+Weby\Sloth is distributed under the MIT license.
+
+## Tests
+
+Running the tests is simple:
+
+```bash
+vendor/bin/phpunit
+```

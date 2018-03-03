@@ -102,6 +102,10 @@ class Pivot extends Base
 	{
 		$this->output = array();
 		
+		if (!$this->group->getFuncs()) {
+			// Apply default function.
+			$this->group->first(null, array('flat' => true));
+		}
 		$groupedData = $this->group->select();
 		
 		$this->resetGroups();

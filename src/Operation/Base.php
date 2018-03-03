@@ -28,6 +28,14 @@ abstract class Base
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
 	
+	/**
+	 * Constructs operation.
+	 * 
+	 * @param Sloth $sloth
+	 * @param int|string|array $groupCols
+	 * @param int|string|array $valueCols
+	 * @throws \Weby\Sloth\Exception
+	 */
 	public function __construct(Sloth $sloth, $groupCols, $valueCols)
 	{
 		$this->sloth = $sloth;

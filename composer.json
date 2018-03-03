@@ -16,8 +16,8 @@
 		"data manipulation",
 		"reporting",
 		"data analysis",
-		"pivot array",
-		"group by array"
+		"group array",
+		"pivot array"
 	],
 	"require-dev" : {
 		"phpunit/phpunit" : "^6.5"
