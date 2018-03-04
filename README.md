@@ -73,10 +73,6 @@ foreach ($result as $row) {
 // two     4       5       6
 ```
 
-## Contributing
-
-Any contribution will be appreciated.
-
 ## Tests
 
 Running the tests is simple:
