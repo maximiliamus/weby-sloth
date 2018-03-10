@@ -92,12 +92,7 @@ class Pivot extends Base
 		return $this;
 	}
 	
-	/**
-	 * Performs a data manipulation and returns a result.
-	 * 
-	 * @return array
-	 */
-	public function select()
+	protected function perform()
 	{
 		$this->output = array();
 		
@@ -117,8 +112,6 @@ class Pivot extends Base
 				$group = &$this->updateGroup($key, $row);
 			}
 		}
-		
-		return $this->output;
 	}
 	
 	private function &addGroup($key, $row)

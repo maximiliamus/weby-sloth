@@ -22,7 +22,6 @@ abstract class Base
 	protected $valueColsAliases = array();
 	
 	protected $output = array();
-	
 	protected $outputFormat = self::OUTPUT_ARRAY;
 	
 	private $assocKeyFieldName = null;
@@ -95,5 +94,50 @@ abstract class Base
 			$this->valueCols[] = $colName;
 			$this->valueColsAliases[$colName] = $colDef;
 		}
+	}
+	
+	abstract protected function perform();
+	
+	/**
+	 * Performs a data manipulation and returns a result.
+	 * 
+	 * @return array
+	 */
+	public function select()
+	{
+		if (!$this->output)
+			$this->perform();
+		
+		return $this->output;
+	}
+	
+	public function print()
+	{
+		if (!$this->output)
+			$this->perform();
+		
+		foreach ($this->output as $row) {
+			foreach ($row as $col) {
+				echo $this->renderCol($col), "\t";
+			}
+			echo "\n";
+		}
+		
+		return $this;
+	}
+	
+	private function renderCol($col)
+	{
+		$result = $col;
+		
+		if (is_array($col)) {
+			if (count($col) == 1) {
+				$result = sprintf('[%s]', $col[0]);
+			} else {
+				$result = sprintf('[%s,...]', $col[0]);
+			}
+		}
+		
+		return $result;
 	}
 }
