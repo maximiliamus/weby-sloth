@@ -206,7 +206,6 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group', array('integer', 'double'))
-			->setScale(2)
 			->sum()
 			->avg()
 			->min()

@@ -25,7 +25,7 @@ abstract class Base
 	protected $outputFormat = self::OUTPUT_ARRAY;
 	
 	protected $store = array();
-	protected $scale = 0;
+	protected $scale = 2;
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -114,6 +114,11 @@ abstract class Base
 		return $this->output;
 	}
 	
+	/**
+	 * Prints operation's results on screen.
+	 * 
+	 * @return \Weby\Sloth\Operation\Base
+	 */
 	public function print()
 	{
 		if (!$this->output)
@@ -144,6 +149,12 @@ abstract class Base
 		return $result;
 	}
 	
+	/**
+	 * Sets scale for BC Math operations on double values.
+	 * 
+	 * @param integer $scale
+	 * @return \Weby\Sloth\Operation\Base
+	 */
 	public function setScale($scale)
 	{
 		$this->scale = $scale;
@@ -151,11 +162,23 @@ abstract class Base
 		return $this;
 	}
 	
+	/**
+	 * Returns scale for BC Math operations on double values.
+	 * 
+	 * @return integer
+	 */
 	public function getScale()
 	{
 		return $this->scale;
 	}
 	
+	/**
+	 * Returns reference to auxiliary store that can be used by 
+	 * the operation functions for their purposes (for example,
+	 * accumulate some values).
+	 * 
+	 * @return array
+	 */
 	public function &getStore()
 	{
 		return $this->store;
