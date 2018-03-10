@@ -1,7 +1,7 @@
 <?php
 namespace Weby\Sloth\Func\Value;
 
-class Sum extends Base
+class Max extends Base
 {
 	const FIELD_SUFFIX = 'sum';
 	
@@ -12,6 +12,8 @@ class Sum extends Base
 	
 	public function onUpdateGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
 	{
-		$currValue += $nextValue;
+		if ($currValue < $nextValue) {
+			$currValue = $nextValue;
+		}
 	}
 }

@@ -3,13 +3,13 @@ namespace Weby\Sloth\Func\Value;
 
 class First extends Base
 {
-	const FIELD_POSTFIX = 'first';
+	const FIELD_SUFFIX = 'first';
 	
 	public $defaultOptions = array(
 		'flat' => false
 	);
 	
-	public function onAddGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
+	public function onAddGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
 	{
 		if ($this->options['flat']) {
 			$currValue = $nextValue;
@@ -18,7 +18,7 @@ class First extends Base
 		}
 	}
 	
-	public function onUpdateGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
+	public function onUpdateGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
 	{
 		if (is_null($nextValue))
 			return;

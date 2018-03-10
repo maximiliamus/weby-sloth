@@ -5,12 +5,12 @@ class Count extends Base
 {
 	const FIELD_NAME = 'count';
 	
-	public function onAddGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
+	public function onAddGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue, &$store)
 	{
 		$currValue = 1;
 	}
 	
-	public function onUpdateGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
+	public function onUpdateGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue, &$store)
 	{
 		$currValue++;
 	}

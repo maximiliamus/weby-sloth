@@ -5,13 +5,13 @@ use Weby\Sloth\Exception;
 
 class Accum extends Base
 {
-	const FIELD_POSTFIX = 'accum';
+	const FIELD_SUFFIX = 'accum';
 	
 	public $defaultOptions = array(
 		'flat' => false
 	);
 	
-	public function onAddGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
+	public function onAddGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
 	{
 		if ($this->options['flat']) {
 			$currValue = $nextValue;
@@ -20,7 +20,7 @@ class Accum extends Base
 		}
 	}
 	
-	public function onUpdateGroup(&$group, $groupCol, &$row, $valueCol, &$currValue, &$nextValue)
+	public function onUpdateGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
 	{
 		if (is_null($nextValue))
 			return;

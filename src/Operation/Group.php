@@ -8,6 +8,11 @@ use Weby\Sloth\Func\Group\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
 use Weby\Sloth\Func\Value\Sum;
+use Weby\Sloth\Func\Value\Avg;
+use Weby\Sloth\Func\Value\Min;
+use Weby\Sloth\Func\Value\Max;
+use Weby\Sloth\Func\Value\Median;
+use Weby\Sloth\Func\Value\Mode;
 
 class Group extends Base
 {
@@ -23,73 +28,136 @@ class Group extends Base
 	}
 	
 	/**
-	 * Whether to count records in groups.
-	 * Column with name 'count' will be added to Sloth's result.
-	 * This column name can be overriden if $fieldName is specified.
+	 * Whether to calculate record count in group.
+	 * Column with name 'count' will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
 	 * 
 	 * @param string $countFieldName
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function count($countFieldName = null, $options = null)
 	{
-		$this->funcs[] = new Count($countFieldName, $options);
+		$this->funcs[Count::class] = new Count($countFieldName, $options);
 		
 		return $this;
 	}
 	
 	/**
-	 * Whether to sum values of value cols in groups.
-	 * Column with name "${Value Column Name/Alias}_sum" will be added to Sloth's result.
-	 * This column name can be overriden if $fieldName is specified.
+	 * Whether to sum values for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_sum" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
 	 * 
 	 * @param string $sumFieldName
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function sum($sumFieldName = null, $options = null)
 	{
-		if (!$this->valueCols) {
-			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
-		}
-		
-		$this->funcs[] = new Sum($sumFieldName, $options);
+		$this->funcs[Sum::class] = new Sum($sumFieldName, $options);
 		
 		return $this;
 	}
 	
 	/**
-	 * Whether to accumulate values of value cols in groups.
-	 * Column with name "${Value Column Name/Alias}_accum" will be added to Sloth's result.
-	 * This column name can be overriden if $fieldName is specified.
+	 * Whether to caclulate average value for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_avg" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
+	 * 
+	 * @param string $sumFieldName
+	 * @return \Weby\Sloth\Operation\Group
+	 */
+	public function avg($sumFieldName = null, $options = null)
+	{
+		$this->funcs[Avg::class] = new Avg($sumFieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether to accumulate values for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_accum" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
 	 * 
 	 * @param string $accumFieldName
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function accum($accumFieldName = null, $options = null)
 	{
-		if (!$this->valueCols) {
-			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
-		}
-		
-		$this->funcs[] = new Accum($accumFieldName, $options);
+		$this->funcs[Accum::class] = new Accum($accumFieldName, $options);
 		
 		return $this;
 	}
 	
 	/**
-	 * Whether to accumulate only a first value of value cols in group.
-	 * Column with name "${Value Column Name/Alias}_first" will be added to Sloth's result.
-	 * This column name can be overwriten if $fieldName is specified.
+	 * Whether to accumulate only a first value for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_first" will be added to the result.
+	 * This column name may be overwriten if $fieldName is specified.
 	 * 
 	 * @param string $accumFirstFieldName
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function first($accumFirstFieldName = null, $options = null)
 	{
-		if (!$this->valueCols) {
-			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
-		}
+		$this->funcs[First::class] = new First($accumFirstFieldName, $options);
 		
-		$this->funcs[] = new First($accumFirstFieldName, $options);
+		return $this;
+	}
+	
+	/**
+	 * Whether to caclulate min value for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_min" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
+	 * 
+	 * @param string $sumFieldName
+	 * @return \Weby\Sloth\Operation\Group
+	 */
+	public function min($sumFieldName = null, $options = null)
+	{
+		$this->funcs[Min::class] = new Min($sumFieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether to caclulate max value for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_max" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
+	 * 
+	 * @param string $sumFieldName
+	 * @return \Weby\Sloth\Operation\Group
+	 */
+	public function max($sumFieldName = null, $options = null)
+	{
+		$this->funcs[Max::class] = new Max($sumFieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether to caclulate median value for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_median" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
+	 * 
+	 * @param string $sumFieldName
+	 * @return \Weby\Sloth\Operation\Group
+	 */
+	public function median($sumFieldName = null, $options = null)
+	{
+		$this->funcs[Median::class] = new Median($sumFieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether to caclulate mode value for each value column in group.
+	 * Column with name "${Value Column Name/Alias}_mode" will be added to the result.
+	 * This column name may be overriden if $fieldName is specified.
+	 * 
+	 * @param string $sumFieldName
+	 * @return \Weby\Sloth\Operation\Group
+	 */
+	public function mode($sumFieldName = null, $options = null)
+	{
+		$this->funcs[Mode::class] = new Mode($sumFieldName, $options);
 		
 		return $this;
 	}
@@ -167,9 +235,29 @@ class Group extends Base
 	
 	protected function perform()
 	{
+		$this->validatePerform();
+		$this->beginPerform();
+		$this->doPerform();
+		$this->endPerform();
+	}
+	
+	private function validatePerform()
+	{
+		$funcs = $this->getFuncs();
+		if (!$this->valueCols && count($funcs) && !array_key_exists(Count::class, $funcs)) {
+			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
+		}
+	}
+	
+	private function beginPerform()
+	{
 		$this->output = array();
-		
+		$this->store = array();
 		$this->resetGroups();
+	}
+	
+	private function doPerform()
+	{
 		foreach ($this->sloth->data as $row) {
 			$key = $this->getGroupKey($row);
 			if (!$this->isGroup($key)) {
@@ -287,7 +375,7 @@ class Group extends Base
 				$currValue = &$result[$fieldName];
 				$nextValue = null;
 				$func->onAddGroup(
-					$result, $fieldName, $row, null, $currValue, $nextValue
+					$result, $fieldName, $row, null, $currValue, $nextValue, $this->store
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
@@ -300,7 +388,7 @@ class Group extends Base
 					$currValue = &$result[$fieldName];
 					$nextValue = &$row[$valueCol];
 					$func->onAddGroup(
-						$result, $fieldName, $row, $valueCol, $currValue, $nextValue
+						$result, $fieldName, $row, $valueCol, $currValue, $nextValue, $this->store
 					);
 				}
 			}
@@ -325,7 +413,7 @@ class Group extends Base
 				$currValue = &$result[$fieldName];
 				$nextValue = null;
 				$func->onUpdateGroup(
-					$result, $fieldName, $row, null, $currValue, $nextValue
+					$result, $fieldName, $row, null, $currValue, $nextValue, $this->store
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
@@ -337,13 +425,18 @@ class Group extends Base
 					$currValue = &$result[$fieldName];
 					$nextValue = &$row[$valueCol];
 					$func->onUpdateGroup(
-						$result, $fieldName, $row, $valueCol, $currValue, $nextValue
+						$result, $fieldName, $row, $valueCol, $currValue, $nextValue, $this->store
 					);
 				}
 			}
 		}
 		
 		return $result;
+	}
+	
+	private function endPerform()
+	{
+		// Do nothing.
 	}
 	
 	private function resetGroups()

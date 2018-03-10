@@ -47,19 +47,6 @@ class Pivot extends Base
 	}
 	
 	/**
-	 * @see \Weby\Sloth\Operation\Group::sum()
-	 * @param string $fieldName
-	 * @param array $options
-	 * @return \Weby\Sloth\Operation\Pivot
-	 */
-	public function sum($fieldName = null, $options = null)
-	{
-		$this->group->sum($fieldName, $options);
-		
-		return $this;
-	}
-	
-	/**
 	 * @see \Weby\Sloth\Operation\Group::accum()
 	 * @param string $fieldName
 	 * @param array $options
@@ -73,6 +60,19 @@ class Pivot extends Base
 	}
 	
 	/**
+	 * @see \Weby\Sloth\Operation\Group::avg()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function avg($fieldName = null, $options = null)
+	{
+		$this->group->avg($fieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
 	 * @see \Weby\Sloth\Operation\Group::first()
 	 * @param string $fieldName
 	 * @param array $options
@@ -81,6 +81,71 @@ class Pivot extends Base
 	public function first($fieldName = null, $options = null)
 	{
 		$this->group->first($fieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::median()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function median($fieldName = null, $options = null)
+	{
+		$this->group->median($fieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::min()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function max($fieldName = null, $options = null)
+	{
+		$this->group->max($fieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::min()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function min($fieldName = null, $options = null)
+	{
+		$this->group->min($fieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::mode()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function mode($fieldName = null, $options = null)
+	{
+		$this->group->mode($fieldName, $options);
+		
+		return $this;
+	}
+	
+	/**
+	 * @see \Weby\Sloth\Operation\Group::sum()
+	 * @param string $fieldName
+	 * @param array $options
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function sum($fieldName = null, $options = null)
+	{
+		$this->group->sum($fieldName, $options);
 		
 		return $this;
 	}

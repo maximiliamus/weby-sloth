@@ -24,6 +24,8 @@ abstract class Base
 	protected $output = array();
 	protected $outputFormat = self::OUTPUT_ARRAY;
 	
+	protected $store = array();
+	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
 	
