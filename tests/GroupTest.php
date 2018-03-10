@@ -265,13 +265,16 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group(
 				array('group' => 'groupA'),
-				array('integer' => 'integerA')
+				array('integer' => 'integerA', 'double')
 			)
 			->sum('')
 			->select();
 		
 		$this->assertEquals(true, $groupedData[0]['integerA'] == $this->testResults['sumInteger'][0]);
 		$this->assertEquals(true, $groupedData[1]['integerA'] == $this->testResults['sumInteger'][1]);
+		
+		$this->assertEquals(true, $groupedData[0]['double'] == $this->testResults['sumDouble'][0]);
+		$this->assertEquals(true, $groupedData[1]['double'] == $this->testResults['sumDouble'][1]);
 	}
 	
 	/**

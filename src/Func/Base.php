@@ -28,6 +28,13 @@ abstract class Base
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	);
 	
+	public function getFuncName()
+	{
+		$parts = explode('\\', get_called_class());
+		$lastPart = array_pop($parts);
+		return lcfirst($lastPart);
+	}
+	
 	public function __construct(
 		\Weby\Sloth\Operation\Base $operation,
 		$options = null
@@ -39,5 +46,10 @@ abstract class Base
 	protected function setOptions(array $options)
 	{
 		return array_merge((array) $this->defaultOptions, $options);
+	}
+	
+	protected function getStoreColumn($groupCol, $dataCol, $storeCol)
+	{
+		return $groupCol . '_' . $dataCol . '_' . $storeCol;
 	}
 }

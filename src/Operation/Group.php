@@ -370,7 +370,7 @@ class Group extends Base
 		
 		foreach ($this->funcs as $func) {
 			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-				$fieldName = $func->funcFieldName;
+				$fieldName = $func->getFieldName();
 				$result[$fieldName] = null;
 				$currValue = &$result[$fieldName];
 				$nextValue = null;
@@ -379,11 +379,8 @@ class Group extends Base
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$fieldName = (
-						  $func->funcFieldPostfix
-						? $this->valueColsAliases[$valueCol] . '_' . $func->funcFieldPostfix
-						: $this->valueColsAliases[$valueCol]
-					);
+					$valueColAlias = $this->valueColsAliases[$valueCol];
+					$fieldName = $func->getFieldName($valueColAlias);
 					$result[$fieldName] = null;
 					$currValue = &$result[$fieldName];
 					$nextValue = &$row[$valueCol];
@@ -409,7 +406,7 @@ class Group extends Base
 		
 		foreach ($this->funcs as $func) {
 			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-				$fieldName = $func->funcFieldName;
+				$fieldName = $func->getFieldName();
 				$currValue = &$result[$fieldName];
 				$nextValue = null;
 				$func->onUpdateGroup(
@@ -417,11 +414,8 @@ class Group extends Base
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$fieldName = (
-						  $func->funcFieldPostfix
-						? $this->valueColsAliases[$valueCol] . '_' . $func->funcFieldPostfix
-						: $this->valueColsAliases[$valueCol]
-					);
+					$valueColAlias = $this->valueColsAliases[$valueCol];
+					$fieldName = $func->getFieldName($valueColAlias);
 					$currValue = &$result[$fieldName];
 					$nextValue = &$row[$valueCol];
 					$func->onUpdateGroup(

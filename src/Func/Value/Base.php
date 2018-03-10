@@ -3,9 +3,7 @@ namespace Weby\Sloth\Func\Value;
 
 abstract class Base extends \Weby\Sloth\Func\Base
 {
-	const FIELD_SUFFIX = '';
-	
-	public $funcFieldPostfix;
+	private $funcFieldSuffix;
 	
 	public function __construct(
 		\Weby\Sloth\Operation\Base $operation,
@@ -15,15 +13,17 @@ abstract class Base extends \Weby\Sloth\Func\Base
 		parent::__construct($operation, $options);
 		
 		if (!is_null($funcFieldSuffix)) {
-			$this->funcFieldPostfix = (string) $funcFieldSuffix;
-		} else {
-			$funcClass = get_called_class();
-			$this->funcFieldPostfix = $funcClass::FIELD_SUFFIX;
+			$this->funcFieldSuffix = (string) $funcFieldSuffix;
 		}
 	}
 	
-	protected function getStoreColumn($groupCol, $dataCol, $storeCol)
+	public function getFieldName($dataCol)
 	{
-		return $groupCol . '_' . $dataCol . '_' . $storeCol;
+		$suffix = (!is_null($this->funcFieldSuffix)
+			? $this->funcFieldSuffix
+			: $this->getFuncName()
+		);
+		
+		return $dataCol . ($suffix ?  '_' . $suffix : '');
 	}
 }

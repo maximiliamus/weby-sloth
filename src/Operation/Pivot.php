@@ -206,7 +206,7 @@ class Pivot extends Base
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->group->getFuncs() as $func) {
 				if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-					$fieldName = $func->funcFieldName;
+					$fieldName = $func->getFieldName();
 					$fieldNameAlias = ($fieldName
 						? $row[$columnCol] . '_' . $fieldName
 						: $row[$columnCol]
@@ -223,11 +223,7 @@ class Pivot extends Base
 					$result[$fieldNameAlias] = $row[$fieldName];
 				} else {
 					foreach ($this->valueColsAliases as $valueColAlias) {
-						$fieldName = (
-							  $func->funcFieldPostfix
-							? $valueColAlias . '_' . $func->funcFieldPostfix
-							: $valueColAlias
-						);
+						$fieldName = $func->getFieldName($valueColAlias);
 						$fieldNameAlias = ($fieldName
 							? $row[$columnCol] . '_' . $fieldName
 							: $row[$columnCol]
@@ -270,7 +266,7 @@ class Pivot extends Base
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->group->getFuncs() as $func) {
 				if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-					$fieldName = $func->funcFieldName;
+					$fieldName = $func->getFieldName();
 					$fieldNameAlias = ($fieldName
 						? $row[$columnCol] . '_' . $fieldName
 						: $row[$columnCol]
@@ -284,11 +280,7 @@ class Pivot extends Base
 					$result[$fieldNameAlias] = $row[$fieldName];
 				} else {
 					foreach ($this->valueColsAliases as $valueColAlias) {
-						$fieldName = (
-							  $func->funcFieldPostfix
-							? $valueColAlias . '_' . $func->funcFieldPostfix
-							: $valueColAlias
-						);
+						$fieldName = $func->getFieldName($valueColAlias);
 						$fieldNameAlias = ($fieldName
 							? $row[$columnCol] . '_' . $fieldName
 							: $row[$columnCol]
