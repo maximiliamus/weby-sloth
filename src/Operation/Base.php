@@ -25,6 +25,7 @@ abstract class Base
 	protected $outputFormat = self::OUTPUT_ARRAY;
 	
 	protected $store = array();
+	protected $scale = 0;
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -141,5 +142,22 @@ abstract class Base
 		}
 		
 		return $result;
+	}
+	
+	public function setScale($scale)
+	{
+		$this->scale = $scale;
+		
+		return $this;
+	}
+	
+	public function getScale()
+	{
+		return $this->scale;
+	}
+	
+	public function &getStore()
+	{
+		return $this->store;
 	}
 }

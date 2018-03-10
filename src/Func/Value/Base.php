@@ -7,9 +7,12 @@ abstract class Base extends \Weby\Sloth\Func\Base
 	
 	public $funcFieldPostfix;
 	
-	public function __construct($funcFieldSuffix = null, $options = null)
-	{
-		parent::__construct($options);
+	public function __construct(
+		\Weby\Sloth\Operation\Base $operation,
+		$funcFieldSuffix = null,
+		$options = null
+	) {
+		parent::__construct($operation, $options);
 		
 		if (!is_null($funcFieldSuffix)) {
 			$this->funcFieldPostfix = (string) $funcFieldSuffix;

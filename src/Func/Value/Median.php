@@ -5,20 +5,24 @@ class Median extends Base
 {
 	const FIELD_SUFFIX = 'median';
 	
-	public function onAddGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
-	{
+	public function onAddGroup(
+		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
+	) {
 		$storeCol = $this->getStoreColumn($groupCol, $dataCol, 'accum');
 		
+		$store = &$this->operation->getStore();
 		$store[$storeCol] = array();
 		$store[$storeCol][] = $nextValue;
 		
 		$currValue = $nextValue;
 	}
 	
-	public function onUpdateGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
-	{
+	public function onUpdateGroup(
+		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
+	) {
 		$storeCol = $this->getStoreColumn($groupCol, $dataCol, 'accum');
 		
+		$store = &$this->operation->getStore();
 		$store[$storeCol][] = $nextValue;
 		
 		$currValue = $this->median($store[$storeCol]);
@@ -35,7 +39,15 @@ class Median extends Base
 		} else {
 			$low = $data[$middleVal];
 			$high = $data[$middleVal + 1];
-			$median = ($low + $high) / 2;
+			$median = (double) bcdiv(
+				bcadd(
+					$low,
+					$high,
+					$this->operation->getScale()
+				),
+				2,
+				$this->operation->getScale()
+			);
 		}
 		
 		return $median;

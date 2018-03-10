@@ -7,9 +7,12 @@ abstract class Base extends \Weby\Sloth\Func\Base
 	
 	public $funcFieldName;
 	
-	public function __construct($funcFieldName = null, $options = null)
-	{
-		parent::__construct($options);
+	public function __construct(
+		\Weby\Sloth\Operation\Base $operation,
+		$funcFieldName = null,
+		$options = null
+	) {
+		parent::__construct($operation, $options);
 		
 		if (!is_null($funcFieldName)) {
 			$this->funcFieldName = (string) $funcFieldName;

@@ -7,6 +7,12 @@ abstract class Base
 	public $defaultOptions;
 	
 	/**
+	 * 
+	 * @var \Weby\Sloth\Operation\Base
+	 */
+	protected $operation;
+	
+	/**
 	 * @param array $group Group of output data.
 	 * @param string $groupCol Col name of output group.
 	 * @param array $data Row of input data.
@@ -15,11 +21,18 @@ abstract class Base
 	 * @param mixed $nextValue Next value of column of input row.
 	 * @param array $store External aux store for the custom needs of the function.
 	 */
-	abstract public function onAddGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store);
-	abstract public function onUpdateGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store);
+	abstract public function onAddGroup(
+		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
+	);
+	abstract public function onUpdateGroup(
+		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
+	);
 	
-	public function __construct($options = null)
-	{
+	public function __construct(
+		\Weby\Sloth\Operation\Base $operation,
+		$options = null
+	) {
+		$this->operation = $operation;
 		$this->options = $this->setOptions((array) $options);
 	}
 	

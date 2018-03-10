@@ -37,7 +37,7 @@ class Group extends Base
 	 */
 	public function count($countFieldName = null, $options = null)
 	{
-		$this->funcs[Count::class] = new Count($countFieldName, $options);
+		$this->funcs[Count::class] = new Count($this, $countFieldName, $options);
 		
 		return $this;
 	}
@@ -52,7 +52,7 @@ class Group extends Base
 	 */
 	public function sum($sumFieldName = null, $options = null)
 	{
-		$this->funcs[Sum::class] = new Sum($sumFieldName, $options);
+		$this->funcs[Sum::class] = new Sum($this, $sumFieldName, $options);
 		
 		return $this;
 	}
@@ -67,7 +67,7 @@ class Group extends Base
 	 */
 	public function avg($sumFieldName = null, $options = null)
 	{
-		$this->funcs[Avg::class] = new Avg($sumFieldName, $options);
+		$this->funcs[Avg::class] = new Avg($this, $sumFieldName, $options);
 		
 		return $this;
 	}
@@ -82,7 +82,7 @@ class Group extends Base
 	 */
 	public function accum($accumFieldName = null, $options = null)
 	{
-		$this->funcs[Accum::class] = new Accum($accumFieldName, $options);
+		$this->funcs[Accum::class] = new Accum($this, $accumFieldName, $options);
 		
 		return $this;
 	}
@@ -97,7 +97,7 @@ class Group extends Base
 	 */
 	public function first($accumFirstFieldName = null, $options = null)
 	{
-		$this->funcs[First::class] = new First($accumFirstFieldName, $options);
+		$this->funcs[First::class] = new First($this, $accumFirstFieldName, $options);
 		
 		return $this;
 	}
@@ -112,7 +112,7 @@ class Group extends Base
 	 */
 	public function min($sumFieldName = null, $options = null)
 	{
-		$this->funcs[Min::class] = new Min($sumFieldName, $options);
+		$this->funcs[Min::class] = new Min($this, $sumFieldName, $options);
 		
 		return $this;
 	}
@@ -127,7 +127,7 @@ class Group extends Base
 	 */
 	public function max($sumFieldName = null, $options = null)
 	{
-		$this->funcs[Max::class] = new Max($sumFieldName, $options);
+		$this->funcs[Max::class] = new Max($this, $sumFieldName, $options);
 		
 		return $this;
 	}
@@ -142,7 +142,7 @@ class Group extends Base
 	 */
 	public function median($sumFieldName = null, $options = null)
 	{
-		$this->funcs[Median::class] = new Median($sumFieldName, $options);
+		$this->funcs[Median::class] = new Median($this, $sumFieldName, $options);
 		
 		return $this;
 	}
@@ -157,7 +157,7 @@ class Group extends Base
 	 */
 	public function mode($sumFieldName = null, $options = null)
 	{
-		$this->funcs[Mode::class] = new Mode($sumFieldName, $options);
+		$this->funcs[Mode::class] = new Mode($this, $sumFieldName, $options);
 		
 		return $this;
 	}
@@ -375,7 +375,7 @@ class Group extends Base
 				$currValue = &$result[$fieldName];
 				$nextValue = null;
 				$func->onAddGroup(
-					$result, $fieldName, $row, null, $currValue, $nextValue, $this->store
+					$result, $fieldName, $row, null, $currValue, $nextValue
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
@@ -388,7 +388,7 @@ class Group extends Base
 					$currValue = &$result[$fieldName];
 					$nextValue = &$row[$valueCol];
 					$func->onAddGroup(
-						$result, $fieldName, $row, $valueCol, $currValue, $nextValue, $this->store
+						$result, $fieldName, $row, $valueCol, $currValue, $nextValue
 					);
 				}
 			}
@@ -413,7 +413,7 @@ class Group extends Base
 				$currValue = &$result[$fieldName];
 				$nextValue = null;
 				$func->onUpdateGroup(
-					$result, $fieldName, $row, null, $currValue, $nextValue, $this->store
+					$result, $fieldName, $row, null, $currValue, $nextValue
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
@@ -425,7 +425,7 @@ class Group extends Base
 					$currValue = &$result[$fieldName];
 					$nextValue = &$row[$valueCol];
 					$func->onUpdateGroup(
-						$result, $fieldName, $row, $valueCol, $currValue, $nextValue, $this->store
+						$result, $fieldName, $row, $valueCol, $currValue, $nextValue
 					);
 				}
 			}

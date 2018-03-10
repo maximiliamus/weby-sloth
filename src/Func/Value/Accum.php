@@ -11,8 +11,9 @@ class Accum extends Base
 		'flat' => false
 	);
 	
-	public function onAddGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
-	{
+	public function onAddGroup(
+		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
+	) {
 		if ($this->options['flat']) {
 			$currValue = $nextValue;
 		} else {
@@ -20,8 +21,9 @@ class Accum extends Base
 		}
 	}
 	
-	public function onUpdateGroup(&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue, &$store)
-	{
+	public function onUpdateGroup(
+		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
+	) {
 		if (is_null($nextValue))
 			return;
 		

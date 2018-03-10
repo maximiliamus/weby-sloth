@@ -159,15 +159,26 @@ class Pivot extends Base
 	
 	protected function perform()
 	{
+		$this->beginPerform();
+		$this->doPerform();
+		$this->endPerform();
+	}
+	
+	private function beginPerform()
+	{
 		$this->output = array();
 		
 		if (!$this->group->getFuncs()) {
 			// Apply default function.
 			$this->group->first(null, array('flat' => true));
 		}
-		$groupedData = $this->group->select();
 		
 		$this->resetGroups();
+	}
+	
+	private function doPerform()
+	{
+		$groupedData = $this->group->select();
 		foreach ($groupedData as $row) {
 			$key = $this->getGroupKey($row);
 			if (!$this->isGroup($key)) {
@@ -177,6 +188,11 @@ class Pivot extends Base
 				$group = &$this->updateGroup($key, $row);
 			}
 		}
+	}
+	
+	private function endPerform()
+	{
+		// Do nothing.
 	}
 	
 	private function &addGroup($key, $row)
@@ -343,5 +359,12 @@ class Pivot extends Base
 	private function isGroup($key)
 	{
 		return isset($this->groups[$key]);
+	}
+	
+	public function setScale($scale)
+	{
+		$this->group->setScale($scale);
+		
+		return parent::setScale($scale);
 	}
 }
