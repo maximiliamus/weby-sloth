@@ -1,8 +1,19 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Func\Value;
 
 use Weby\Sloth\Exception;
 
+/**
+ * Accumulates values of a column.
+ */
 class Accum extends Base
 {
 	public $defaultOptions = array(

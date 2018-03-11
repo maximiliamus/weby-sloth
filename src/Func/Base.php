@@ -1,12 +1,35 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Func;
 
+/**
+ * Base class for all functions.
+ */
 abstract class Base
 {
+	/**
+	 * Options of the function.
+	 * 
+	 * @var array
+	 */
 	public $options;
+	
+	/**
+	 * Default options of the function.
+	 * 
+	 * @var array
+	 */
 	public $defaultOptions;
 	
 	/**
+	 * Reference to the operation.
 	 * 
 	 * @var \Weby\Sloth\Operation\Base
 	 */

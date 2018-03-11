@@ -1,8 +1,19 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
 
+/**
+ * Pivot (pivot table) operation.
+ */
 class Pivot extends Base
 {
 	private $columnCols = array();

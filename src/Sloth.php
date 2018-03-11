@@ -1,6 +1,17 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth;
 
+/**
+ * Main class to perform data manipulations.
+ */
 class Sloth
 {
 	const DATA_UNKNOWN = 0;

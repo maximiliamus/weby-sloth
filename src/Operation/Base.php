@@ -1,8 +1,20 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
 
+/**
+ * Base class for all operations.
+ *
+ */
 abstract class Base
 {
 	const OUTPUT_ARRAY  = 1;

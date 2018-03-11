@@ -1,9 +1,22 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Func\Group;
 
+/**
+ * Base class for "group" functions, i.e.
+ * functions that are applied to entire group
+ * instead of value columns.
+ */
 abstract class Base extends \Weby\Sloth\Func\Base
 {
-	public $funcFieldName;
+	private $funcFieldName;
 	
 	public function __construct(
 		\Weby\Sloth\Operation\Base $operation,
@@ -17,6 +30,12 @@ abstract class Base extends \Weby\Sloth\Func\Base
 		}
 	}
 	
+	/**
+	 * Returns filed name that will hold function's result
+	 * in the output array.
+	 * 
+	 * @return string
+	 */
 	public function getFieldName()
 	{
 		return ($this->funcFieldName

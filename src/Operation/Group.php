@@ -1,4 +1,12 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
@@ -14,6 +22,9 @@ use Weby\Sloth\Func\Value\Max;
 use Weby\Sloth\Func\Value\Median;
 use Weby\Sloth\Func\Value\Mode;
 
+/**
+ * Group (group by) operation.
+ */
 class Group extends Base
 {
 	private $funcs = array();

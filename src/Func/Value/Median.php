@@ -1,6 +1,17 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Func\Value;
 
+/**
+ * Calculates median of a column.
+ */
 class Median extends Base
 {
 	public function onAddGroup(

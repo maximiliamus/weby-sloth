@@ -1,6 +1,17 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Func\Value;
 
+/**
+ * Calculates min value of a column.
+ */
 class Min extends Base
 {
 	public function onAddGroup(

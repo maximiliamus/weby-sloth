@@ -1,6 +1,19 @@
 <?php
+/**
+ * Weby\Sloth
+ *
+ * @vendor      Weby
+ * @package     Sloth
+ * @link        https://github.com/maximiliamus/weby-sloth
+ */
+
 namespace Weby\Sloth\Func\Value;
 
+/**
+ * Base class for "value" functions, i.e.
+ * functions that are applied to value column
+ * instead of entire group.
+ */
 abstract class Base extends \Weby\Sloth\Func\Base
 {
 	private $funcFieldSuffix;
@@ -17,6 +30,13 @@ abstract class Base extends \Weby\Sloth\Func\Base
 		}
 	}
 	
+	/**
+	 * Returns filed name that will hold function's result
+	 * in the output array. Function will be applied to a specified
+	 * column of input data.
+	 * 
+	 * @return string
+	 */
 	public function getFieldName($dataCol)
 	{
 		$suffix = (!is_null($this->funcFieldSuffix)
