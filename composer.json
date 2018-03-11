@@ -2,7 +2,7 @@
 	"minimum-stability" : "RC",
 	"autoload" : {
 		"psr-4" : {
-			"Weby\\Sloth\\" : "src"
+			"Weby\\Sloth\\" : "src/"
 		}
 	},
 	"config" : {

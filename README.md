@@ -7,9 +7,13 @@ functions that may be applied to this operations.
 
 ## Installation
 
-TBD
+```bash
+composer require weby/sloth:v0.x-dev
+```
 
 ## Usage
+
+See **examples** folder for more info.
 
 ### Input data
 
@@ -27,18 +31,18 @@ $data = array(
 ### "Goup" operation
 
 ```php
-require_once dirname(__FILE__) . '/../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 use \Weby\Sloth\Sloth;
 
 include_once 'data.php';
 
 Sloth::from($data)
-	->group('foo', 'baz')
-	->count()
-	->sum()
-	->avg()
-	->print();
+    ->group('foo', 'baz')
+    ->count()
+    ->sum()
+    ->avg()
+    ->print();
 
 // Outputs:
 // one      3       6        2
@@ -48,15 +52,15 @@ Sloth::from($data)
 ### "Pivot" operation
 
 ```php
-require_once dirname(__FILE__) . '/../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 use \Weby\Sloth\Sloth;
 
 include_once 'data.php';
 
 Sloth::from($data)
-	->pivot('foo', 'bar', 'baz')
-	->print();
+    ->pivot('foo', 'bar', 'baz')
+    ->print();
 
 // Outputs:
 // one     1       2       3
@@ -74,4 +78,3 @@ vendor/bin/phpunit
 ## License
 
 Weby\Sloth is distributed under the MIT license.
-
