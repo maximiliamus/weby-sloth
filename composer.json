@@ -19,6 +19,10 @@
 		"group array",
 		"pivot array"
 	],
+	"license": "MIT",
+	"require" : {
+		"php" : "^7.0"
+	},
 	"require-dev" : {
 		"phpunit/phpunit" : "^6.5"
 	}
