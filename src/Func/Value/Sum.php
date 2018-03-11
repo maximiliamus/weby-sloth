@@ -3,8 +3,6 @@ namespace Weby\Sloth\Func\Value;
 
 class Sum extends Base
 {
-	const FIELD_SUFFIX = 'sum';
-	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {

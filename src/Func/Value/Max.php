@@ -3,8 +3,6 @@ namespace Weby\Sloth\Func\Value;
 
 class Max extends Base
 {
-	const FIELD_SUFFIX = 'max';
-	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {

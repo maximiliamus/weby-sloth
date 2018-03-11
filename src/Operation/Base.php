@@ -99,6 +99,9 @@ abstract class Base
 		}
 	}
 	
+	/**
+	 * Performs operation.
+	 */
 	abstract protected function perform();
 	
 	/**

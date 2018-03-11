@@ -5,8 +5,6 @@ use Weby\Sloth\Exception;
 
 class Accum extends Base
 {
-	const FIELD_SUFFIX = 'accum';
-	
 	public $defaultOptions = array(
 		'flat' => false
 	);

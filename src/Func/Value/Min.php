@@ -3,8 +3,6 @@ namespace Weby\Sloth\Func\Value;
 
 class Min extends Base
 {
-	const FIELD_SUFFIX = 'min';
-	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {

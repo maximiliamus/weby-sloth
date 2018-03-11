@@ -11,7 +11,7 @@ class Sloth
 	/**
 	 * Input data.
 	 * 
-	 * @var array[array|object]
+	 * @var array
 	 */
 	public $data = null;
 	
@@ -48,7 +48,7 @@ class Sloth
 	/**
 	 * Returns Sloth's instance created for specified data.
 	 * 
-	 * @param array[array|object] $data
+	 * @param array $data
 	 * @return \Weby\Sloth\Sloth
 	 */
 	public static function from(&$data)
@@ -59,7 +59,7 @@ class Sloth
 	/**
 	 * Creates Sloth's instance for specified data.
 	 * 
-	 * @param array[array|object] $data
+	 * @param array $data
 	 * @throws \Weby\Sloth\Exception
 	 */
 	public function __construct(&$data)

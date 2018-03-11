@@ -3,8 +3,6 @@ namespace Weby\Sloth\Func\Value;
 
 class Mode extends Base
 {
-	const FIELD_SUFFIX = 'mode';
-	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {

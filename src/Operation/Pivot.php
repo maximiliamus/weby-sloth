@@ -157,6 +157,10 @@ class Pivot extends Base
 		return $this;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::perform()
+	 */
 	protected function perform()
 	{
 		$this->beginPerform();

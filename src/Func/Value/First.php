@@ -3,8 +3,6 @@ namespace Weby\Sloth\Func\Value;
 
 class First extends Base
 {
-	const FIELD_SUFFIX = 'first';
-	
 	public $defaultOptions = array(
 		'flat' => false
 	);

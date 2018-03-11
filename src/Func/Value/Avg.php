@@ -5,8 +5,6 @@ use \Weby\Sloth\Exception;
 
 class Avg extends Base
 {
-	const FIELD_SUFFIX = 'avg';
-	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {

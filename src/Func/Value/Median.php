@@ -3,8 +3,6 @@ namespace Weby\Sloth\Func\Value;
 
 class Median extends Base
 {
-	const FIELD_SUFFIX = 'median';
-	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {

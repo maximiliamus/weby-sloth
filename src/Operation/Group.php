@@ -32,12 +32,12 @@ class Group extends Base
 	 * Column with name 'count' will be added to the result.
 	 * This column name may be overriden if $fieldName is specified.
 	 * 
-	 * @param string $countFieldName
+	 * @param string $fieldName
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function count($countFieldName = null, $options = null)
+	public function count($fieldName = null, $options = null)
 	{
-		$this->funcs[Count::class] = new Count($this, $countFieldName, $options);
+		$this->funcs[Count::class] = new Count($this, $fieldName, $options);
 		
 		return $this;
 	}
@@ -45,14 +45,14 @@ class Group extends Base
 	/**
 	 * Whether to sum values for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_sum" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $sumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function sum($sumFieldName = null, $options = null)
+	public function sum($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Sum::class] = new Sum($this, $sumFieldName, $options);
+		$this->funcs[Sum::class] = new Sum($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -60,14 +60,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate average value for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_avg" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "avg" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $sumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function avg($sumFieldName = null, $options = null)
+	public function avg($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Avg::class] = new Avg($this, $sumFieldName, $options);
+		$this->funcs[Avg::class] = new Avg($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -75,14 +75,14 @@ class Group extends Base
 	/**
 	 * Whether to accumulate values for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_accum" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "accum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $accumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function accum($accumFieldName = null, $options = null)
+	public function accum($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Accum::class] = new Accum($this, $accumFieldName, $options);
+		$this->funcs[Accum::class] = new Accum($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -90,14 +90,14 @@ class Group extends Base
 	/**
 	 * Whether to accumulate only a first value for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_first" will be added to the result.
-	 * This column name may be overwriten if $fieldName is specified.
+	 * The column suffix "first" may be overwriten if $fieldSuffix is specified.
 	 * 
-	 * @param string $accumFirstFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function first($accumFirstFieldName = null, $options = null)
+	public function first($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[First::class] = new First($this, $accumFirstFieldName, $options);
+		$this->funcs[First::class] = new First($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -105,14 +105,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate min value for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_min" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "min" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $sumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function min($sumFieldName = null, $options = null)
+	public function min($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Min::class] = new Min($this, $sumFieldName, $options);
+		$this->funcs[Min::class] = new Min($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -120,14 +120,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate max value for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_max" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "max" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $sumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function max($sumFieldName = null, $options = null)
+	public function max($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Max::class] = new Max($this, $sumFieldName, $options);
+		$this->funcs[Max::class] = new Max($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -135,14 +135,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate median value for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_median" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "median" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $sumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function median($sumFieldName = null, $options = null)
+	public function median($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Median::class] = new Median($this, $sumFieldName, $options);
+		$this->funcs[Median::class] = new Median($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -150,22 +150,22 @@ class Group extends Base
 	/**
 	 * Whether to caclulate mode value for each value column in group.
 	 * Column with name "${Value Column Name/Alias}_mode" will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * The column suffix "mode" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $sumFieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function mode($sumFieldName = null, $options = null)
+	public function mode($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Mode::class] = new Mode($this, $sumFieldName, $options);
+		$this->funcs[Mode::class] = new Mode($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
 	
 	/**
-	 * Returns list of functions.
+	 * Returns list of functions that were specified for operation.
 	 * 
-	 * @return array[\Weby\Sloth\Func\Base]
+	 * @return array
 	 */
 	public function getFuncs()
 	{
@@ -173,7 +173,7 @@ class Group extends Base
 	}
 	
 	/**
-	 * Returns list of group columns.
+	 * Returns list of group columns that were specified for operation.
 	 * 
 	 * @return array
 	 */
@@ -183,7 +183,7 @@ class Group extends Base
 	}
 	
 	/**
-	 * Returns list of column aliases.
+	 * Returns list of aliases for group columns that were specified for operation.
 	 * 
 	 * @return array
 	 */
@@ -196,9 +196,9 @@ class Group extends Base
 	 * Whether to convert the output into the assoc array.
 	 * Keys of the assoc array will be values of $keyColumn.
 	 * Values of the assoc array will be values of $valueColumn.
-	 * If $key is omitted then first group column will be used.
-	 * If $value is omitted then first non-group (value or func) column will be used.
-	 * If $value is specified as '*' then value will be entire output row.
+	 * - If $key is omitted then first group column will be used.
+	 * - If $value is omitted then first non-group column will be used.
+	 * - If $value is specified as '*' then value will be entire output row.
 	 * 
 	 * @param mixed $keyColumn
 	 * @return \Weby\Sloth\Operation\Group
@@ -233,6 +233,10 @@ class Group extends Base
 		return $this;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::perform()
+	 */
 	protected function perform()
 	{
 		$this->validatePerform();
