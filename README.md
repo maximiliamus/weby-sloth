@@ -11,11 +11,9 @@ TBD
 
 ## Usage
 
-### "Goup" operation
+### Input data
 
 ```php
-namespace Weby\Sloth;
-
 $data = array(
     array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
     array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
@@ -24,49 +22,41 @@ $data = array(
     array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
     array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
 );
+```
 
-$result = Sloth::from($data)
-    ->group('foo', 'baz')
-    ->count()
-    ->sum()
-    ->select();
+### "Goup" operation
 
-foreach ($result as $row) {
-    foreach ($row as $col) {
-        echo $col, "\t";
-    }
-    echo "\n";
-}
+```php
+require_once dirname(__FILE__) . '/../vendor/autoload.php';
+
+use \Weby\Sloth\Sloth;
+
+include_once 'data.php';
+
+Sloth::from($data)
+	->group('foo', 'baz')
+	->count()
+	->sum()
+	->avg()
+	->print();
 
 // Outputs:
-// one     3       6
-// two     3       15
+// one      3       6        2
+// two      3       15       5
 ```
 
 ### "Pivot" operation
 
 ```php
-namespace Weby\Sloth;
+require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
-$data = array(
-    array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
-    array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
-    array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
-    array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
-    array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
-    array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
-);
+use \Weby\Sloth\Sloth;
 
-$result = Sloth::from($data)
-    ->pivot('foo', 'bar', 'baz')
-    ->select();
+include_once 'data.php';
 
-foreach ($result as $row) {
-    foreach ($row as $col) {
-        echo $col, "\t";
-    }
-    echo "\n";
-}
+Sloth::from($data)
+	->pivot('foo', 'bar', 'baz')
+	->print();
 
 // Outputs:
 // one     1       2       3
