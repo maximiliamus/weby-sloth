@@ -18,6 +18,7 @@ See **examples** folder for more info.
 ### Input data
 
 ```php
+// examples/data.php:
 $data = array(
     array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
     array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
@@ -31,6 +32,7 @@ $data = array(
 ### "Goup" operation
 
 ```php
+// examples/group.php:
 require_once '../vendor/autoload.php';
 
 use \Weby\Sloth\Sloth;
@@ -52,6 +54,7 @@ Sloth::from($data)
 ### "Pivot" operation
 
 ```php
+// examples/pivot.php:
 require_once '../vendor/autoload.php';
 
 use \Weby\Sloth\Sloth;
