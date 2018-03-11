@@ -13,7 +13,6 @@ use Weby\Sloth\Sloth;
 
 /**
  * Base class for all operations.
- *
  */
 abstract class Base
 {
