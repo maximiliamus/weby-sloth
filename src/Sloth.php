@@ -142,7 +142,7 @@ class Sloth
 	}
 	
 	/**
-	 * Checks whether a colum exists in the data.
+	 * Checks whether a colum exists in the input data.
 	 * 
 	 * @param string|int $colName Name or index of column.
 	 * @return bool
