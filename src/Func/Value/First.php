@@ -16,9 +16,9 @@ namespace Weby\Sloth\Func\Value;
  */
 class First extends Base
 {
-	public $defaultOptions = array(
+	public $defaultOptions = [
 		'flat' => false
-	);
+	];
 	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
@@ -26,7 +26,7 @@ class First extends Base
 		if ($this->options['flat']) {
 			$currValue = $nextValue;
 		} else {
-			$currValue = array($nextValue);
+			$currValue = [$nextValue];
 		}
 	}
 	
@@ -45,7 +45,7 @@ class First extends Base
 		if ($this->options['flat']) {
 			$currValue = $nextValue;
 		} else {
-			$currValue = array($nextValue);
+			$currValue = [$nextValue];
 		}
 	}
 }

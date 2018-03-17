@@ -20,7 +20,7 @@ class Median extends Base
 		$storeCol = $this->getStoreColumn($groupCol, $dataCol, 'accum');
 		
 		$store = &$this->operation->getStore();
-		$store[$storeCol] = array();
+		$store[$storeCol] = [];
 		$store[$storeCol][] = $nextValue;
 		
 		$currValue = $nextValue;

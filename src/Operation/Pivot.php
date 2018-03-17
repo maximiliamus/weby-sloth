@@ -17,13 +17,13 @@ use Weby\Sloth\Utils;
  */
 class Pivot extends Base
 {
-	private $columnCols = array();
-	private $columnColsAliases = array();
+	private $columnCols = [];
+	private $columnColsAliases = [];
 	
-	private $addedCols = array();
+	private $addedCols = [];
 	
 	private $groupedData = null;
-	private $groups = array();
+	private $groups = [];
 	
 	/**
 	 * @var \Weby\Sloth\Operation\Group
@@ -193,11 +193,11 @@ class Pivot extends Base
 	
 	private function beginPerform()
 	{
-		$this->output = array();
+		$this->output = [];
 		
 		if (!$this->group->getFuncs()) {
 			// Apply default function.
-			$this->group->first(null, array('flat' => true));
+			$this->group->first(null, ['flat' => true]);
 		}
 		
 		$this->resetGroups();
@@ -224,7 +224,7 @@ class Pivot extends Base
 	
 	private function &addGroup($key, $row)
 	{
-		$group = array();
+		$group = [];
 		
 		foreach ($this->groupCols as $groupCol) {
 			$group[$groupCol->alias] = $row[$groupCol->alias];
@@ -368,7 +368,7 @@ class Pivot extends Base
 	
 	private function resetGroups()
 	{
-		$this->groups = array();
+		$this->groups = [];
 	}
 	
 	private function isGroup($key)

@@ -9,6 +9,8 @@
 
 namespace Weby\Sloth\Func;
 
+use Weby\Sloth\Utils;
+
 /**
  * Base class for all functions.
  */
@@ -63,12 +65,15 @@ abstract class Base
 		$options = null
 	) {
 		$this->operation = $operation;
-		$this->options = $this->setOptions((array) $options);
+		$this->options = $this->setOptions($options);
 	}
 	
-	protected function setOptions(array $options)
+	protected function setOptions($options)
 	{
-		return array_merge((array) $this->defaultOptions, $options);
+		$options = Utils::normalizeArray($options);
+		$defaultOptions = Utils::normalizeArray($this->defaultOptions);
+		
+		return array_merge($defaultOptions, $options);
 	}
 	
 	protected function getStoreColumn($groupCol, $dataCol, $storeCol)

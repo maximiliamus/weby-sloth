@@ -9,6 +9,7 @@
 
 namespace Weby\Sloth\Func\Value;
 
+use Weby\Sloth\Utils;
 use Weby\Sloth\Exception;
 
 /**
@@ -16,9 +17,9 @@ use Weby\Sloth\Exception;
  */
 class Accum extends Base
 {
-	public $defaultOptions = array(
+	public $defaultOptions = [
 		'flat' => false
-	);
+	];
 	
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
@@ -26,7 +27,7 @@ class Accum extends Base
 		if ($this->options['flat']) {
 			$currValue = $nextValue;
 		} else {
-			$currValue = array($nextValue);
+			$currValue = [$nextValue];
 		}
 	}
 	
@@ -38,11 +39,29 @@ class Accum extends Base
 		
 		if ($this->options['flat']) {
 			switch (gettype($currValue)) {
-				case 'string':  $currValue  .= (string)  $nextValue; break;
-				case 'integer': $currValue  += (integer) $nextValue; break;
-				case 'double':  $currValue  += (float)   $nextValue; break;
-				case 'boolean': $currValue   = $currValue && (boolean) $nextValue; break;
-				case 'array':   $currValue   = array_merge($currValue, (array) $nextValue); break;
+				case 'string':
+					$currValue .= (string) $nextValue;
+					break;
+					
+				case 'integer':
+					$currValue += (integer) $nextValue;
+					break;
+					
+				case 'double':
+					$currValue += (float) $nextValue;
+					break;
+					
+				case 'boolean':
+					$currValue = $currValue && (boolean) $nextValue;
+					break;
+					
+				case 'array':
+					$currValue = array_merge(
+						$currValue,
+						Utils::normalizeArray($nextValue)
+					);
+					break;
+					
 				default:
 					throw new Exception('Unsupported value type.');
 			}

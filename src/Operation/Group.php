@@ -27,8 +27,8 @@ use Weby\Sloth\Func\Value\Mode;
  */
 class Group extends Base
 {
-	private $funcs = array();
-	protected $groups = array();
+	private $funcs = [];
+	protected $groups = [];
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -252,8 +252,8 @@ class Group extends Base
 	
 	private function beginPerform()
 	{
-		$this->output = array();
-		$this->store = array();
+		$this->output = [];
+		$this->store = [];
 		$this->resetGroups();
 	}
 	
@@ -328,7 +328,7 @@ class Group extends Base
 	
 	private function &addGroup($key, $row)
 	{
-		$group = array();
+		$group = [];
 		
 		if (is_object($row)) {
 			$row = Utils::toArray($row);
@@ -403,7 +403,7 @@ class Group extends Base
 	
 	private function resetGroups()
 	{
-		$this->groups = array();
+		$this->groups = [];
 	}
 	
 	private function isGroup($key)

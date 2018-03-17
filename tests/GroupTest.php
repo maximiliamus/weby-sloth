@@ -5,96 +5,96 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 {
 	public function providerArrayOrdered()
 	{
-		return array (
-			array(
-				array(
-					array(1, 'group1', 's1', 1, 0.1, true,  array('a1')),
-					array(3, 'group1', 's3', 1, 0.1, true,  array('a3')),
-					array(2, 'group2', 's2', 2, 0.2, true,  array('a2')),
-					array(5, 'group2', 's5', 2, 0.2, false, array('a5')),
-					array(4, 'group2', 's4', 2, 0.2, true,  array('a4')),
-				),
-			),
-		);
+		return [
+			[
+				[
+					[1, 'group1', 's1', 1, 0.1, true,  ['a1']],
+					[3, 'group1', 's3', 1, 0.1, true,  ['a3']],
+					[2, 'group2', 's2', 2, 0.2, true,  ['a2']],
+					[5, 'group2', 's5', 2, 0.2, false, ['a5']],
+					[4, 'group2', 's4', 2, 0.2, true,  ['a4']],
+				],
+			],
+		];
 	}
 	
 	public function providerAssocOrdered()
 	{
-		return array (
-			array(
-				array(
-					array('id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => array('a1')),
-					array('id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => array('a3')),
-					array('id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => array('a2')),
-					array('id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' => 2, 'double' => 0.2, 'boolean' => false, 'array' => array('a5')),
-					array('id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => array('a4')),
-				),
-			),
-		);
+		return [
+			[
+				[
+					['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a1']],
+					['id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a3']],
+					['id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a2']],
+					['id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' => 2, 'double' => 0.2, 'boolean' => false, 'array' => ['a5']],
+					['id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a4']],
+				],
+			],
+		];
 	}
 	
 	public function providerObjectOrdered()
 	{
-		return array (
-			array(
-				array(
-					(object) array('id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => array('a1')),
-					(object) array('id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => array('a3')),
-					(object) array('id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => array('a2')),
-					(object) array('id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' => 2, 'double' => 0.2, 'boolean' => false, 'array' => array('a5')),
-					(object) array('id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => array('a4')),
-				),
-			),
-		);
+		return [
+			[
+				[
+					(object) ['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a1']],
+					(object) ['id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a3']],
+					(object) ['id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a2']],
+					(object) ['id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' => 2, 'double' => 0.2, 'boolean' => false, 'array' => ['a5']],
+					(object) ['id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a4']],
+				],
+			],
+		];
 	}
 	
-	private $testResults = array(
+	private $testResults = [
 		'groupCount' => 2,
-		'groupNames' => array('group1', 'group2'),
+		'groupNames' => ['group1', 'group2'],
 		
-		'count' => array(2, 3),
+		'count' => [2, 3],
 		
-		'sumInteger' => array(2, 6),
-		'sumDouble' => array(0.2, 0.6),
+		'sumInteger' => [2, 6],
+		'sumDouble' => [0.2, 0.6],
 		
-		'avgInteger' => array(1, 2),
-		'avgDouble' => array(0.1, 0.2),
+		'avgInteger' => [1, 2],
+		'avgDouble' => [0.1, 0.2],
 		
-		'maxInteger' => array(1, 2),
-		'maxDouble' => array(0.1, 0.2),
+		'maxInteger' => [1, 2],
+		'maxDouble' => [0.1, 0.2],
 		
-		'minInteger' => array(1, 2),
-		'minDouble' => array(0.1, 0.2),
+		'minInteger' => [1, 2],
+		'minDouble' => [0.1, 0.2],
 		
-		'medianInteger' => array(1, 2),
-		'medianDouble' => array(0.1, 0.2),
+		'medianInteger' => [1, 2],
+		'medianDouble' => [0.1, 0.2],
 		
-		'modeInteger' => array(1, 2),
-		'modeDouble' => array(0.1, 0.2),
+		'modeInteger' => [1, 2],
+		'modeDouble' => [0.1, 0.2],
 		
-		'accumInteger' => array(array(1, 1), array(2, 2, 2)),
-		'accumDouble'  => array(array(0.1, 0.1), array(0.2, 0.2, 0.2)),
-		'accumString'  => array(array('s1', 's3'), array('s2', 's5', 's4')),
-		'accumBoolean' => array(array(true, true), array(true, false, true)),
-		'accumArray'   => array(array(array('a1'), array('a3')), array(array('a2'), array('a5'), array('a4'))),
+		'accumInteger' => [[1, 1], [2, 2, 2]],
+		'accumDouble'  => [[0.1, 0.1], [0.2, 0.2, 0.2]],
+		'accumString'  => [['s1', 's3'], ['s2', 's5', 's4']],
+		'accumBoolean' => [[true, true], [true, false, true]],
+		'accumArray'   => [[['a1'], ['a3']], [['a2'], ['a5'], ['a4']]],
 		
-		'firstInteger' => array(array(1), array(2)),
-		'firstDouble'  => array(array(0.1), array(0.2)),
-		'firstString'  => array(array('s1'), array('s2')),
-		'firstBoolean' => array(array(true), array(true)),
-		'firstArray'   => array(array(array('a1')), array(array('a2'))),
+		'firstInteger' => [[1], [2]],
+		'firstDouble'  => [[0.1], [0.2]],
+		'firstString'  => [['s1'], ['s2']],
+		'firstBoolean' => [[true], [true]],
+		'firstArray'   => [[['a1']], [['a2']]],
 		
-		'accumFlatString'  => array('s1s3', 's2s5s4'),
-		'accumFlatInteger' => array(2, 6),
-		'accumFlatDouble'  => array(0.2, 0.6),
-		'accumFlatBoolean' => array(true, false),
-		'accumFlatArray'   => array(array('a1', 'a3'), array('a2', 'a5', 'a4')),
-		'firstFlatString'  => array('s1', 's2'),
-		'firstFlatInteger' => array(1, 2),
-		'firstFlatDouble'  => array(0.1, 0.2),
-		'firstFlatBoolean' => array(true, true),
-		'firstFlatArray'   => array(array('a1'), array('a2')),
-	);
+		'accumFlatString'  => ['s1s3', 's2s5s4'],
+		'accumFlatInteger' => [2, 6],
+		'accumFlatDouble'  => [0.2, 0.6],
+		'accumFlatBoolean' => [true, false],
+		'accumFlatArray'   => [['a1', 'a3'], ['a2', 'a5', 'a4']],
+		'firstFlatString'  => ['s1', 's2'],
+		'firstFlatInteger' => [1, 2],
+		'firstFlatDouble'  => [0.1, 0.2],
+		'firstFlatBoolean' => [true, true],
+		'firstFlatArray'   => [['a1'], ['a2']],
+	];
 	
 	/**
 	 * @dataProvider providerArrayOrdered
@@ -112,7 +112,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		// Alias for column
 		$groupedData = $sloth
-			->group(array(1 => 'groupA'))
+			->group([1 => 'groupA'])
 			->select();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
@@ -139,7 +139,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		// Alias for column
 		$groupedData = $sloth
-			->group(array(1 => 'groupA'))
+			->group([1 => 'groupA'])
 			->count(2)
 			->select();
 		
@@ -166,7 +166,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		// Alias for column
 		$groupedData = $sloth
-			->group(array('group' => 'groupA'))
+			->group(['group' => 'groupA'])
 			->select();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
@@ -190,7 +190,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		// Alias for column
 		$groupedData = $sloth
-			->group(array('group' => 'groupA'))
+			->group(['group' => 'groupA'])
 			->count('countA')
 			->select();
 		
@@ -205,7 +205,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 	{
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
-			->group('group', array('integer', 'double'))
+			->group('group', ['integer', 'double'])
 			->sum()
 			->avg()
 			->min()
@@ -253,8 +253,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$groupedData = $sloth
 			->group(
-				array('group' => 'groupA'),
-				array('integer' => 'integerA')
+				['group' => 'groupA'],
+				['integer' => 'integerA']
 			)
 			->sum('sumA')
 			->select();
@@ -264,8 +264,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group(
-				array('group' => 'groupA'),
-				array('integer' => 'integerA', 'double')
+				['group' => 'groupA'],
+				['integer' => 'integerA', 'double']
 			)
 			->sum('')
 			->select();
@@ -286,13 +286,13 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group(
 				'group',
-				array(
+				[
 					'string',
 					'integer',
 					'double',
 					'boolean',
 					'array'
-				)
+				]
 			)
 			->accum()
 			->select();
@@ -315,14 +315,14 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$groupedData = $sloth
 			->group(
-				array('group' => 'groupA'),
-				array(
+				['group' => 'groupA'],
+				[
 					'string'  => 'stringA',
 					'integer' => 'integerA',
 					'double'  => 'doubleA',
 					'boolean' => 'booleanA',
 					'array'   => 'arrayA',
-				)
+				]
 			)
 			->accum('accumA')
 			->select();
@@ -344,14 +344,14 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group(
-				array('group' => 'groupA'),
-				array(
+				['group' => 'groupA'],
+				[
 					'string'  => 'stringA',
 					'integer' => 'integerA',
 					'double'  => 'doubleA',
 					'boolean' => 'booleanA',
 					'array'   => 'arrayA',
-				)
+				]
 			)
 			->accum('')
 			->select();
@@ -389,8 +389,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$groupedData = $sloth
 			->group(
-				array('group' => 'groupA'),
-				array('string' => 'stringA')
+				['group' => 'groupA'],
+				['string' => 'stringA']
 			)
 			->first('firstA')
 			->select();
@@ -400,8 +400,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group(
-				array('group' => 'groupA'),
-				array('string' => 'stringA')
+				['group' => 'groupA'],
+				['string' => 'stringA']
 			)
 			->first('')
 			->select();
@@ -418,7 +418,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group', 'string')
-			->accum(null, array('flat' => true))
+			->accum(null, ['flat' => true])
 			->select();
 		
 		$this->assertEquals(true, $groupedData[0]['string_accum'] == $this->testResults['accumFlatString'][0]);
@@ -426,7 +426,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group('group', 'integer')
-			->accum(null, array('flat' => true))
+			->accum(null, ['flat' => true])
 			->select();
 		
 		$this->assertEquals(true, $groupedData[0]['integer_accum'] == $this->testResults['accumFlatInteger'][0]);
@@ -441,7 +441,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group', 'string')
-			->first(null, array('flat' => true))
+			->first(null, ['flat' => true])
 			->select();
 		
 		$this->assertEquals(true, $groupedData[0]['string_first'] == $this->testResults['firstFlatString'][0]);
@@ -449,7 +449,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group('group', 'integer')
-			->first(null, array('flat' => true))
+			->first(null, ['flat' => true])
 			->select();
 		
 		$this->assertEquals(true, $groupedData[0]['integer_first'] == $this->testResults['firstFlatInteger'][0]);
@@ -473,7 +473,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		// Alias for column
 		$groupedData = $sloth
-			->group(array('group' => 'groupA'))
+			->group(['group' => 'groupA'])
 			->count('countA')
 			->select();
 		
@@ -500,7 +500,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		// Alias for column
 		$groupedData = $sloth
-			->group(array('group' => 'groupAlias'))
+			->group(['group' => 'groupAlias'])
 			->select();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
