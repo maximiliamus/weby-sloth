@@ -19,14 +19,14 @@ See **examples** folder for more info.
 
 ```php
 // examples/data.php:
-$data = array(
-    array('foo' => 'one', 'bar' => 'A', 'baz' => 1),
-    array('foo' => 'one', 'bar' => 'B', 'baz' => 2),
-    array('foo' => 'one', 'bar' => 'C', 'baz' => 3),
-    array('foo' => 'two', 'bar' => 'A', 'baz' => 4),
-    array('foo' => 'two', 'bar' => 'B', 'baz' => 5),
-    array('foo' => 'two', 'bar' => 'C', 'baz' => 6),
-);
+$data = [
+    ['foo' => 'one', 'bar' => 'A', 'baz' => 1],
+    ['foo' => 'one', 'bar' => 'B', 'baz' => 2],
+    ['foo' => 'one', 'bar' => 'C', 'baz' => 3],
+    ['foo' => 'two', 'bar' => 'A', 'baz' => 4],
+    ['foo' => 'two', 'bar' => 'B', 'baz' => 5],
+    ['foo' => 'two', 'bar' => 'C', 'baz' => 6],
+];
 ```
 
 ### "Goup" operation
@@ -35,7 +35,7 @@ $data = array(
 // examples/group.php:
 require_once '../vendor/autoload.php';
 
-use \Weby\Sloth\Sloth;
+use Weby\Sloth\Sloth;
 
 include_once 'data.php';
 
@@ -57,7 +57,7 @@ Sloth::from($data)
 // examples/pivot.php:
 require_once '../vendor/autoload.php';
 
-use \Weby\Sloth\Sloth;
+use Weby\Sloth\Sloth;
 
 include_once 'data.php';
 

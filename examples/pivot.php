@@ -1,7 +1,7 @@
 <?php
 require_once '../vendor/autoload.php';
 
-use \Weby\Sloth\Sloth;
+use Weby\Sloth\Sloth;
 
 include_once 'data.php';
 

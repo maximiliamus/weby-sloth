@@ -9,7 +9,7 @@
 
 namespace Weby\Sloth\Func\Value;
 
-use \Weby\Sloth\Exception;
+use Weby\Sloth\Exception;
 
 /**
  * Calculates average (mean) value of a column.
