@@ -506,6 +506,15 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupAlias'] == $this->testResults['groupNames'][0]);
 		$this->assertEquals(true, $groupedData[1]['groupAlias'] == $this->testResults['groupNames'][1]);
+		
+		// Alias for column object
+		$groupedData = $sloth
+			->group(Column::new('group')->as('groupAlias'))
+			->select();
+		
+		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
+		$this->assertEquals(true, $groupedData[0]['groupAlias'] == $this->testResults['groupNames'][0]);
+		$this->assertEquals(true, $groupedData[1]['groupAlias'] == $this->testResults['groupNames'][1]);
 	}
 	
 	/**
