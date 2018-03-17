@@ -5,7 +5,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 {
 	public function providerArrayOrdered()
 	{
-		return [
+		return
+		[
 			[
 				[
 					[1, 'group1', 's1', 1, 0.1, true,  ['a1']],
@@ -20,7 +21,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 	
 	public function providerAssocOrdered()
 	{
-		return [
+		return
+		[
 			[
 				[
 					['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a1']],
@@ -35,7 +37,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 	
 	public function providerObjectOrdered()
 	{
-		return [
+		return
+		[
 			[
 				[
 					(object) ['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a1']],
