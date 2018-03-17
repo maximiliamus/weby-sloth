@@ -40,4 +40,25 @@ class Utils
 	{
 		return is_string(key($row));
 	}
+	
+	/**
+	 * Normalize data to be an array regardless of initial type.
+	 * 
+	 * @param mixed $data
+	 * @return array
+	 */
+	public static function normalizeArray($data)
+	{
+		$result = null;
+		
+		if (!$data) {
+			$result = [];
+		} elseif (is_array($data)) {
+			$result = $data;
+		} else {
+			$result = [$data];
+		}
+		
+		return $result;
+	}
 }

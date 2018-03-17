@@ -184,26 +184,6 @@ class Group extends Base
 	}
 	
 	/**
-	 * Returns list of group columns that were specified for operation.
-	 * 
-	 * @return array
-	 */
-	public function getGroupCols()
-	{
-		return $this->groupCols;
-	}
-	
-	/**
-	 * Returns list of aliases for group columns that were specified for operation.
-	 * 
-	 * @return array
-	 */
-	public function getGroupColsAliases()
-	{
-		return $this->groupColsAliases;
-	}
-	
-	/**
 	 * Whether to convert the output into the assoc array.
 	 * Keys of the assoc array will be values of $keyColumn.
 	 * Values of the assoc array will be values of $valueColumn.
@@ -225,7 +205,8 @@ class Group extends Base
 				$this->assocKeyFieldName = (string) $keyColumn;
 			}
 		} else {
-			$this->assocKeyFieldName = $this->groupColsAliases[$this->groupCols[0]];
+			// Use alias of a first group column.
+			$this->assocKeyFieldName = $this->groupCols[0]->alias;
 		}
 		
 		if ($valueColumn) {
@@ -236,8 +217,13 @@ class Group extends Base
 			}
 		} else {
 			$this->assocValueFieldName = ($this->valueCols
-				? $this->valueColsAliases[$this->valueCols[0]]
-				: null
+				// Use alias of a first value column.
+				? $this->valueCols[0]->alias
+				: (isset($this->funcs[Count::class])
+					// Use filed name of a single group function.
+					? $this->funcs[Count::class]->getFieldName()
+					: '*'
+				)
 			);
 		}
 		
@@ -308,50 +294,19 @@ class Group extends Base
 				}
 				
 				$assocValue = null;
-				if ($this->assocValueFieldName) {
-					if ($this->assocValueFieldName instanceof \Closure) {
-						print_r($this->assocValueFieldName);
-						$assocValue = call_user_func(
-							$this->assocValueFieldName, $assocKey, $row
-						);
-					} elseif ($this->assocValueFieldName == '*') {
-						$assocValue = &$row;
-					} else {
-						$assocValue = &$row[$this->assocValueFieldName];
-					}
+				if ($this->assocValueFieldName instanceof \Closure) {
+					$assocValue = call_user_func(
+						$this->assocValueFieldName, $assocKey, $row
+					);
+				} elseif ($this->assocValueFieldName == '*') {
+					$assocValue = &$row;
 				} else {
-					if ($this->searchAssocValueFieldName($row)) {
-						$assocValue = &$row[$this->assocValueFieldName];
-					}
+					$assocValue = &$row[$this->assocValueFieldName];
 				}
 				$this->output[$assocKey] = &$assocValue;
 				
 				break;
 		}
-	}
-	
-	/**
-	 * Searches first non-group column to use it as
-	 * value column for the output assoc array.
-	 * 
-	 * @param array $row Output row
-	 * @return boolean
-	 */
-	private function searchAssocValueFieldName(&$row)
-	{
-		$availableCols = array_keys($row);
-		$groupColsAliases = array_flip($this->groupColsAliases);
-		
-		$result = false;
-		foreach ($availableCols as $col) {
-			if (!isset($groupColsAliases[$col])) {
-				$this->assocValueFieldName = $col;
-				$result = true;
-				break;
-			};
-		}
-		
-		return $result;
 	}
 	
 	private function getGroupKey($row)
@@ -363,7 +318,7 @@ class Group extends Base
 		}
 		
 		foreach ($this->groupCols as $groupCol) {
-			$result .= $row[$groupCol];
+			$result .= $row[$groupCol->name];
 		}
 		
 		$result = md5($result);
@@ -373,47 +328,46 @@ class Group extends Base
 	
 	private function &addGroup($key, $row)
 	{
-		$result = array();
+		$group = array();
 		
 		if (is_object($row)) {
 			$row = Utils::toArray($row);
 		}
 		
-		foreach ($this->groupCols as $group) {
-			$result[$this->groupColsAliases[$group]] = $row[$group];
+		foreach ($this->groupCols as $groupCol) {
+			$group[$groupCol->alias] = $row[$groupCol->name];
 		}
 		
 		foreach ($this->funcs as $func) {
 			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-				$fieldName = $func->getFieldName();
-				$result[$fieldName] = null;
-				$currValue = &$result[$fieldName];
+				$colName = $func->getFieldName();
+				$group[$colName] = null;
+				$currValue = &$group[$colName];
 				$nextValue = null;
 				$func->onAddGroup(
-					$result, $fieldName, $row, null, $currValue, $nextValue
+					$group, $colName, $row, null, $currValue, $nextValue
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$valueColAlias = $this->valueColsAliases[$valueCol];
-					$fieldName = $func->getFieldName($valueColAlias);
-					$result[$fieldName] = null;
-					$currValue = &$result[$fieldName];
-					$nextValue = &$row[$valueCol];
+					$colName = $func->getFieldName($valueCol->alias);
+					$group[$colName] = null;
+					$currValue = &$group[$colName];
+					$nextValue = &$row[$valueCol->name];
 					$func->onAddGroup(
-						$result, $fieldName, $row, $valueCol, $currValue, $nextValue
+						$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 					);
 				}
 			}
 		}
 		
-		$this->groups[$key] = &$result;
+		$this->groups[$key] = &$group;
 		
-		return $result;
+		return $group;
 	}
 	
 	private function &updateGroup($key, $row)
 	{
-		$result = &$this->groups[$key];
+		$group = &$this->groups[$key];
 		
 		if (is_object($row)) {
 			$row = Utils::toArray($row);
@@ -421,26 +375,25 @@ class Group extends Base
 		
 		foreach ($this->funcs as $func) {
 			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-				$fieldName = $func->getFieldName();
-				$currValue = &$result[$fieldName];
+				$colName = $func->getFieldName();
+				$currValue = &$group[$colName];
 				$nextValue = null;
 				$func->onUpdateGroup(
-					$result, $fieldName, $row, null, $currValue, $nextValue
+					$group, $colName, $row, null, $currValue, $nextValue
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$valueColAlias = $this->valueColsAliases[$valueCol];
-					$fieldName = $func->getFieldName($valueColAlias);
-					$currValue = &$result[$fieldName];
-					$nextValue = &$row[$valueCol];
+					$colName = $func->getFieldName($valueCol->alias);
+					$currValue = &$group[$colName];
+					$nextValue = &$row[$valueCol->name];
 					$func->onUpdateGroup(
-						$result, $fieldName, $row, $valueCol, $currValue, $nextValue
+						$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 					);
 				}
 			}
 		}
 		
-		return $result;
+		return $group;
 	}
 	
 	private function endPerform()

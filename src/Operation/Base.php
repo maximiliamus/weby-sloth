@@ -10,6 +10,8 @@
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
+use Weby\Sloth\Utils;
+use Weby\Sloth\Column;
 
 /**
  * Base class for all operations.
@@ -27,10 +29,7 @@ abstract class Base
 	protected $sloth = null;
 	
 	protected $groupCols = array();
-	protected $groupColsAliases = array();
-	
 	protected $valueCols = array();
-	protected $valueColsAliases = array();
 	
 	protected $output = array();
 	protected $outputFormat = self::OUTPUT_ARRAY;
@@ -51,10 +50,13 @@ abstract class Base
 	 */
 	public function __construct(Sloth $sloth, $groupCols, $valueCols)
 	{
+		$groupCols  = Utils::normalizeArray($groupCols);
+		$valueCols  = Utils::normalizeArray($valueCols);
+		
 		$this->sloth = $sloth;
 		
 		$this->assignGroupCols($groupCols);
-		if (empty($this->groupCols))
+		if (!$this->groupCols)
 			throw new \Weby\Sloth\Exception('No group columns.');
 		
 		$this->assignValueCols($valueCols);
@@ -62,10 +64,10 @@ abstract class Base
 	
 	protected function assignGroupCols($groupCols)
 	{
-		foreach ((array) $groupCols as $colName => $colDef) {
+		foreach ($groupCols as $colName => $colDef) {
 			if ($this->sloth->isArray) {
 				if (!is_string($colDef)) {
-					// If this is not aliased column.
+					// If not aliased column was specified...
 					$colName = $colDef;
 				}
 			} else {
@@ -74,23 +76,31 @@ abstract class Base
 				}
 			}
 			
-			if (!$this->sloth->isColExists($colName)) {
+			$col = null;
+			if ($colName instanceof \Weby\Sloth\Column) {
+				// If column object was specified...
+				$col = $colName;
+			} else {
+				$col = Column::new($colName)
+					->as($colDef);
+			}
+			
+			if (!$this->sloth->isColExists($col->name)) {
 				throw new \Weby\Sloth\Exception(
-					sprintf('Unknown group column "%s".', $colName)
+					sprintf('Unknown group column "%s".', $col->name)
 				);
 			}
 			
-			$this->groupCols[] = $colName;
-			$this->groupColsAliases[$colName] = $colDef;
+			$this->groupCols[] = $col;
 		}
 	}
 	
 	protected function assignValueCols($valueCols)
 	{
-		foreach ((array) $valueCols as $colName => $colDef) {
+		foreach ($valueCols as $colName => $colDef) {
 			if ($this->sloth->isArray) {
 				if (!is_string($colDef)) {
-					// If this is not aliased column.
+					// If not aliased column was specified...
 					$colName = $colDef;
 				}
 			} else {
@@ -99,14 +109,22 @@ abstract class Base
 				}
 			}
 			
-			if (!$this->sloth->isColExists($colName)) {
+			$col = null;
+			if ($colName instanceof \Weby\Sloth\Column) {
+				// If column object was specified...
+				$col = $colName;
+			} else {
+				$col = Column::new($colName)
+					->as($colDef);
+			}
+			
+			if (!$this->sloth->isColExists($col->name)) {
 				throw new \Weby\Sloth\Exception(
-					sprintf('Unknown value column "%s".', $colDef)
+					sprintf('Unknown value column "%s".', $col->name)
 				);
 			}
 			
-			$this->valueCols[] = $colName;
-			$this->valueColsAliases[$colName] = $colDef;
+			$this->valueCols[] = $col;
 		}
 	}
 	
@@ -114,6 +132,16 @@ abstract class Base
 	 * Performs operation.
 	 */
 	abstract protected function perform();
+	
+	/**
+	 * Returns list of group columns that were specified for operation.
+	 * 
+	 * @return array
+	 */
+	public function getGroupCols()
+	{
+		return $this->groupCols;
+	}
 	
 	/**
 	 * Performs a data manipulation and returns a result.

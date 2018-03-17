@@ -10,6 +10,7 @@
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
+use Weby\Sloth\Utils;
 
 /**
  * Pivot (pivot table) operation.
@@ -19,7 +20,7 @@ class Pivot extends Base
 	private $columnCols = array();
 	private $columnColsAliases = array();
 	
-	private $addedColumnCols = array();
+	private $addedCols = array();
 	
 	private $groupedData = null;
 	private $groups = array();
@@ -31,15 +32,19 @@ class Pivot extends Base
 	
 	public function __construct(Sloth $sloth, $groupCols, $columnCols, $valueCols)
 	{
+		$groupCols  = Utils::normalizeArray($groupCols);
+		$columnCols = Utils::normalizeArray($columnCols);
+		$valueCols  = Utils::normalizeArray($valueCols);
+		
 		parent::__construct($sloth, $groupCols, $valueCols);
 		
-		$this->columnCols = (array) $columnCols;
+		$this->columnCols = $columnCols;
 		if (!$this->columnCols)
 			throw new \Weby\Sloth\Exception('No column columns.');
 		
 		$this->group = new Group(
 			$sloth,
-			array_merge((array) $groupCols, (array) $columnCols),
+			array_merge($groupCols, $columnCols),
 			$valueCols
 		);
 	}
@@ -161,9 +166,16 @@ class Pivot extends Base
 		return $this;
 	}
 	
-	public function addColumn($name, $values = null)
+	/**
+	 * Adds additional column to the output.
+	 * 
+	 * @param string $name
+	 * @param mixed $value
+	 * @return \Weby\Sloth\Operation\Pivot
+	 */
+	public function addColumn($name, $value = null)
 	{
-		$this->addedColumnCols[$name] = $values;
+		$this->addedCols[$name] = $value;
 		
 		return $this;
 	}
@@ -212,10 +224,10 @@ class Pivot extends Base
 	
 	private function &addGroup($key, $row)
 	{
-		$result = array();
+		$group = array();
 		
-		foreach ($this->groupColsAliases as $groupColAlias) {
-			$result[$groupColAlias] = $row[$groupColAlias];
+		foreach ($this->groupCols as $groupCol) {
+			$group[$groupCol->alias] = $row[$groupCol->alias];
 		}
 		
 		foreach ($this->columnCols as $columnCol) {
@@ -229,16 +241,16 @@ class Pivot extends Base
 					
 					// If there are different number of cols
 					// in rows then add missed ones.
-					$this->propagateColumns($result);
+					$this->propagateColumns($group);
 					if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 						$this->columnColsAliases[$fieldNameAlias] = true;
 						$this->backPropagateColumn($fieldNameAlias);
 					}
 					
-					$result[$fieldNameAlias] = $row[$fieldName];
+					$group[$fieldNameAlias] = $row[$fieldName];
 				} else {
-					foreach ($this->valueColsAliases as $valueColAlias) {
-						$fieldName = $func->getFieldName($valueColAlias);
+					foreach ($this->valueCols as $valueCol) {
+						$fieldName = $func->getFieldName($valueCol->alias);
 						$fieldNameAlias = ($fieldName
 							? $row[$columnCol] . '_' . $fieldName
 							: $row[$columnCol]
@@ -246,32 +258,30 @@ class Pivot extends Base
 						
 						// If there are different number of cols
 						// in rows then add missed ones.
-						$this->propagateColumns($result);
+						$this->propagateColumns($group);
 						if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 							$this->columnColsAliases[$fieldNameAlias] = true;
 							$this->backPropagateColumn($fieldNameAlias);
 						}
 						
-						$result[$fieldNameAlias] = $row[$fieldName];
+						$group[$fieldNameAlias] = $row[$fieldName];
 					}
 				}
 			}
 		}
 		
-		foreach ($this->addedColumnCols as $addedColumnCol => $values) {
+		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
-			if (is_array($values)) {
-				// TODO
-			} elseif ($values instanceof \Closure) {
-				$value = call_user_func($values, $result);
+			if ($colDef instanceof \Closure) {
+				$value = call_user_func($colDef, $group);
 			} else {
-				$value = $values;
+				$value = $colDef;
 			}
-			$result[$addedColumnCol] = $value;
+			$group[$addedCol] = $value;
 		}
-		$this->groups[$key] = &$result;
+		$this->groups[$key] = &$group;
 		
-		return $result;
+		return $group;
 	}
 	
 	private function &updateGroup($key, $row)
@@ -294,8 +304,8 @@ class Pivot extends Base
 					
 					$result[$fieldNameAlias] = $row[$fieldName];
 				} else {
-					foreach ($this->valueColsAliases as $valueColAlias) {
-						$fieldName = $func->getFieldName($valueColAlias);
+					foreach ($this->valueCols as $valueCol) {
+						$fieldName = $func->getFieldName($valueCol->alias);
 						$fieldNameAlias = ($fieldName
 							? $row[$columnCol] . '_' . $fieldName
 							: $row[$columnCol]
@@ -312,16 +322,14 @@ class Pivot extends Base
 			}
 		}
 		
-		foreach ($this->addedColumnCols as $addedColumnCol => $values) {
+		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
-			if (is_array($values)) {
-				// TODO
-			} elseif ($values instanceof \Closure) {
-				$value = call_user_func($values, $result);
+			if ($colDef instanceof \Closure) {
+				$value = call_user_func($colDef, $result);
 			} else {
-				$value = $values;
+				$value = $colDef;
 			}
-			$result[$addedColumnCol] = $value;
+			$result[$addedCol] = $value;
 		}
 		
 		return $result;
@@ -349,8 +357,8 @@ class Pivot extends Base
 	{
 		$result = '';
 		
-		foreach ($this->groupColsAliases as $groupColAlias) {
-			$result .= $row[$groupColAlias];
+		foreach ($this->groupCols as $groupCol) {
+			$result .= $row[$groupCol->alias];
 		}
 		
 		$result = md5($result);
