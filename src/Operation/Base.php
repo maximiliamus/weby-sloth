@@ -204,7 +204,11 @@ abstract class Base
 	}
 	
 	/**
-	 * Performs a data manipulation and returns a result.
+	 * Performs a data manipulation and returns the operation output.
+	 * It is a shourtcut action for ->perform()->getOutput() action sequence.
+	 * 
+	 * @see \Weby\Sloth\Operation\Base::perform()
+	 * @see \Weby\Sloth\Operation\Base::getOutput()
 	 * 
 	 * @return array
 	 */
