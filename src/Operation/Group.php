@@ -12,7 +12,7 @@ namespace Weby\Sloth\Operation;
 use Weby\Sloth\Sloth;
 use Weby\Sloth\Exception;
 use Weby\Sloth\Utils;
-use Weby\Sloth\Func\Group\Count;
+use Weby\Sloth\Func\Value\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
 use Weby\Sloth\Func\Value\Sum;
@@ -39,14 +39,14 @@ class Group extends Base
 	}
 	
 	/**
-	 * Whether to calculate record count in group.
-	 * Column with name 'count' will be added to the result.
-	 * This column name may be overriden if $fieldName is specified.
+	 * Whether to calculate record count in a group.
+	 * Column with name "${Value Column Name/Alias}_count" will be added to the result.
+	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldName
+	 * @param string $fieldSuffix
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function count($fieldName = null, $options = null)
+	public function count($fieldSuffix = null, $options = null)
 	{
 		$this->funcs[Count::class] = new Count($this, $fieldName, $options);
 		
@@ -54,7 +54,7 @@ class Group extends Base
 	}
 	
 	/**
-	 * Whether to sum values for each value column in group.
+	 * Whether to sum values for each value column in a group.
 	 * Column with name "${Value Column Name/Alias}_sum" will be added to the result.
 	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
@@ -240,6 +240,7 @@ class Group extends Base
 	
 	protected function beginPerform()
 	{
+		$this->isOneFunc = count($this->funcs) == 1;
 		$this->isOneCol = count($this->valueCols) == 1;
 		
 		$this->resetOutput();
@@ -319,28 +320,30 @@ class Group extends Base
 	
 	private function buildColumnName($valueCol, $func)
 	{
-		$colName = '';
+		$result = null;
+		
+		$colName = $valueCol->alias;
+		$funcName = $func->alias;
 		
 		if ($this->isOptimizeColumnNames) {
-			$funcName = $func->getFuncName();
-			$colName = ($this->isOneCol && $funcName
-				? $funcName
-				: $func->getFieldName($valueCol->alias)
+			$result = (
+				  $this->isOneCol && $this->isOneFunc
+				? $colName
+				: (
+					  $this->isOneCol
+					? $funcName
+					: (
+						  $this->isOneFunc
+						? $colName
+						: $colName . '_' . $funcName
+					)
+				)
 			);
 		} else {
-			$colName = $func->getFieldName($valueCol->alias);
+			$result = $colName . '_' . $funcName;
 		}
 		
-		return $colName;
-	}
-	
-	private function buildOutputColumnNames($colName)
-	{
-		if ($this->groups)
-			return;
-		
-		$this->outputCols[] = $colName;
-		$this->outputValueCols[] = $colName;
+		return $result;
 	}
 	
 	private function &addGroup($key, $row)
@@ -359,28 +362,29 @@ class Group extends Base
 			}
 		}
 		
-		foreach ($this->funcs as $func) {
-			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-				$colName = $func->getFieldName();
-				$this->buildOutputColumnNames($colName);
+		foreach ($this->valueCols as $valueCol) {
+			foreach ($this->funcs as $func) {
+				$colName = $this->buildColumnName($valueCol, $func);
+				
+				if (!$this->groups) {
+					$this->outputCols[] = $colName;
+					$this->outputValueCols[] = $colName;
+				}
 				
 				$group[$colName] = null;
 				$currValue = &$group[$colName];
-				$nextValue = null;
+				$nextValue = &$row[$valueCol->name];
+				
 				$func->onAddGroup(
-					$group, $colName, $row, null, $currValue, $nextValue
+					$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 				);
-			} else {
-				foreach ($this->valueCols as $valueCol) {
-					$colName = $this->buildColumnName($valueCol, $func);
-					$this->buildOutputColumnNames($colName);
-					
-					$group[$colName] = null;
-					$currValue = &$group[$colName];
-					$nextValue = &$row[$valueCol->name];
-					$func->onAddGroup(
-						$group, $colName, $row, $valueCol->name, $currValue, $nextValue
-					);
+				
+				if (!$this->isFlatOutput) {
+					$parts = explode('_', $colName);
+					if (count($parts) == 2) {
+						$group[$parts[0]][$parts[1]] = &$group[$colName];
+						unset($group[$colName]);
+					}
 				}
 			}
 		}
@@ -398,22 +402,30 @@ class Group extends Base
 			$row = Utils::toArray($row);
 		}
 		
-		foreach ($this->funcs as $func) {
-			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
-				$colName = $func->getFieldName();
+		foreach ($this->valueCols as $valueCol) {
+			foreach ($this->funcs as $func) {
+				$colName = $this->buildColumnName($valueCol, $func);
+				
+				if (!$this->isFlatOutput) {
+					$parts = explode('_', $colName);
+					if (count($parts) == 2) {
+						$group[$colName] = &$group[$parts[0]][$parts[1]];
+					}
+				}
+				
 				$currValue = &$group[$colName];
-				$nextValue = null;
+				$nextValue = &$row[$valueCol->name];
+				
 				$func->onUpdateGroup(
-					$group, $colName, $row, null, $currValue, $nextValue
+					$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 				);
-			} else {
-				foreach ($this->valueCols as $valueCol) {
-					$colName = $this->buildColumnName($valueCol, $func);
-					$currValue = &$group[$colName];
-					$nextValue = &$row[$valueCol->name];
-					$func->onUpdateGroup(
-						$group, $colName, $row, $valueCol->name, $currValue, $nextValue
-					);
+				
+				if (!$this->isFlatOutput) {
+					$parts = explode('_', $colName);
+					if (count($parts) == 2) {
+						$group[$parts[0]][$parts[1]] = &$group[$colName];
+						unset($group[$colName]);
+					}
 				}
 			}
 		}

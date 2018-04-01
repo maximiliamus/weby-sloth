@@ -17,6 +17,20 @@ use Weby\Sloth\Utils;
 abstract class Base
 {
 	/**
+	 * Function name.
+	 * 
+	 * @var string
+	 */
+	public $name;
+	
+	/**
+	 * Function alias.
+	 * 
+	 * @var string
+	 */
+	public $alias;
+	
+	/**
 	 * Options of the function.
 	 * 
 	 * @var array
@@ -37,6 +51,17 @@ abstract class Base
 	 */
 	protected $operation;
 	
+	public function __construct(
+		\Weby\Sloth\Operation\Base $operation,
+		string $alias = null,
+		array $options = null
+	) {
+		$this->name = $this->getFuncName();
+		$this->alias = $alias ? $alias : $this->name;
+		$this->operation = $operation;
+		$this->options = $this->setOptions($options);
+	}
+	
 	/**
 	 * @param array $group Group of output data.
 	 * @param string $groupCol Col name of output group.
@@ -53,19 +78,12 @@ abstract class Base
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	);
 	
-	public function getFuncName()
+	protected function getFuncName()
 	{
 		$parts = explode('\\', get_called_class());
 		$lastPart = array_pop($parts);
+		
 		return lcfirst($lastPart);
-	}
-	
-	public function __construct(
-		\Weby\Sloth\Operation\Base $operation,
-		$options = null
-	) {
-		$this->operation = $operation;
-		$this->options = $this->setOptions($options);
 	}
 	
 	protected function setOptions($options)

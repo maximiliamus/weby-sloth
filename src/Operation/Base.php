@@ -44,6 +44,8 @@ abstract class Base
 	protected $isOneFunc = false;
 	protected $isOneCol = false;
 	
+	protected $isFlatOutput = false;
+	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
 	
@@ -296,9 +298,36 @@ abstract class Base
 		return $this;
 	}
 	
+	/**
+	 * Whether to optimize column names (make them simple)
+	 * when only one column or function were specified.
+	 * Column names generation in accordance with an optimization:
+	 * - One column and one func: colName
+	 * - One column: funcName
+	 * - One func: colName
+	 * 
+	 * @param unknown $value
+	 * @return \Weby\Sloth\Operation\Base
+	 */
 	public function setOptimizeColumnNames($value)
 	{
 		$this->isOptimizeColumnNames = $value;
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether to produce flat output.
+	 * Column names generation in accordance with output type:
+	 * - flat output: parentColName_childColName_funcName
+	 * - nested output: [parentColName][childColName][funcName]
+	 * 
+	 * @param boolean $value
+	 * @return \Weby\Sloth\Operation\Base
+	 */
+	public function setFlatOutput(bool $value)
+	{
+		$this->isFlatOutput = $value;
 		
 		return $this;
 	}
