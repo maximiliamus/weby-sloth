@@ -47,6 +47,7 @@ Sloth::from($data)
     ->print();
 
 // Outputs:
+// foo      count   sum      avg
 // one      3       6        2
 // two      3       15       5
 ```
@@ -66,6 +67,7 @@ Sloth::from($data)
     ->print();
 
 // Outputs:
+// foo     A       B       C
 // one     1       2       3
 // two     4       5       6
 ```
