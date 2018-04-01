@@ -161,6 +161,26 @@ abstract class Base
 	}
 	
 	/**
+	 * Returns list of column names that were produced by the operation.
+	 * 
+	 * @return array List of column names
+	 */
+	public function getOutputCols()
+	{
+		return $this->outputCols;
+	}
+	
+	/**
+	 * Returns list of value column names that were produced by the operation.
+	 * 
+	 * @return array List of column names
+	 */
+	public function getOutputValueCols()
+	{
+		return $this->outputValueCols;
+	}
+	
+	/**
 	 * Performs a data manipulation and returns a result.
 	 * 
 	 * @return array
