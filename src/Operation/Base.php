@@ -204,7 +204,7 @@ abstract class Base
 	}
 	
 	/**
-	 * Performs a data manipulation and returns the operation output.
+	 * Performs a data manipulation and returns an operation output.
 	 * It is a shourtcut action for ->perform()->getOutput() action sequence.
 	 * 
 	 * @see \Weby\Sloth\Operation\Base::perform()
@@ -214,22 +214,24 @@ abstract class Base
 	 */
 	public function fetch()
 	{
-		if (!$this->output)
+		if (!$this->output) {
 			$this->perform();
+		}
 		
-		return $this->output;
+		return $this->getOutput();
 	}
 	
 	/**
-	 * Prints operation's results on screen.
+	 * Prints an operation output on screen.
 	 * 
 	 * @param boolean $onlyData Weather to print only data without column names.
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function print($onlyData = false)
+	public function printOutput($onlyData = false)
 	{
-		if (!$this->output)
-			$this->perform();
+		if (!$this->output) {
+			return $this;
+		}
 		
 		if (!$onlyData) {
 			foreach ($this->outputCols as $col) {
@@ -246,6 +248,24 @@ abstract class Base
 		}
 		
 		return $this;
+	}
+	
+	/**
+	 * Performs a data manipulation and prints an operation output.
+	 * It is a shourtcut action for ->perform()->printOutput() action sequence.
+	 * 
+	 * @see \Weby\Sloth\Operation\Base::perform()
+	 * @see \Weby\Sloth\Operation\Base::printOutput()
+	 * 
+	 * @return array
+	 */
+	public function print($onlyData = false)
+	{
+		if (!$this->output) {
+			$this->perform();
+		}
+		
+		return $this->printOutput($onlyData);
 	}
 	
 	private function renderCol($col)
