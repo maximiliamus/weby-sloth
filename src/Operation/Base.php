@@ -28,15 +28,21 @@ abstract class Base
 	 */
 	protected $sloth = null;
 	
-	protected $groupCols = array();
-	protected $valueCols = array();
+	protected $groupCols = [];
+	protected $valueCols = [];
 	
-	protected $output = array();
+	protected $output = [];
 	protected $outputFormat = self::OUTPUT_ARRAY;
-	protected $outputCols = array();
+	
+	protected $outputCols = [];
+	protected $outputValueCols = [];
 	
 	protected $store = array();
 	protected $scale = 2;
+	
+	protected $isOptimizeColumnNames = true;
+	protected $isOneFunc = false;
+	protected $isOneCol = false;
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -219,6 +225,13 @@ abstract class Base
 	public function setScale($scale)
 	{
 		$this->scale = $scale;
+		
+		return $this;
+	}
+	
+	public function setOptimizeColumnNames($value)
+	{
+		$this->isOptimizeColumnNames = $value;
 		
 		return $this;
 	}

@@ -25,9 +25,6 @@ class Pivot extends Base
 	private $groupedData = null;
 	private $groups = [];
 	
-	private $isOneFunc = false;
-	private $isOneCol = false;
-	
 	/**
 	 * @var \Weby\Sloth\Operation\Group
 	 */
@@ -227,6 +224,35 @@ class Pivot extends Base
 		// Do nothing.
 	}
 	
+	private function buildColumnName($columnCol, $valueCol, $func)
+	{
+		$fieldName = '';
+		$fieldNameAlias = '';
+		
+		if ($this->isOptimizeColumnNames) {
+			$fieldName = ($this->isOneCol
+				? $func->getFuncName()
+				: $func->getFieldName($valueCol->alias)
+			);
+			$fieldNameAlias = ($this->isOneFunc
+				? $columnCol
+				: (
+					  $fieldName
+					? $columnCol . '_' . $fieldName
+					: $columnCol
+				)
+			);
+		} else {
+			$fieldName = $func->getFieldName($valueCol->alias);
+			$fieldNameAlias = ($fieldName
+				? $columnCol . '_' . $fieldName
+				: $columnCol
+			);
+		}
+		
+		return [$fieldName, $fieldNameAlias];
+	}
+	
 	private function &addGroup($key, $row)
 	{
 		$group = [];
@@ -261,23 +287,15 @@ class Pivot extends Base
 					if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 						$this->columnColsAliases[$fieldNameAlias] = true;
 						$this->backPropagateColumn($fieldNameAlias);
+						
 						$this->outputCols[] = $fieldNameAlias;
 					}
 					
 					$group[$fieldNameAlias] = $row[$fieldName];
 				} else {
 					foreach ($this->valueCols as $valueCol) {
-						$fieldName = ($this->isOneCol
-							? $func->getFuncName()
-							: $func->getFieldName($valueCol->alias)
-						);
-						$fieldNameAlias = ($this->isOneFunc
-							? $row[$columnCol]
-							: (
-								  $fieldName
-								? $row[$columnCol] . '_' . $fieldName
-								: $row[$columnCol]
-							)
+						list($fieldName, $fieldNameAlias) = $this->buildColumnName(
+							$row[$columnCol], $valueCol, $func
 						);
 						
 						// If there are different number of cols
@@ -286,7 +304,9 @@ class Pivot extends Base
 						if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 							$this->columnColsAliases[$fieldNameAlias] = true;
 							$this->backPropagateColumn($fieldNameAlias);
+							
 							$this->outputCols[] = $fieldNameAlias;
+							$this->outputValueCols[] = $fieldNameAlias;
 						}
 						
 						$group[$fieldNameAlias] = $row[$fieldName];
@@ -304,7 +324,7 @@ class Pivot extends Base
 			}
 			
 			if (!$this->groups) {
-				$this->outputCols[] = $fieldNameAlias;
+				$this->outputCols[] = $addedCol;
 			}
 						
 			$group[$addedCol] = $value;
@@ -344,23 +364,16 @@ class Pivot extends Base
 					$result[$fieldNameAlias] = $row[$fieldName];
 				} else {
 					foreach ($this->valueCols as $valueCol) {
-						$fieldName = ($this->isOneCol
-							? $func->getFuncName()
-							: $func->getFieldName($valueCol->alias)
-						);
-						$fieldNameAlias = ($this->isOneFunc
-							? $row[$columnCol]
-							: (
-								  $fieldName
-								? $row[$columnCol] . '_' . $fieldName
-								: $row[$columnCol]
-							)
+						list($fieldName, $fieldNameAlias) = $this->buildColumnName(
+							$row[$columnCol], $valueCol, $func
 						);
 						
 						if (!isset($this->columnColsAliases[$fieldNameAlias])) {
 							$this->columnColsAliases[$fieldNameAlias] = true;
 							$this->backPropagateColumn($fieldNameAlias);
+							
 							$this->outputCols[] = $fieldNameAlias;
+							$this->outputValueCols[] = $fieldNameAlias;
 						}
 						
 						$result[$fieldNameAlias] = $row[$fieldName];
@@ -433,5 +446,11 @@ class Pivot extends Base
 		$this->group->setScale($scale);
 		
 		return parent::setScale($scale);
+	}
+	
+	public function setOptimizeColumnNames($value)
+	{
+		$this->group->setOptimizeColumnNames($value);
+		return parent::setOptimizeColumnNames($scale);
 	}
 }

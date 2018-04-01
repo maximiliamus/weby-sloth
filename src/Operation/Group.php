@@ -33,8 +33,6 @@ class Group extends Base
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
 	
-	private $isOneCol = false;
-	
 	public function __construct(Sloth $sloth, $groupCols, $valueCols)
 	{
 		parent::__construct($sloth, $groupCols, $valueCols);
@@ -331,6 +329,32 @@ class Group extends Base
 		return $result;
 	}
 	
+	private function buildColumnName($valueCol, $func)
+	{
+		$colName = '';
+		
+		if ($this->isOptimizeColumnNames) {
+			$funcName = $func->getFuncName();
+			$colName = ($this->isOneCol && $funcName
+				? $funcName
+				: $func->getFieldName($valueCol->alias)
+			);
+		} else {
+			$colName = $func->getFieldName($valueCol->alias);
+		}
+		
+		return $colName;
+	}
+	
+	private function buildOutputColumnNames($colName)
+	{
+		if ($this->groups)
+			return;
+		
+		$this->outputCols[] = $colName;
+		$this->outputValueCols[] = $colName;
+	}
+	
 	private function &addGroup($key, $row)
 	{
 		$group = [];
@@ -350,10 +374,7 @@ class Group extends Base
 		foreach ($this->funcs as $func) {
 			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
 				$colName = $func->getFieldName();
-				
-				if (!$this->groups) {
-					$this->outputCols[] = $colName;
-				}
+				$this->buildOutputColumnNames($colName);
 				
 				$group[$colName] = null;
 				$currValue = &$group[$colName];
@@ -363,15 +384,8 @@ class Group extends Base
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$funcName = $func->getFuncName();
-					$colName = ($this->isOneCol && $funcName
-						? $funcName
-						: $func->getFieldName($valueCol->alias)
-					);
-					
-					if (!$this->groups) {
-						$this->outputCols[] = $colName;
-					}
+					$colName = $this->buildColumnName($valueCol, $func);
+					$this->buildOutputColumnNames($colName);
 					
 					$group[$colName] = null;
 					$currValue = &$group[$colName];
@@ -406,11 +420,7 @@ class Group extends Base
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$funcName = $func->getFuncName();
-					$colName = ($this->isOneCol && $funcName
-						? $funcName
-						: $func->getFieldName($valueCol->alias)
-					);
+					$colName = $this->buildColumnName($valueCol, $func);
 					$currValue = &$group[$colName];
 					$nextValue = &$row[$valueCol->name];
 					$func->onUpdateGroup(
