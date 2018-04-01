@@ -17,7 +17,7 @@ namespace Weby\Sloth\Func\Value;
 class First extends Base
 {
 	public $defaultOptions = [
-		'flat' => false
+		'flat' => true
 	];
 	
 	public function onAddGroup(

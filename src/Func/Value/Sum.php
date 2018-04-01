@@ -9,6 +9,8 @@
 
 namespace Weby\Sloth\Func\Value;
 
+use Weby\Sloth\Exception;
+
 /**
  * Calculates sum of a column.
  */
@@ -37,8 +39,7 @@ class Sum extends Base
 				break;
 				
 			default:
-				$currValue += $nextValue;
-				break;
+				throw new Exception('Unsupported value type.');
 		}
 	}
 }

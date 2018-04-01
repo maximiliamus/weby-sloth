@@ -10,5 +10,6 @@ Sloth::from($data)
 	->print();
 
 // Outputs:
+// foo     A       B       C
 // one     1       2       3
 // two     4       5       6

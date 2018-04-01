@@ -33,6 +33,8 @@ class Group extends Base
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
 	
+	private $isOneCol = false;
+	
 	public function __construct(Sloth $sloth, $groupCols, $valueCols)
 	{
 		parent::__construct($sloth, $groupCols, $valueCols);
@@ -252,8 +254,11 @@ class Group extends Base
 	
 	private function beginPerform()
 	{
-		$this->output = [];
-		$this->store = [];
+		$this->isOneCol = count($this->valueCols) == 1;
+		
+		$this->resetOutput();
+		$this->resetStore();
+		$this->resetOutputCols();
 		$this->resetGroups();
 	}
 	
@@ -336,11 +341,20 @@ class Group extends Base
 		
 		foreach ($this->groupCols as $groupCol) {
 			$group[$groupCol->alias] = $row[$groupCol->name];
+			
+			if (!$this->groups) {
+				$this->outputCols[] = $groupCol->alias;
+			}
 		}
 		
 		foreach ($this->funcs as $func) {
 			if ($func instanceof \Weby\Sloth\Func\Group\Base) {
 				$colName = $func->getFieldName();
+				
+				if (!$this->groups) {
+					$this->outputCols[] = $colName;
+				}
+				
 				$group[$colName] = null;
 				$currValue = &$group[$colName];
 				$nextValue = null;
@@ -349,7 +363,16 @@ class Group extends Base
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$colName = $func->getFieldName($valueCol->alias);
+					$funcName = $func->getFuncName();
+					$colName = ($this->isOneCol && $funcName
+						? $funcName
+						: $func->getFieldName($valueCol->alias)
+					);
+					
+					if (!$this->groups) {
+						$this->outputCols[] = $colName;
+					}
+					
 					$group[$colName] = null;
 					$currValue = &$group[$colName];
 					$nextValue = &$row[$valueCol->name];
@@ -383,7 +406,11 @@ class Group extends Base
 				);
 			} else {
 				foreach ($this->valueCols as $valueCol) {
-					$colName = $func->getFieldName($valueCol->alias);
+					$funcName = $func->getFuncName();
+					$colName = ($this->isOneCol && $funcName
+						? $funcName
+						: $func->getFieldName($valueCol->alias)
+					);
 					$currValue = &$group[$colName];
 					$nextValue = &$row[$valueCol->name];
 					$func->onUpdateGroup(
@@ -399,6 +426,20 @@ class Group extends Base
 	private function endPerform()
 	{
 		// Do nothing.
+	}
+	
+	private function resetOutput()
+	{
+		$this->output = [];
+	}
+	
+	private function resetStore() {
+		$this->store = [];
+	}
+	
+	private function resetOutputCols()
+	{
+		$this->outputCols = [];
 	}
 	
 	private function resetGroups()

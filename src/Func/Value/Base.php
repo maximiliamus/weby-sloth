@@ -39,11 +39,16 @@ abstract class Base extends \Weby\Sloth\Func\Base
 	 */
 	public function getFieldName($dataCol)
 	{
-		$suffix = (!is_null($this->funcFieldSuffix)
-			? $this->funcFieldSuffix
-			: $this->getFuncName()
-		);
+		$funcName = $this->getFuncName();
 		
-		return $dataCol . ($suffix ?  '_' . $suffix : '');
+		return $dataCol . ($funcName ?  '_' . $funcName : '');
+	}
+	
+	public function getFuncName()
+	{
+		return (!is_null($this->funcFieldSuffix)
+			? $this->funcFieldSuffix
+			: parent::getFuncName()
+		);
 	}
 }

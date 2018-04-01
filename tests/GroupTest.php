@@ -75,28 +75,29 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		'modeInteger' => [1, 2],
 		'modeDouble' => [0.1, 0.2],
 		
+		'accumString'  => [['s1', 's3'], ['s2', 's5', 's4']],
 		'accumInteger' => [[1, 1], [2, 2, 2]],
 		'accumDouble'  => [[0.1, 0.1], [0.2, 0.2, 0.2]],
-		'accumString'  => [['s1', 's3'], ['s2', 's5', 's4']],
 		'accumBoolean' => [[true, true], [true, false, true]],
 		'accumArray'   => [[['a1'], ['a3']], [['a2'], ['a5'], ['a4']]],
 		
-		'firstInteger' => [[1], [2]],
-		'firstDouble'  => [[0.1], [0.2]],
-		'firstString'  => [['s1'], ['s2']],
-		'firstBoolean' => [[true], [true]],
-		'firstArray'   => [[['a1']], [['a2']]],
+		'firstString'  => ['s1', 's2'],
+		'firstInteger' => [1, 2],
+		'firstDouble'  => [0.1, 0.2],
+		'firstBoolean' => [true, true],
+		'firstArray'   => [['a1'], ['a2']],
 		
 		'accumFlatString'  => ['s1s3', 's2s5s4'],
 		'accumFlatInteger' => [2, 6],
 		'accumFlatDouble'  => [0.2, 0.6],
 		'accumFlatBoolean' => [true, false],
 		'accumFlatArray'   => [['a1', 'a3'], ['a2', 'a5', 'a4']],
-		'firstFlatString'  => ['s1', 's2'],
-		'firstFlatInteger' => [1, 2],
-		'firstFlatDouble'  => [0.1, 0.2],
-		'firstFlatBoolean' => [true, true],
-		'firstFlatArray'   => [['a1'], ['a2']],
+		
+		'firstNonFlatInteger' => [[1], [2]],
+		'firstNonFlatDouble'  => [[0.1], [0.2]],
+		'firstNonFlatString'  => [['s1'], ['s2']],
+		'firstNonFlatBoolean' => [[true], [true]],
+		'firstNonFlatArray'   => [[['a1']], [['a2']]],
 	];
 	
 	/**
@@ -262,8 +263,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->sum('sumA')
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['integerA_sumA'] == $this->testResults['sumInteger'][0]);
-		$this->assertEquals(true, $groupedData[1]['integerA_sumA'] == $this->testResults['sumInteger'][1]);
+		$this->assertEquals(true, $groupedData[0]['sumA'] == $this->testResults['sumInteger'][0]);
+		$this->assertEquals(true, $groupedData[1]['sumA'] == $this->testResults['sumInteger'][1]);
 		
 		$groupedData = $sloth
 			->group(
@@ -386,8 +387,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->first()
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['string_first'] == $this->testResults['firstString'][0]);
-		$this->assertEquals(true, $groupedData[1]['string_first'] == $this->testResults['firstString'][1]);
+		$this->assertEquals(true, $groupedData[0]['first'] == $this->testResults['firstString'][0]);
+		$this->assertEquals(true, $groupedData[1]['first'] == $this->testResults['firstString'][1]);
 		
 		// Alias for column
 		$groupedData = $sloth
@@ -398,8 +399,8 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->first('firstA')
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['stringA_firstA'] == $this->testResults['firstString'][0]);
-		$this->assertEquals(true, $groupedData[1]['stringA_firstA'] == $this->testResults['firstString'][1]);
+		$this->assertEquals(true, $groupedData[0]['firstA'] == $this->testResults['firstString'][0]);
+		$this->assertEquals(true, $groupedData[1]['firstA'] == $this->testResults['firstString'][1]);
 		
 		$groupedData = $sloth
 			->group(
@@ -424,39 +425,39 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->accum(null, ['flat' => true])
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['string_accum'] == $this->testResults['accumFlatString'][0]);
-		$this->assertEquals(true, $groupedData[1]['string_accum'] == $this->testResults['accumFlatString'][1]);
+		$this->assertEquals(true, $groupedData[0]['accum'] == $this->testResults['accumFlatString'][0]);
+		$this->assertEquals(true, $groupedData[1]['accum'] == $this->testResults['accumFlatString'][1]);
 		
 		$groupedData = $sloth
 			->group('group', 'integer')
 			->accum(null, ['flat' => true])
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['integer_accum'] == $this->testResults['accumFlatInteger'][0]);
-		$this->assertEquals(true, $groupedData[1]['integer_accum'] == $this->testResults['accumFlatInteger'][1]);
+		$this->assertEquals(true, $groupedData[0]['accum'] == $this->testResults['accumFlatInteger'][0]);
+		$this->assertEquals(true, $groupedData[1]['accum'] == $this->testResults['accumFlatInteger'][1]);
 	}
 	
 	/**
 	 * @dataProvider providerAssocOrdered
 	 */
-	public function testGroup_AssocInput_SingleGroup_First_Flat($data)
+	public function testGroup_AssocInput_SingleGroup_First_NonFlat($data)
 	{
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group', 'string')
-			->first(null, ['flat' => true])
+			->first(null, ['flat' => false])
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['string_first'] == $this->testResults['firstFlatString'][0]);
-		$this->assertEquals(true, $groupedData[1]['string_first'] == $this->testResults['firstFlatString'][1]);
+		$this->assertEquals(true, $groupedData[0]['first'] == $this->testResults['firstNonFlatString'][0]);
+		$this->assertEquals(true, $groupedData[1]['first'] == $this->testResults['firstNonFlatString'][1]);
 		
 		$groupedData = $sloth
 			->group('group', 'integer')
-			->first(null, ['flat' => true])
+			->first(null, ['flat' => false])
 			->select();
 		
-		$this->assertEquals(true, $groupedData[0]['integer_first'] == $this->testResults['firstFlatInteger'][0]);
-		$this->assertEquals(true, $groupedData[1]['integer_first'] == $this->testResults['firstFlatInteger'][1]);
+		$this->assertEquals(true, $groupedData[0]['first'] == $this->testResults['firstNonFlatInteger'][0]);
+		$this->assertEquals(true, $groupedData[1]['first'] == $this->testResults['firstNonFlatInteger'][1]);
 	}
 	
 	/**

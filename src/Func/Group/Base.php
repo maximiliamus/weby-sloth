@@ -38,9 +38,14 @@ abstract class Base extends \Weby\Sloth\Func\Base
 	 */
 	public function getFieldName()
 	{
+		return $this->getFuncName();
+	}
+	
+	public function getFuncName()
+	{
 		return ($this->funcFieldName
 			? $this->funcFieldName
-			: $this->getFuncName()
+			: parent::getFuncName()
 		);
 	}
 }

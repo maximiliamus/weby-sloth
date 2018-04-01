@@ -39,15 +39,15 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(true, $goupedData[0]['group'] == $this->testResults['groupNames'][0]);
 		$this->assertEquals(true, $goupedData[1]['group'] == $this->testResults['groupNames'][1]);
 		
-		$this->assertEquals(true, $goupedData[0]['2000-01-01_integer_sum'] == $this->testResults['sum'][0][0]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-03_integer_sum'] == $this->testResults['sum'][0][1]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-02_integer_sum'] == $this->testResults['sum'][0][2]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-04_integer_sum'] == $this->testResults['sum'][0][3]);
+		$this->assertEquals(true, $goupedData[0]['2000-01-01'] == $this->testResults['sum'][0][0]);
+		$this->assertEquals(true, $goupedData[0]['2000-01-03'] == $this->testResults['sum'][0][1]);
+		$this->assertEquals(true, $goupedData[0]['2000-01-02'] == $this->testResults['sum'][0][2]);
+		$this->assertEquals(true, $goupedData[0]['2000-01-04'] == $this->testResults['sum'][0][3]);
 		
-		$this->assertEquals(true, $goupedData[1]['2000-01-01_integer_sum'] == $this->testResults['sum'][1][0]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-03_integer_sum'] == $this->testResults['sum'][1][1]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-02_integer_sum'] == $this->testResults['sum'][1][2]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-04_integer_sum'] == $this->testResults['sum'][1][3]);
+		$this->assertEquals(true, $goupedData[1]['2000-01-01'] == $this->testResults['sum'][1][0]);
+		$this->assertEquals(true, $goupedData[1]['2000-01-03'] == $this->testResults['sum'][1][1]);
+		$this->assertEquals(true, $goupedData[1]['2000-01-02'] == $this->testResults['sum'][1][2]);
+		$this->assertEquals(true, $goupedData[1]['2000-01-04'] == $this->testResults['sum'][1][3]);
 		
 		// Alias for column
 		$goupedData = $sloth

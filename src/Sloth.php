@@ -103,11 +103,11 @@ class Sloth
 	 * Provides fluent interface to "pivot" operation.
 	 * 
 	 * @param string|array $groupCols
-	 * @param string|array $valueCols
 	 * @param string|array $columnCols
+	 * @param string|array $valueCols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function pivot($groupCols, $valueCols, $columnCols)
+	public function pivot($groupCols, $columnCols, $valueCols)
 	{
 		$pivot = new Operation\Pivot($this, $groupCols, $valueCols, $columnCols);
 		

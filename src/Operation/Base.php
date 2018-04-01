@@ -33,6 +33,7 @@ abstract class Base
 	
 	protected $output = array();
 	protected $outputFormat = self::OUTPUT_ARRAY;
+	protected $outputCols = array();
 	
 	protected $store = array();
 	protected $scale = 2;
@@ -144,6 +145,16 @@ abstract class Base
 	}
 	
 	/**
+	 * Returns list of value columns that were specified for operation.
+	 * 
+	 * @return array
+	 */
+	public function getValueCols()
+	{
+		return $this->valueCols;
+	}
+	
+	/**
 	 * Performs a data manipulation and returns a result.
 	 * 
 	 * @return array
@@ -159,12 +170,20 @@ abstract class Base
 	/**
 	 * Prints operation's results on screen.
 	 * 
+	 * @param boolean $onlyData Weather to print only data without column names.
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function print()
+	public function print($onlyData = false)
 	{
 		if (!$this->output)
 			$this->perform();
+		
+		if (!$onlyData) {
+			foreach ($this->outputCols as $col) {
+				echo $col, "\t";
+			}
+			echo "\n";
+		}
 		
 		foreach ($this->output as $row) {
 			foreach ($row as $col) {
