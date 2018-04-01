@@ -180,18 +180,12 @@ class Pivot extends Base
 		return $this;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see \Weby\Sloth\Operation\Base::perform()
-	 */
-	protected function perform()
+	protected function validatePerform()
 	{
-		$this->beginPerform();
-		$this->doPerform();
-		$this->endPerform();
+		// Do nothing.
 	}
 	
-	private function beginPerform()
+	protected function beginPerform()
 	{
 		if (!$this->group->getFuncs()) {
 			// Apply default function.
@@ -205,9 +199,9 @@ class Pivot extends Base
 		$this->resetGroups();
 	}
 	
-	private function doPerform()
+	protected function doPerform()
 	{
-		$groupedData = $this->group->select();
+		$groupedData = $this->group->fetch();
 		foreach ($groupedData as $row) {
 			$key = $this->getGroupKey($row);
 			if (!$this->isGroup($key)) {
@@ -219,7 +213,7 @@ class Pivot extends Base
 		}
 	}
 	
-	private function endPerform()
+	protected function endPerform()
 	{
 		// Do nothing.
 	}

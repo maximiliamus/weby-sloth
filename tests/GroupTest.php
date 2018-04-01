@@ -108,7 +108,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group(1)
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0][1] == $this->testResults['groupNames'][0]);
@@ -117,7 +117,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$groupedData = $sloth
 			->group([1 => 'groupA'])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupA'] == $this->testResults['groupNames'][0]);
@@ -133,7 +133,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group(1)
 			->count()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0][1] == $this->testResults['groupNames'][0]);
@@ -145,7 +145,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group([1 => 'groupA'])
 			->count(2)
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupA'] == $this->testResults['groupNames'][0]);
@@ -162,7 +162,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['group'] == $this->testResults['groupNames'][0]);
@@ -171,7 +171,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$groupedData = $sloth
 			->group(['group' => 'groupA'])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupA'] == $this->testResults['groupNames'][0]);
@@ -187,7 +187,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group')
 			->count()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['count'] == $this->testResults['count'][0]);
 		$this->assertEquals(true, $groupedData[1]['count'] == $this->testResults['count'][1]);
@@ -196,7 +196,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group(['group' => 'groupA'])
 			->count('countA')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['countA'] == $this->testResults['count'][0]);
 		$this->assertEquals(true, $groupedData[1]['countA'] == $this->testResults['count'][1]);
@@ -216,7 +216,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->max()
 			->median()
 			->mode()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['integer_sum'] == $this->testResults['sumInteger'][0]);
 		$this->assertEquals(true, $groupedData[1]['integer_sum'] == $this->testResults['sumInteger'][1]);
@@ -261,7 +261,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				['integer' => 'integerA']
 			)
 			->sum('sumA')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['sumA'] == $this->testResults['sumInteger'][0]);
 		$this->assertEquals(true, $groupedData[1]['sumA'] == $this->testResults['sumInteger'][1]);
@@ -272,7 +272,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				['integer' => 'integerA', 'double']
 			)
 			->sum('')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['integerA'] == $this->testResults['sumInteger'][0]);
 		$this->assertEquals(true, $groupedData[1]['integerA'] == $this->testResults['sumInteger'][1]);
@@ -299,7 +299,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				]
 			)
 			->accum()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['string_accum'] == $this->testResults['accumString'][0]);
 		$this->assertEquals(true, $groupedData[1]['string_accum'] == $this->testResults['accumString'][1]);
@@ -329,7 +329,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				]
 			)
 			->accum('accumA')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['stringA_accumA'] == $this->testResults['accumString'][0]);
 		$this->assertEquals(true, $groupedData[1]['stringA_accumA'] == $this->testResults['accumString'][1]);
@@ -358,7 +358,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				]
 			)
 			->accum('')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['stringA'] == $this->testResults['accumString'][0]);
 		$this->assertEquals(true, $groupedData[1]['stringA'] == $this->testResults['accumString'][1]);
@@ -385,7 +385,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group', 'string')
 			->first()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['first'] == $this->testResults['firstString'][0]);
 		$this->assertEquals(true, $groupedData[1]['first'] == $this->testResults['firstString'][1]);
@@ -397,7 +397,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				['string' => 'stringA']
 			)
 			->first('firstA')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['firstA'] == $this->testResults['firstString'][0]);
 		$this->assertEquals(true, $groupedData[1]['firstA'] == $this->testResults['firstString'][1]);
@@ -408,7 +408,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 				['string' => 'stringA']
 			)
 			->first('')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['stringA'] == $this->testResults['firstString'][0]);
 		$this->assertEquals(true, $groupedData[1]['stringA'] == $this->testResults['firstString'][1]);
@@ -423,7 +423,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group', 'string')
 			->accum(null, ['flat' => true])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['accum'] == $this->testResults['accumFlatString'][0]);
 		$this->assertEquals(true, $groupedData[1]['accum'] == $this->testResults['accumFlatString'][1]);
@@ -431,7 +431,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group', 'integer')
 			->accum(null, ['flat' => true])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['accum'] == $this->testResults['accumFlatInteger'][0]);
 		$this->assertEquals(true, $groupedData[1]['accum'] == $this->testResults['accumFlatInteger'][1]);
@@ -446,7 +446,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group', 'string')
 			->first(null, ['flat' => false])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['first'] == $this->testResults['firstNonFlatString'][0]);
 		$this->assertEquals(true, $groupedData[1]['first'] == $this->testResults['firstNonFlatString'][1]);
@@ -454,7 +454,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group', 'integer')
 			->first(null, ['flat' => false])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, $groupedData[0]['first'] == $this->testResults['firstNonFlatInteger'][0]);
 		$this->assertEquals(true, $groupedData[1]['first'] == $this->testResults['firstNonFlatInteger'][1]);
@@ -469,7 +469,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group')
 			->count()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['group'] == $this->testResults['groupNames'][0]);
@@ -479,7 +479,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group(['group' => 'groupA'])
 			->count('countA')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupA'] == $this->testResults['groupNames'][0]);
@@ -496,7 +496,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['group'] == $this->testResults['groupNames'][0]);
@@ -505,7 +505,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column
 		$groupedData = $sloth
 			->group(['group' => 'groupAlias'])
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupAlias'] == $this->testResults['groupNames'][0]);
@@ -514,7 +514,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		// Alias for column object
 		$groupedData = $sloth
 			->group(Column::new('group')->as('groupAlias'))
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['groupAlias'] == $this->testResults['groupNames'][0]);
@@ -530,7 +530,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$groupedData = $sloth
 			->group('group', 'integer')
 			->sum('')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData[0]['group'] == $this->testResults['groupNames'][0]);
@@ -543,7 +543,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->group('group', 'integer')
 			->sum('')
 			->asAssoc()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count(array_keys($groupedData)) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData['group1'] == $this->testResults['sumInteger'][0]);
@@ -553,7 +553,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->group('group', 'integer', 'double')
 			->sum('')
 			->asAssoc()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count(array_keys($groupedData)) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData['group1'] == $this->testResults['sumInteger'][0]);
@@ -563,7 +563,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->group('group', 'integer', 'double')
 			->sum('')
 			->asAssoc('group', '*')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count(array_keys($groupedData)) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData['group1']['integer'] == $this->testResults['sumInteger'][0]);
@@ -573,7 +573,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 			->group('group')
 			->count()
 			->asAssoc()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count(array_keys($groupedData)) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $groupedData['group1'] == $this->testResults['count'][0]);

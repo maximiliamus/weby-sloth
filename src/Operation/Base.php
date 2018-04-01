@@ -138,7 +138,20 @@ abstract class Base
 	/**
 	 * Performs operation.
 	 */
-	abstract protected function perform();
+	public function perform()
+	{
+		$this->validatePerform();
+		$this->beginPerform();
+		$this->doPerform();
+		$this->endPerform();
+		
+		return $this;
+	}
+	
+	abstract protected function validatePerform();
+	abstract protected function beginPerform();
+	abstract protected function doPerform();
+	abstract protected function endPerform();
 	
 	/**
 	 * Returns list of group columns that were specified for operation.
@@ -158,6 +171,16 @@ abstract class Base
 	public function getValueCols()
 	{
 		return $this->valueCols;
+	}
+	
+	/**
+	 * Returns data that were produced by the operation.
+	 * 
+	 * @return array
+	 */
+	public function getOutput()
+	{
+		return $this->output;
 	}
 	
 	/**
@@ -185,7 +208,7 @@ abstract class Base
 	 * 
 	 * @return array
 	 */
-	public function select()
+	public function fetch()
 	{
 		if (!$this->output)
 			$this->perform();

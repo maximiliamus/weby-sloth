@@ -230,19 +230,7 @@ class Group extends Base
 		return $this;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 * @see \Weby\Sloth\Operation\Base::perform()
-	 */
-	protected function perform()
-	{
-		$this->validatePerform();
-		$this->beginPerform();
-		$this->doPerform();
-		$this->endPerform();
-	}
-	
-	private function validatePerform()
+	protected function validatePerform()
 	{
 		$funcs = $this->getFuncs();
 		if (!$this->valueCols && count($funcs) && !array_key_exists(Count::class, $funcs)) {
@@ -250,7 +238,7 @@ class Group extends Base
 		}
 	}
 	
-	private function beginPerform()
+	protected function beginPerform()
 	{
 		$this->isOneCol = count($this->valueCols) == 1;
 		
@@ -260,7 +248,7 @@ class Group extends Base
 		$this->resetGroups();
 	}
 	
-	private function doPerform()
+	protected function doPerform()
 	{
 		foreach ($this->sloth->data as $row) {
 			$key = $this->getGroupKey($row);
@@ -433,7 +421,7 @@ class Group extends Base
 		return $group;
 	}
 	
-	private function endPerform()
+	protected function endPerform()
 	{
 		// Do nothing.
 	}

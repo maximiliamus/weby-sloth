@@ -33,7 +33,7 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 		$goupedData = $sloth
 			->pivot('group', 'date', 'integer')
 			->sum()
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($goupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $goupedData[0]['group'] == $this->testResults['groupNames'][0]);
@@ -57,7 +57,7 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 				array('integer' => '')
 			)
 			->sum('')
-			->select();
+			->fetch();
 		
 		$this->assertEquals(true, count($goupedData) == $this->testResults['groupCount']);
 		$this->assertEquals(true, $goupedData[0]['groupA'] == $this->testResults['groupNames'][0]);
