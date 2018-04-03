@@ -237,15 +237,7 @@ class Pivot extends Base
 			$pivotColName = (
 				  $this->isOneCol && $this->isOneFunc
 				? $pivotColName
-				: (
-					  $this->isOneCol
-					? $groupColName
-					: (
-						  $this->isOneFunc
-						? $pivotColName
-						: $pivotColName . '_' . $groupColName
-					)
-				)
+				: $pivotColName . '_' . $groupColName
 			);
 		} else {
 			$pivotColName = $pivotColName . '_' . $groupColName;
@@ -382,18 +374,84 @@ class Pivot extends Base
 	
 	private function backPropagateColumn($col)
 	{
-		foreach ($this->groups as $key => &$row) {
-			if (!array_key_exists($col, $row)) {
-				$row[$col] = null;
+		if ($this->isFlatOutput) {
+			foreach ($this->groups as $key => &$group) {
+				if (!array_key_exists($col, $group)) {
+					$group[$col] = null;
+				}
+			}
+		} else {
+			$parts = explode('_', $col);
+			switch (count($parts)) {
+				case 1:
+					foreach ($this->groups as $key => &$group) {
+						if (!array_key_exists($parts[0], $group)) {
+							$group[$parts[0]] = null;
+						}
+					}
+					break;
+					
+				case 2:
+					foreach ($this->groups as $key => &$group) {
+						if (
+							   !array_key_exists($parts[0], $group)
+							|| !array_key_exists($parts[1], $group[$parts[0]])
+						) {
+							$group[$parts[0]][$parts[1]] = null;
+						}
+					}
+					break;
+					
+				case 3:
+					foreach ($this->groups as $key => &$group) {
+						if (
+							   !array_key_exists($parts[0], $group)
+							|| !array_key_exists($parts[1], $group[$parts[0]])
+							|| !array_key_exists($parts[2], $group[$parts[0]][$parts[1]])
+						) {
+							$group[$parts[0]][$parts[1]][$parts[2]] = null;
+						}
+					}
+					break;
 			}
 		}
 	}
 	
-	private function propagateColumns(&$row)
+	private function propagateColumns(&$group)
 	{
 		foreach ($this->columnColsAliases as $columnColAlias => $isSet) {
-			if (!array_key_exists($columnColAlias, $row)) {
-				$row[$columnColAlias] = null;
+			if ($this->isFlatOutput) {
+				if (!array_key_exists($columnColAlias, $group)) {
+					$group[$columnColAlias] = null;
+				}
+			} else {
+				$parts = explode('_', $columnColAlias);
+				switch (count($parts)) {
+					case 1:
+						if (!array_key_exists($parts[0], $group)) {
+							$group[$parts[0]] = null;
+						}
+						break;
+						
+					case 2:
+						if (
+							   !array_key_exists($parts[0], $group)
+							|| !array_key_exists($parts[1], $group[$parts[0]])
+						) {
+							$group[$parts[0]][$parts[1]] = null;
+						}
+						break;
+						
+					case 3:
+						if (
+							   !array_key_exists($parts[0], $group)
+							|| !array_key_exists($parts[1], $group[$parts[0]])
+							|| !array_key_exists($parts[2], $group[$parts[0]][$parts[1]])
+						) {
+							$group[$parts[0]][$parts[1]][$parts[2]] = null;
+						}
+						break;
+				}
 			}
 		}
 	}
