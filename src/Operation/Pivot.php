@@ -11,6 +11,7 @@ namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
 use Weby\Sloth\Utils;
+use Weby\Sloth\Column;
 
 /**
  * Pivot (pivot table) operation.
@@ -38,7 +39,7 @@ class Pivot extends Base
 		
 		parent::__construct($sloth, $groupCols, $valueCols);
 		
-		$this->columnCols = $columnCols;
+		$this->assignColumnCols($columnCols);
 		if (!$this->columnCols)
 			throw new \Weby\Sloth\Exception('No column columns.');
 		
@@ -47,6 +48,15 @@ class Pivot extends Base
 			array_merge($groupCols, $columnCols),
 			$valueCols
 		);
+		$this->group->setFlatOutput(true);
+	}
+	
+	protected function assignColumnCols($columnCols)
+	{
+		foreach ($columnCols as $colName) {
+			$col = Column::new($colName);
+			$this->columnCols[] = $col;
+		}
 	}
 	
 	/**
@@ -218,33 +228,30 @@ class Pivot extends Base
 		// Do nothing.
 	}
 	
-	private function buildColumnName($columnCol, $valueCol, $func)
+	protected function buildColumnName($valueCol, $func, $columnCol = null)
 	{
-		$fieldName = '';
-		$fieldNameAlias = '';
+		$groupColName = parent::buildColumnName($valueCol, $func);
+		$pivotColName = $columnCol;
 		
 		if ($this->isOptimizeColumnNames) {
-			$fieldName = ($this->isOneCol
-				? $func->getFuncName()
-				: $func->getFieldName($valueCol->alias)
-			);
-			$fieldNameAlias = ($this->isOneFunc
-				? $columnCol
+			$pivotColName = (
+				  $this->isOneCol && $this->isOneFunc
+				? $pivotColName
 				: (
-					  $fieldName
-					? $columnCol . '_' . $fieldName
-					: $columnCol
+					  $this->isOneCol
+					? $groupColName
+					: (
+						  $this->isOneFunc
+						? $pivotColName
+						: $pivotColName . '_' . $groupColName
+					)
 				)
 			);
 		} else {
-			$fieldName = $func->getFieldName($valueCol->alias);
-			$fieldNameAlias = ($fieldName
-				? $columnCol . '_' . $fieldName
-				: $columnCol
-			);
+			$pivotColName = $pivotColName . '_' . $groupColName;
 		}
 		
-		return [$fieldName, $fieldNameAlias];
+		return [$groupColName, $pivotColName];
 	}
 	
 	private function &addGroup($key, $row)
@@ -262,25 +269,38 @@ class Pivot extends Base
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
 				foreach ($this->group->getFuncs() as $func) {
-					list($fieldName, $fieldNameAlias) = $this->buildColumnName(
-						$row[$columnCol], $valueCol, $func
+					list($groupColName, $pivotColName) = $this->buildColumnName(
+						$valueCol, $func, $row[$columnCol->name]
 					);
 					
 					// If there are different number of cols
 					// in rows then add missed ones.
 					$this->propagateColumns($group);
-					if (!isset($this->columnColsAliases[$fieldNameAlias])) {
-						$this->columnColsAliases[$fieldNameAlias] = true;
-						$this->backPropagateColumn($fieldNameAlias);
+					if (!isset($this->columnColsAliases[$pivotColName])) {
+						$this->columnColsAliases[$pivotColName] = true;
+						$this->backPropagateColumn($pivotColName);
 						
-						$this->outputCols[] = $fieldNameAlias;
-						$this->outputValueCols[] = $fieldNameAlias;
+						$this->outputCols[] = $pivotColName;
+						$this->outputValueCols[] = $pivotColName;
 					}
 					
 					if ($this->isFlatOutput) {
-						$group[$fieldNameAlias] = $row[$fieldName];
+						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$group[$fieldNameAlias][$fieldName] = $row[$fieldName];
+						$parts = explode('_', $pivotColName);
+						switch (count($parts)) {
+							case 1:
+								$group[$parts[0]] = $row[$groupColName];
+								break;
+								
+							case 2:
+								$group[$parts[0]][$parts[1]] = $row[$groupColName];
+								break;
+								
+							case 3:
+								$group[$parts[0]][$parts[1]][$parts[2]] = $row[$groupColName];
+								break;
+						}
 					}
 				}
 			}
@@ -297,7 +317,7 @@ class Pivot extends Base
 			if (!$this->groups) {
 				$this->outputCols[] = $addedCol;
 			}
-						
+			
 			$group[$addedCol] = $value;
 		}
 		
@@ -308,27 +328,40 @@ class Pivot extends Base
 	
 	private function &updateGroup($key, $row)
 	{
-		$result = &$this->groups[$key];
+		$group = &$this->groups[$key];
 		
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
 				foreach ($this->group->getFuncs() as $func) {
-					list($fieldName, $fieldNameAlias) = $this->buildColumnName(
-						$row[$columnCol], $valueCol, $func
+					list($groupColName, $pivotColName) = $this->buildColumnName(
+						$valueCol, $func, $row[$columnCol->name]
 					);
 					
-					if (!isset($this->columnColsAliases[$fieldNameAlias])) {
-						$this->columnColsAliases[$fieldNameAlias] = true;
-						$this->backPropagateColumn($fieldNameAlias);
+					if (!isset($this->columnColsAliases[$pivotColName])) {
+						$this->columnColsAliases[$pivotColName] = true;
+						$this->backPropagateColumn($pivotColName);
 						
-						$this->outputCols[] = $fieldNameAlias;
-						$this->outputValueCols[] = $fieldNameAlias;
+						$this->outputCols[] = $pivotColName;
+						$this->outputValueCols[] = $pivotColName;
 					}
 					
 					if ($this->isFlatOutput) {
-						$group[$fieldNameAlias] = $row[$fieldName];
+						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$group[$fieldNameAlias][$fieldName] = $row[$fieldName];
+						$parts = explode('_', $pivotColName);
+						switch (count($parts)) {
+							case 1:
+								$group[$parts[0]] = $row[$groupColName];
+								break;
+								
+							case 2:
+								$group[$parts[0]][$parts[1]] = $row[$groupColName];
+								break;
+								
+							case 3:
+								$group[$parts[0]][$parts[1]][$parts[2]] = $row[$groupColName];
+								break;
+						}
 					}
 				}
 			}
@@ -337,14 +370,14 @@ class Pivot extends Base
 		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
 			if ($colDef instanceof \Closure) {
-				$value = call_user_func($colDef, $result);
+				$value = call_user_func($colDef, $group);
 			} else {
 				$value = $colDef;
 			}
-			$result[$addedCol] = $value;
+			$group[$addedCol] = $value;
 		}
 		
-		return $result;
+		return $group;
 	}
 	
 	private function backPropagateColumn($col)
@@ -393,22 +426,22 @@ class Pivot extends Base
 		return isset($this->groups[$key]);
 	}
 	
-	public function setScale($scale)
+	public function setScale(int $scale)
 	{
 		$this->group->setScale($scale);
 		
 		return parent::setScale($scale);
 	}
 	
-	public function setOptimizeColumnNames($value)
+	public function setOptimizeColumnNames(bool $value)
 	{
 		$this->group->setOptimizeColumnNames($value);
-		return parent::setOptimizeColumnNames($scale);
+		
+		return parent::setOptimizeColumnNames($value);
 	}
 	
-	public function setFlatOutput($value)
+	public function setFlatOutput(bool $value)
 	{
-		$this->group->setFlatOutput($value);
-		return parent::setFlatOutput($scale);
+		return parent::setFlatOutput($value);
 	}
 }

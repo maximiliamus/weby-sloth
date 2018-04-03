@@ -318,34 +318,6 @@ class Group extends Base
 		return $result;
 	}
 	
-	private function buildColumnName($valueCol, $func)
-	{
-		$result = null;
-		
-		$colName = $valueCol->alias;
-		$funcName = $func->alias;
-		
-		if ($this->isOptimizeColumnNames) {
-			$result = (
-				  $this->isOneCol && $this->isOneFunc
-				? $colName
-				: (
-					  $this->isOneCol
-					? $funcName
-					: (
-						  $this->isOneFunc
-						? $colName
-						: $colName . '_' . $funcName
-					)
-				)
-			);
-		} else {
-			$result = $colName . '_' . $funcName;
-		}
-		
-		return $result;
-	}
-	
 	private function &addGroup($key, $row)
 	{
 		$group = [];

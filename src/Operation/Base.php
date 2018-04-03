@@ -291,7 +291,7 @@ abstract class Base
 	 * @param integer $scale
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function setScale($scale)
+	public function setScale(int $scale)
 	{
 		$this->scale = $scale;
 		
@@ -309,7 +309,7 @@ abstract class Base
 	 * @param unknown $value
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function setOptimizeColumnNames($value)
+	public function setOptimizeColumnNames(bool $value)
 	{
 		$this->isOptimizeColumnNames = $value;
 		
@@ -352,5 +352,33 @@ abstract class Base
 	public function &getStore()
 	{
 		return $this->store;
+	}
+	
+	protected function buildColumnName($valueCol, $func)
+	{
+		$result = null;
+		
+		$colName = $valueCol->alias;
+		$funcName = $func->alias;
+		
+		if ($this->isOptimizeColumnNames) {
+			$result = (
+				  $this->isOneCol && $this->isOneFunc
+				? $colName
+				: (
+					  $this->isOneCol
+					? $funcName
+					: (
+						  $this->isOneFunc
+						? $colName
+						: $colName . '_' . $funcName
+					)
+				)
+			);
+		} else {
+			$result = $colName . '_' . $funcName;
+		}
+		
+		return $result;
 	}
 }
