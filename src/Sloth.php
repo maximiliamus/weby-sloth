@@ -19,6 +19,9 @@ class Sloth
 	const DATA_ASSOC   = 2;
 	const DATA_OBJECT  = 3;
 	
+	const FLAT_FIELD_SEPARATOR   = '.';
+	const NESTED_FIELD_SEPARATOR = '|';
+	
 	/**
 	 * Input data.
 	 * 

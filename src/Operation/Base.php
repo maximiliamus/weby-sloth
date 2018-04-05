@@ -235,6 +235,17 @@ abstract class Base
 			return $this;
 		}
 		
+		if ($this->isFlatOutput) {
+			$this->printFlatOutput($onlyData);
+		} else {
+			$this->printNestedOutput($onlyData);
+		}
+		
+		return $this;
+	}
+	
+	private function printFlatOutput($onlyData)
+	{
 		if (!$onlyData) {
 			foreach ($this->outputCols as $col) {
 				echo $col, "\t";
@@ -244,12 +255,38 @@ abstract class Base
 		
 		foreach ($this->output as $row) {
 			foreach ($row as $col) {
-				echo $this->renderCol($col), "\t";
+				echo $this->renderValue($col), "\t";
+			}
+			echo "\n";
+		}
+	}
+	
+	private function printNestedOutput($onlyData)
+	{
+		if (!$onlyData) {
+			foreach ($this->outputCols as $col) {
+				$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $col);
+				$col = implode(Sloth::NESTED_FIELD_SEPARATOR, $parts);
+				echo $col, "\t";
 			}
 			echo "\n";
 		}
 		
-		return $this;
+		foreach ($this->output as $row) {
+			foreach ($this->outputCols as $col) {
+				$value = null;
+				
+				$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $col);
+				switch (count($parts)) {
+					case 1: $value = $row[$parts[0]]; break;
+					case 2: $value = $row[$parts[0]][$parts[1]]; break;
+					case 3: $value = $row[$parts[0]][$parts[1]][$parts[2]]; break;
+				}
+				
+				echo $this->renderValue($value), "\t";
+			}
+			echo "\n";
+		}
 	}
 	
 	/**
@@ -270,7 +307,7 @@ abstract class Base
 		return $this->printOutput($onlyData);
 	}
 	
-	private function renderCol($col)
+	private function renderValue($col)
 	{
 		$result = $col;
 		
@@ -291,7 +328,7 @@ abstract class Base
 	 * @param integer $scale
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function setScale($scale)
+	public function setScale(int $scale)
 	{
 		$this->scale = $scale;
 		
@@ -309,7 +346,7 @@ abstract class Base
 	 * @param unknown $value
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function setOptimizeColumnNames($value)
+	public function setOptimizeColumnNames(bool $value)
 	{
 		$this->isOptimizeColumnNames = $value;
 		
@@ -352,5 +389,33 @@ abstract class Base
 	public function &getStore()
 	{
 		return $this->store;
+	}
+	
+	protected function buildColumnName($valueCol, $func)
+	{
+		$result = null;
+		
+		$colName = $valueCol->alias;
+		$funcName = $func->alias;
+		
+		if ($this->isOptimizeColumnNames) {
+			$result = (
+				  $this->isOneCol && $this->isOneFunc
+				? $colName
+				: (
+					  $this->isOneCol
+					? $funcName
+					: (
+						  $this->isOneFunc
+						? $colName
+						: $colName . Sloth::FLAT_FIELD_SEPARATOR . $funcName
+					)
+				)
+			);
+		} else {
+			$result = $colName . Sloth::FLAT_FIELD_SEPARATOR . $funcName;
+		}
+		
+		return $result;
 	}
 }

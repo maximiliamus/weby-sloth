@@ -318,34 +318,6 @@ class Group extends Base
 		return $result;
 	}
 	
-	private function buildColumnName($valueCol, $func)
-	{
-		$result = null;
-		
-		$colName = $valueCol->alias;
-		$funcName = $func->alias;
-		
-		if ($this->isOptimizeColumnNames) {
-			$result = (
-				  $this->isOneCol && $this->isOneFunc
-				? $colName
-				: (
-					  $this->isOneCol
-					? $funcName
-					: (
-						  $this->isOneFunc
-						? $colName
-						: $colName . '_' . $funcName
-					)
-				)
-			);
-		} else {
-			$result = $colName . '_' . $funcName;
-		}
-		
-		return $result;
-	}
-	
 	private function &addGroup($key, $row)
 	{
 		$group = [];
@@ -380,7 +352,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode('_', $colName);
+					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
@@ -407,7 +379,7 @@ class Group extends Base
 				$colName = $this->buildColumnName($valueCol, $func);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode('_', $colName);
+					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$colName] = &$group[$parts[0]][$parts[1]];
 					}
@@ -421,7 +393,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode('_', $colName);
+					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
