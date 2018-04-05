@@ -352,7 +352,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode('_', $colName);
+					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
@@ -379,7 +379,7 @@ class Group extends Base
 				$colName = $this->buildColumnName($valueCol, $func);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode('_', $colName);
+					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$colName] = &$group[$parts[0]][$parts[1]];
 					}
@@ -393,7 +393,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode('_', $colName);
+					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);

@@ -9,6 +9,7 @@
 
 namespace Weby\Sloth\Func;
 
+use Weby\Sloth\Sloth;
 use Weby\Sloth\Utils;
 
 /**
@@ -96,6 +97,9 @@ abstract class Base
 	
 	protected function getStoreColumn($groupCol, $dataCol, $storeCol)
 	{
-		return $groupCol . '_' . $dataCol . '_' . $storeCol;
+		return ($groupCol
+			. Sloth::FLAT_FIELD_SEPARATOR . $dataCol
+			. Sloth::FLAT_FIELD_SEPARATOR . $storeCol
+		);
 	}
 }
