@@ -98,8 +98,8 @@ abstract class Base
 	protected function getStoreColumn($groupCol, $dataCol, $storeCol)
 	{
 		return ($groupCol
-			. Sloth::FLAT_FIELD_SEPARATOR . $dataCol
-			. Sloth::FLAT_FIELD_SEPARATOR . $storeCol
+			. Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $dataCol
+			. Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $storeCol
 		);
 	}
 }

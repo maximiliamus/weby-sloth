@@ -48,7 +48,7 @@ class Pivot extends Base
 			array_merge($groupCols, $columnCols),
 			$valueCols
 		);
-		$this->group->setFlatOutput(true);
+		$this->group->setFlattenOutput(true);
 	}
 	
 	protected function assignColumnCols($columnCols)
@@ -61,117 +61,126 @@ class Pivot extends Base
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::count()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function count($fieldName = null, $options = null)
+	public function count($alias = null, $options = null)
 	{
-		$this->group->count($fieldName, $options);
+		$this->group->count($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::accum()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function accum($fieldName = null, $options = null)
+	public function accum($alias = null, $options = null)
 	{
-		$this->group->accum($fieldName, $options);
+		$this->group->accum($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::avg()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function avg($fieldName = null, $options = null)
+	public function avg($alias = null, $options = null)
 	{
-		$this->group->avg($fieldName, $options);
+		$this->group->avg($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::first()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function first($fieldName = null, $options = null)
+	public function first($alias = null, $options = null)
 	{
-		$this->group->first($fieldName, $options);
+		$this->group->first($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::median()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function median($fieldName = null, $options = null)
+	public function median($alias = null, $options = null)
 	{
-		$this->group->median($fieldName, $options);
+		$this->group->median($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::min()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function max($fieldName = null, $options = null)
+	public function max($alias = null, $options = null)
 	{
-		$this->group->max($fieldName, $options);
+		$this->group->max($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::min()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function min($fieldName = null, $options = null)
+	public function min($alias = null, $options = null)
 	{
-		$this->group->min($fieldName, $options);
+		$this->group->min($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::mode()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function mode($fieldName = null, $options = null)
+	public function mode($alias = null, $options = null)
 	{
-		$this->group->mode($fieldName, $options);
+		$this->group->mode($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::sum()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function sum($fieldName = null, $options = null)
+	public function sum($alias = null, $options = null)
 	{
-		$this->group->sum($fieldName, $options);
+		$this->group->sum($alias, $options);
 		
 		return $this;
 	}
@@ -237,10 +246,10 @@ class Pivot extends Base
 			$pivotColName = (
 				  $this->isOneCol && $this->isOneFunc
 				? $pivotColName
-				: $pivotColName . Sloth::FLAT_FIELD_SEPARATOR . $groupColName
+				: $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName
 			);
 		} else {
-			$pivotColName = $pivotColName . Sloth::FLAT_FIELD_SEPARATOR . $groupColName;
+			$pivotColName = $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName;
 		}
 		
 		return [$groupColName, $pivotColName];
@@ -279,7 +288,7 @@ class Pivot extends Base
 					if ($this->isFlatOutput) {
 						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $pivotColName);
+						$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $pivotColName);
 						switch (count($parts)) {
 							case 1:
 								$group[$parts[0]] = $row[$groupColName];
@@ -340,7 +349,7 @@ class Pivot extends Base
 					if ($this->isFlatOutput) {
 						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $pivotColName);
+						$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $pivotColName);
 						switch (count($parts)) {
 							case 1:
 								$group[$parts[0]] = $row[$groupColName];
@@ -381,7 +390,7 @@ class Pivot extends Base
 				}
 			}
 		} else {
-			$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $col);
+			$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
 			switch (count($parts)) {
 				case 1:
 					foreach ($this->groups as $key => &$group) {
@@ -425,7 +434,7 @@ class Pivot extends Base
 					$group[$columnColAlias] = null;
 				}
 			} else {
-				$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $columnColAlias);
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $columnColAlias);
 				switch (count($parts)) {
 					case 1:
 						if (!array_key_exists($parts[0], $group)) {
@@ -484,6 +493,10 @@ class Pivot extends Base
 		return isset($this->groups[$key]);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::setScale()
+	 */
 	public function setScale(int $scale)
 	{
 		$this->group->setScale($scale);
@@ -491,6 +504,10 @@ class Pivot extends Base
 		return parent::setScale($scale);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::setOptimizeColumnNames()
+	 */
 	public function setOptimizeColumnNames(bool $value)
 	{
 		$this->group->setOptimizeColumnNames($value);
@@ -498,7 +515,11 @@ class Pivot extends Base
 		return parent::setOptimizeColumnNames($value);
 	}
 	
-	public function setFlatOutput(bool $value)
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::setFlatOutput()
+	 */
+	public function setFlattenOutput(bool $value)
 	{
 		return parent::setFlatOutput($value);
 	}

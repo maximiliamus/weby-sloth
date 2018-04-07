@@ -40,45 +40,39 @@ class Group extends Base
 	
 	/**
 	 * Whether to calculate record count in a group.
-	 * Column with name "${Value Column Name/Alias}_count" will be added to the result.
-	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function count($fieldSuffix = null, $options = null)
+	public function count($alias = null, $options = null)
 	{
-		$this->funcs[Count::class] = new Count($this, $fieldName, $options);
+		$this->funcs[Count::class] = new Count($this, $alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to sum values for each value column in a group.
-	 * Column with name "${Value Column Name/Alias}_sum" will be added to the result.
-	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function sum($fieldSuffix = null, $options = null)
+	public function sum($alias = null, $options = null)
 	{
-		$this->funcs[Sum::class] = new Sum($this, $fieldSuffix, $options);
+		$this->funcs[Sum::class] = new Sum($this, $alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate average value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_avg" will be added to the result.
-	 * The column suffix "avg" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function avg($fieldSuffix = null, $options = null)
+	public function avg($alias = null, $options = null)
 	{
-		$this->funcs[Avg::class] = new Avg($this, $fieldSuffix, $options);
+		$this->funcs[Avg::class] = new Avg($this, $alias, $options);
 		
 		return $this;
 	}
@@ -100,75 +94,65 @@ class Group extends Base
 	
 	/**
 	 * Whether to accumulate only a first value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_first" will be added to the result.
-	 * The column suffix "first" may be overwriten if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function first($fieldSuffix = null, $options = null)
+	public function first($alias = null, $options = null)
 	{
-		$this->funcs[First::class] = new First($this, $fieldSuffix, $options);
+		$this->funcs[First::class] = new First($this, $alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate min value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_min" will be added to the result.
-	 * The column suffix "min" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function min($fieldSuffix = null, $options = null)
+	public function min($alias = null, $options = null)
 	{
-		$this->funcs[Min::class] = new Min($this, $fieldSuffix, $options);
+		$this->funcs[Min::class] = new Min($this, $alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate max value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_max" will be added to the result.
-	 * The column suffix "max" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function max($fieldSuffix = null, $options = null)
+	public function max($alias = null, $options = null)
 	{
-		$this->funcs[Max::class] = new Max($this, $fieldSuffix, $options);
+		$this->funcs[Max::class] = new Max($this, $alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate median value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_median" will be added to the result.
-	 * The column suffix "median" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function median($fieldSuffix = null, $options = null)
+	public function median($alias = null, $options = null)
 	{
-		$this->funcs[Median::class] = new Median($this, $fieldSuffix, $options);
+		$this->funcs[Median::class] = new Median($this, $alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate mode value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_mode" will be added to the result.
-	 * The column suffix "mode" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function mode($fieldSuffix = null, $options = null)
+	public function mode($alias = null, $options = null)
 	{
-		$this->funcs[Mode::class] = new Mode($this, $fieldSuffix, $options);
+		$this->funcs[Mode::class] = new Mode($this, $alias, $options);
 		
 		return $this;
 	}
@@ -352,7 +336,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
+					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
@@ -379,7 +363,7 @@ class Group extends Base
 				$colName = $this->buildColumnName($valueCol, $func);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
+					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$colName] = &$group[$parts[0]][$parts[1]];
 					}
@@ -393,7 +377,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
+					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
