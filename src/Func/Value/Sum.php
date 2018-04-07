@@ -25,7 +25,7 @@ class Sum extends Base
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		switch (gettype($currValue)) {
+		switch ($valueType = gettype($currValue)) {
 			case 'integer':
 				$currValue = (integer) bcadd($currValue, $nextValue);
 				break;
@@ -39,7 +39,7 @@ class Sum extends Base
 				break;
 				
 			default:
-				throw new Exception('Unsupported value type.');
+				throw new Exception(sprintf('Unsupported value type "%s".', $valueType));
 		}
 	}
 }

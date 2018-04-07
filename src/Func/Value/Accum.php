@@ -38,7 +38,7 @@ class Accum extends Base
 			return;
 		
 		if ($this->options['flat']) {
-			switch (gettype($currValue)) {
+			switch ($valueType = gettype($currValue)) {
 				case 'string':
 					$currValue .= (string) $nextValue;
 					break;
@@ -63,7 +63,7 @@ class Accum extends Base
 					break;
 					
 				default:
-					throw new Exception('Unsupported value type.');
+					throw new Exception(sprintf('Unsupported value type "%s".', $valueType));
 			}
 		} else {
 			$currValue[] = $nextValue;

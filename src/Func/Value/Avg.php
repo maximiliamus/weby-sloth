@@ -54,7 +54,7 @@ class Avg extends Base
 				break;
 				
 			default:
-				throw new Exception('Unsupported value type.');
+				throw new Exception(sprintf('Unsupported value type "%s".', $valueType));
 		}
 		$store[$countCol]++;
 		
