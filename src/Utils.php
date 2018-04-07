@@ -51,7 +51,7 @@ class Utils
 	{
 		$result = null;
 		
-		if (!$data) {
+		if (is_null($data)) {
 			$result = [];
 		} elseif (is_array($data)) {
 			$result = $data;
