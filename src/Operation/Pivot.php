@@ -237,9 +237,17 @@ class Pivot extends Base
 		// Do nothing.
 	}
 	
-	protected function buildValueFuncColumnName($valueCol, $func, $columnCol = null)
+	protected function buildGroupFuncColumnName($groupFunc)
 	{
-		$groupColName = parent::buildValueFuncColumnName($valueCol, $func);
+		$groupColName = parent::buildGroupFuncColumnName($groupFunc);
+		$pivotColName = $groupColName;
+		
+		return [$groupColName, $pivotColName];
+	}
+	
+	protected function buildValueFuncColumnName($valueCol, $valueFunc, $columnCol = null)
+	{
+		$groupColName = parent::buildValueFuncColumnName($valueCol, $valueFunc);
 		$pivotColName = $columnCol;
 		
 		if ($this->isOptimizeColumnNames) {
@@ -259,6 +267,18 @@ class Pivot extends Base
 	{
 		$group = [];
 		
+		$this->addGroup_processGroupCols($group, $row);
+		$this->addGroup_processGroupFuncs($group, $row);
+		$this->addGroup_processValueFuncs($group, $row);
+		$this->addGroup_processAddedCols($group, $row);
+		
+		$this->groups[$key] = &$group;
+		
+		return $group;
+	}
+	
+	private function addGroup_processGroupCols(&$group, &$row)
+	{
 		foreach ($this->groupCols as $groupCol) {
 			$group[$groupCol->alias] = $row[$groupCol->alias];
 			
@@ -266,12 +286,30 @@ class Pivot extends Base
 				$this->outputCols[] = $groupCol->alias;
 			}
 		}
-		
+	}
+	
+	private function addGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->group->getGroupFuncs() as $groupFunc) {
+			list($groupColName, $pivotColName) = $this->buildGroupFuncColumnName(
+				$groupFunc
+			);
+			
+			if (!$this->groups) {
+				$this->outputCols[] = $pivotColName;
+			}
+			
+			$group[$pivotColName] = $row[$groupColName];
+		}
+	}
+	
+	private function addGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
-				foreach ($this->group->getFuncs() as $func) {
+				foreach ($this->group->getValueFuncs() as $valueFunc) {
 					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
-						$valueCol, $func, $row[$columnCol->name]
+						$valueCol, $valueFunc, $row[$columnCol->name]
 					);
 					
 					// If there are different number of cols
@@ -306,7 +344,10 @@ class Pivot extends Base
 				}
 			}
 		}
-		
+	}
+	
+	private function addGroup_processAddedCols(&$group, &$row)
+	{
 		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
 			if ($colDef instanceof \Closure) {
@@ -321,21 +362,37 @@ class Pivot extends Base
 			
 			$group[$addedCol] = $value;
 		}
-		
-		$this->groups[$key] = &$group;
-		
-		return $group;
 	}
 	
 	private function &updateGroup($key, $row)
 	{
 		$group = &$this->groups[$key];
 		
+		$this->updateGroup_processGroupFuncs($group, $row);
+		$this->updateGroup_processValueFuncs($group, $row);
+		$this->updateGroup_processAddedCols($group, $row);
+		
+		return $group;
+	}
+	
+	private function updateGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->group->getGroupFuncs() as $groupFunc) {
+			list($groupColName, $pivotColName) = $this->buildGroupFuncColumnName(
+				$groupFunc
+			);
+			
+			$group[$pivotColName] = $row[$groupColName];
+		}
+	}
+	
+	private function updateGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
-				foreach ($this->group->getFuncs() as $func) {
+				foreach ($this->group->getValueFuncs() as $valueFunc) {
 					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
-						$valueCol, $func, $row[$columnCol->name]
+						$valueCol, $valueFunc, $row[$columnCol->name]
 					);
 					
 					if (!isset($this->columnColsAliases[$pivotColName])) {
@@ -367,18 +424,21 @@ class Pivot extends Base
 				}
 			}
 		}
-		
+	}
+	
+	private function updateGroup_processAddedCols(&$group, &$row)
+	{
 		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
+			
 			if ($colDef instanceof \Closure) {
 				$value = call_user_func($colDef, $group);
 			} else {
 				$value = $colDef;
 			}
+			
 			$group[$addedCol] = $value;
 		}
-		
-		return $group;
 	}
 	
 	private function backPropagateColumn($col)

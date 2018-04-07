@@ -328,17 +328,17 @@ abstract class Base
 		return $result;
 	}
 	
-	protected function buildGroupFuncColumnName($func)
+	protected function buildGroupFuncColumnName($groupFunc)
 	{
-		return $func->alias;
+		return $groupFunc->alias;
 	}
 	
-	protected function buildValueFuncColumnName($valueCol, $func)
+	protected function buildValueFuncColumnName($valueCol, $valueFunc)
 	{
 		$result = null;
 		
 		$colName = $valueCol->alias;
-		$funcName = $func->alias;
+		$funcName = $valueFunc->alias;
 		
 		if ($this->isOptimizeColumnNames) {
 			$result = (

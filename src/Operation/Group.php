@@ -316,6 +316,17 @@ class Group extends Base
 			$row = Utils::toArray($row);
 		}
 		
+		$this->addGroup_processGroupCols($group, $row);
+		$this->addGroup_processGroupFuncs($group, $row);
+		$this->addGroup_processValueFuncs($group, $row);
+		
+		$this->groups[$key] = &$group;
+		
+		return $group;
+	}
+	
+	private function addGroup_processGroupCols(&$group, &$row)
+	{
 		foreach ($this->groupCols as $groupCol) {
 			$group[$groupCol->alias] = $row[$groupCol->name];
 			
@@ -323,13 +334,6 @@ class Group extends Base
 				$this->outputCols[] = $groupCol->alias;
 			}
 		}
-		
-		$this->addGroup_processGroupFuncs($group, $row);
-		$this->addGroup_processValueFuncs($group, $row);
-		
-		$this->groups[$key] = &$group;
-		
-		return $group;
 	}
 	
 	private function addGroup_processGroupFuncs(&$group, &$row)
@@ -348,14 +352,6 @@ class Group extends Base
 			$groupFunc->onAddGroup(
 				$group, $colName, $row, null, $currValue, $nextValue
 			);
-			
-			if (!$this->isFlatOutput) {
-				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
-				if (count($parts) == 2) {
-					$group[$parts[0]][$parts[1]] = &$group[$colName];
-					unset($group[$colName]);
-				}
-			}
 		}
 	}
 	
@@ -408,27 +404,12 @@ class Group extends Base
 		foreach ($this->groupFuncs as $groupFunc) {
 			$colName = $this->buildGroupFuncColumnName($groupFunc);
 			
-			if (!$this->isFlatOutput) {
-				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
-				if (count($parts) == 2) {
-					$group[$colName] = &$group[$parts[0]][$parts[1]];
-				}
-			}
-			
 			$currValue = &$group[$colName];
 			$nextValue = null;
 			
 			$groupFunc->onUpdateGroup(
 				$group, $colName, $row, null, $currValue, $nextValue
 			);
-			
-			if (!$this->isFlatOutput) {
-				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
-				if (count($parts) == 2) {
-					$group[$parts[0]][$parts[1]] = &$group[$colName];
-					unset($group[$colName]);
-				}
-			}
 		}
 	}
 	
