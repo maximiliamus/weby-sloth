@@ -31,6 +31,9 @@ abstract class Base
 	protected $groupCols = [];
 	protected $valueCols = [];
 	
+	protected $groupFuncs = [];
+	protected $valueFuncs = [];
+	
 	protected $output = [];
 	protected $outputFormat = self::OUTPUT_ARRAY;
 	
@@ -142,6 +145,9 @@ abstract class Base
 	 */
 	public function perform()
 	{
+		$this->isOneFunc = count($this->valueFuncs) == 1;
+		$this->isOneCol = count($this->valueCols) == 1;
+		
 		$this->validatePerform();
 		$this->beginPerform();
 		$this->doPerform();
@@ -322,7 +328,12 @@ abstract class Base
 		return $result;
 	}
 	
-	protected function buildColumnName($valueCol, $func)
+	protected function buildGroupFuncColumnName($func)
+	{
+		return $func->alias;
+	}
+	
+	protected function buildValueFuncColumnName($valueCol, $func)
 	{
 		$result = null;
 		
@@ -348,6 +359,36 @@ abstract class Base
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Returns list of functions that will be applied to entire group only.
+	 * 
+	 * @return array
+	 */
+	public function getGroupFuncs()
+	{
+		return $this->groupFuncs;
+	}
+	
+	/**
+	 * Returns list of functions that will be applied to value columns only.
+	 * 
+	 * @return array
+	 */
+	public function getValueFuncs()
+	{
+		return $this->valueFuncs;
+	}
+	
+	/**
+	 * Returns list of all functions that were specified for the operation.
+	 * 
+	 * @return array
+	 */
+	public function getFuncs()
+	{
+		return array_merge($this->groupFuncs, $this->valueFuncs);
 	}
 	
 	/**

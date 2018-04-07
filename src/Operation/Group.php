@@ -12,6 +12,7 @@ namespace Weby\Sloth\Operation;
 use Weby\Sloth\Sloth;
 use Weby\Sloth\Exception;
 use Weby\Sloth\Utils;
+use Weby\Sloth\Func\Group\Count as CountAsterix;
 use Weby\Sloth\Func\Value\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
@@ -27,8 +28,7 @@ use Weby\Sloth\Func\Value\Mode;
  */
 class Group extends Base
 {
-	private $funcs = [];
-	protected $groups = [];
+	private $groups = [];
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -46,7 +46,11 @@ class Group extends Base
 	 */
 	public function count($alias = null, $options = null)
 	{
-		$this->funcs[Count::class] = new Count($this, $alias, $options);
+		if ($alias == '*') {
+			$this->groupFuncs[CountAsterix::class] = new CountAsterix($this, $alias, $options);
+		} else {
+			$this->valueFuncs[Count::class] = new Count($this, $alias, $options);
+		}
 		
 		return $this;
 	}
@@ -59,7 +63,7 @@ class Group extends Base
 	 */
 	public function sum($alias = null, $options = null)
 	{
-		$this->funcs[Sum::class] = new Sum($this, $alias, $options);
+		$this->valueFuncs[Sum::class] = new Sum($this, $alias, $options);
 		
 		return $this;
 	}
@@ -72,7 +76,7 @@ class Group extends Base
 	 */
 	public function avg($alias = null, $options = null)
 	{
-		$this->funcs[Avg::class] = new Avg($this, $alias, $options);
+		$this->valueFuncs[Avg::class] = new Avg($this, $alias, $options);
 		
 		return $this;
 	}
@@ -87,7 +91,7 @@ class Group extends Base
 	 */
 	public function accum($fieldSuffix = null, $options = null)
 	{
-		$this->funcs[Accum::class] = new Accum($this, $fieldSuffix, $options);
+		$this->valueFuncs[Accum::class] = new Accum($this, $fieldSuffix, $options);
 		
 		return $this;
 	}
@@ -100,7 +104,7 @@ class Group extends Base
 	 */
 	public function first($alias = null, $options = null)
 	{
-		$this->funcs[First::class] = new First($this, $alias, $options);
+		$this->valueFuncs[First::class] = new First($this, $alias, $options);
 		
 		return $this;
 	}
@@ -113,7 +117,7 @@ class Group extends Base
 	 */
 	public function min($alias = null, $options = null)
 	{
-		$this->funcs[Min::class] = new Min($this, $alias, $options);
+		$this->valueFuncs[Min::class] = new Min($this, $alias, $options);
 		
 		return $this;
 	}
@@ -126,7 +130,7 @@ class Group extends Base
 	 */
 	public function max($alias = null, $options = null)
 	{
-		$this->funcs[Max::class] = new Max($this, $alias, $options);
+		$this->valueFuncs[Max::class] = new Max($this, $alias, $options);
 		
 		return $this;
 	}
@@ -139,7 +143,7 @@ class Group extends Base
 	 */
 	public function median($alias = null, $options = null)
 	{
-		$this->funcs[Median::class] = new Median($this, $alias, $options);
+		$this->valueFuncs[Median::class] = new Median($this, $alias, $options);
 		
 		return $this;
 	}
@@ -152,19 +156,9 @@ class Group extends Base
 	 */
 	public function mode($alias = null, $options = null)
 	{
-		$this->funcs[Mode::class] = new Mode($this, $alias, $options);
+		$this->valueFuncs[Mode::class] = new Mode($this, $alias, $options);
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns list of functions that were specified for operation.
-	 * 
-	 * @return array
-	 */
-	public function getFuncs()
-	{
-		return $this->funcs;
 	}
 	
 	/**
@@ -203,9 +197,10 @@ class Group extends Base
 			$this->assocValueFieldName = ($this->valueCols
 				// Use alias of a first value column.
 				? $this->valueCols[0]->alias
-				: (isset($this->funcs[Count::class])
-					// Use filed name of a single group function.
-					? $this->funcs[Count::class]->getFieldName()
+				: ($this->groupFuncs
+					// Use filed name of a first group function.
+					? array_values($this->groupFuncs)[0]->alias
+					// Use all value columns.
 					: '*'
 				)
 			);
@@ -214,19 +209,30 @@ class Group extends Base
 		return $this;
 	}
 	
+	private function hasCountAsterixFunc()
+	{
+		return isset($this->getGroupFuncs()[CountAsterix::class]);
+	}
+	
 	protected function validatePerform()
 	{
-		$funcs = $this->getFuncs();
-		if (!$this->valueCols && count($funcs) && !array_key_exists(Count::class, $funcs)) {
+		if (
+			   !$this->valueCols
+			&& !(count($this->getFuncs()) == 1 && $this->hasCountAsterixFunc())
+		) {
 			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
+		}
+		
+		if (
+			   $this->valueCols
+			&& !(count($this->valueFuncs))
+		) {
+			throw new \Weby\Sloth\Exception('No functions to apply to value columns.');
 		}
 	}
 	
 	protected function beginPerform()
 	{
-		$this->isOneFunc = count($this->funcs) == 1;
-		$this->isOneCol = count($this->valueCols) == 1;
-		
 		$this->resetOutput();
 		$this->resetStore();
 		$this->resetOutputCols();
@@ -318,9 +324,46 @@ class Group extends Base
 			}
 		}
 		
+		$this->addGroup_processGroupFuncs($group, $row);
+		$this->addGroup_processValueFuncs($group, $row);
+		
+		$this->groups[$key] = &$group;
+		
+		return $group;
+	}
+	
+	private function addGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->groupFuncs as $groupFunc) {
+			$colName = $this->buildGroupFuncColumnName($groupFunc);
+			
+			if (!$this->groups) {
+				$this->outputCols[] = $colName;
+			}
+			
+			$group[$colName] = null;
+			$currValue = &$group[$colName];
+			$nextValue = null;
+			
+			$groupFunc->onAddGroup(
+				$group, $colName, $row, null, $currValue, $nextValue
+			);
+			
+			if (!$this->isFlatOutput) {
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
+				if (count($parts) == 2) {
+					$group[$parts[0]][$parts[1]] = &$group[$colName];
+					unset($group[$colName]);
+				}
+			}
+		}
+	}
+	
+	private function addGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->valueCols as $valueCol) {
-			foreach ($this->funcs as $func) {
-				$colName = $this->buildColumnName($valueCol, $func);
+			foreach ($this->valueFuncs as $valueFunc) {
+				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc);
 				
 				if (!$this->groups) {
 					$this->outputCols[] = $colName;
@@ -331,7 +374,7 @@ class Group extends Base
 				$currValue = &$group[$colName];
 				$nextValue = &$row[$valueCol->name];
 				
-				$func->onAddGroup(
+				$valueFunc->onAddGroup(
 					$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 				);
 				
@@ -344,10 +387,6 @@ class Group extends Base
 				}
 			}
 		}
-		
-		$this->groups[$key] = &$group;
-		
-		return $group;
 	}
 	
 	private function &updateGroup($key, $row)
@@ -358,9 +397,46 @@ class Group extends Base
 			$row = Utils::toArray($row);
 		}
 		
+		$this->updateGroup_processGroupFuncs($group, $row);
+		$this->updateGroup_processValueFuncs($group, $row);
+		
+		return $group;
+	}
+	
+	private function updateGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->groupFuncs as $groupFunc) {
+			$colName = $this->buildGroupFuncColumnName($groupFunc);
+			
+			if (!$this->isFlatOutput) {
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
+				if (count($parts) == 2) {
+					$group[$colName] = &$group[$parts[0]][$parts[1]];
+				}
+			}
+			
+			$currValue = &$group[$colName];
+			$nextValue = null;
+			
+			$groupFunc->onUpdateGroup(
+				$group, $colName, $row, null, $currValue, $nextValue
+			);
+			
+			if (!$this->isFlatOutput) {
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
+				if (count($parts) == 2) {
+					$group[$parts[0]][$parts[1]] = &$group[$colName];
+					unset($group[$colName]);
+				}
+			}
+		}
+	}
+	
+	private function updateGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->valueCols as $valueCol) {
-			foreach ($this->funcs as $func) {
-				$colName = $this->buildColumnName($valueCol, $func);
+			foreach ($this->valueFuncs as $valueFunc) {
+				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc);
 				
 				if (!$this->isFlatOutput) {
 					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
@@ -372,7 +448,7 @@ class Group extends Base
 				$currValue = &$group[$colName];
 				$nextValue = &$row[$valueCol->name];
 				
-				$func->onUpdateGroup(
+				$valueFunc->onUpdateGroup(
 					$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 				);
 				
@@ -385,8 +461,6 @@ class Group extends Base
 				}
 			}
 		}
-		
-		return $group;
 	}
 	
 	protected function endPerform()

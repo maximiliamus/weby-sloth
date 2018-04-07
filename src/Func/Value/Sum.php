@@ -19,13 +19,21 @@ class Sum extends Base
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		$currValue = $nextValue;
+		if (is_null($nextValue)) {
+			$currValue = 0;
+		} else {
+			$currValue = $nextValue;
+		}
 	}
 	
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
 		switch ($valueType = gettype($currValue)) {
+			case 'NULL':
+				// Do nothing.
+				break;
+				
 			case 'integer':
 				$currValue = (integer) bcadd($currValue, $nextValue);
 				break;

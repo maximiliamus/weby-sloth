@@ -206,12 +206,12 @@ class Pivot extends Base
 	
 	protected function beginPerform()
 	{
-		if (!$this->group->getFuncs()) {
+		if (!$this->group->getValueFuncs()) {
 			// Apply default function.
 			$this->group->first();
 		}
 		
-		$this->isOneFunc = count($this->group->getFuncs()) == 1;
+		$this->isOneFunc = count($this->group->getValueFuncs()) == 1;
 		$this->isOneCol = count($this->group->getValueCols()) == 1;
 		
 		$this->resetOutput();
@@ -237,9 +237,9 @@ class Pivot extends Base
 		// Do nothing.
 	}
 	
-	protected function buildColumnName($valueCol, $func, $columnCol = null)
+	protected function buildValueFuncColumnName($valueCol, $func, $columnCol = null)
 	{
-		$groupColName = parent::buildColumnName($valueCol, $func);
+		$groupColName = parent::buildValueFuncColumnName($valueCol, $func);
 		$pivotColName = $columnCol;
 		
 		if ($this->isOptimizeColumnNames) {
@@ -270,7 +270,7 @@ class Pivot extends Base
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
 				foreach ($this->group->getFuncs() as $func) {
-					list($groupColName, $pivotColName) = $this->buildColumnName(
+					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
 						$valueCol, $func, $row[$columnCol->name]
 					);
 					
@@ -334,7 +334,7 @@ class Pivot extends Base
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
 				foreach ($this->group->getFuncs() as $func) {
-					list($groupColName, $pivotColName) = $this->buildColumnName(
+					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
 						$valueCol, $func, $row[$columnCol->name]
 					);
 					
