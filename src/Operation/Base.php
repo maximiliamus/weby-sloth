@@ -10,6 +10,7 @@
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
+use Weby\Sloth\Exception;
 use Weby\Sloth\Utils;
 use Weby\Sloth\Column;
 
@@ -48,6 +49,8 @@ abstract class Base
 	protected $isOneCol = false;
 	
 	protected $isFlatOutput = false;
+	
+	protected $context = null;
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -145,6 +148,8 @@ abstract class Base
 	 */
 	public function perform()
 	{
+		$this->context = null;
+		
 		$this->isOneFunc = count($this->valueFuncs) == 1;
 		$this->isOneCol = count($this->valueCols) == 1;
 		
@@ -168,6 +173,8 @@ abstract class Base
 	 */
 	public function getGroupCols()
 	{
+		$this->context = null;
+		
 		return $this->groupCols;
 	}
 	
@@ -178,6 +185,8 @@ abstract class Base
 	 */
 	public function getValueCols()
 	{
+		$this->context = null;
+		
 		return $this->valueCols;
 	}
 	
@@ -188,6 +197,8 @@ abstract class Base
 	 */
 	public function getOutput()
 	{
+		$this->context = null;
+		
 		return $this->output;
 	}
 	
@@ -198,6 +209,8 @@ abstract class Base
 	 */
 	public function getOutputCols()
 	{
+		$this->context = null;
+		
 		return $this->outputCols;
 	}
 	
@@ -208,6 +221,8 @@ abstract class Base
 	 */
 	public function getOutputValueCols()
 	{
+		$this->context = null;
+		
 		return $this->outputValueCols;
 	}
 	
@@ -222,6 +237,8 @@ abstract class Base
 	 */
 	public function fetch()
 	{
+		$this->context = null;
+		
 		if (!$this->output) {
 			$this->perform();
 		}
@@ -237,6 +254,8 @@ abstract class Base
 	 */
 	public function printOutput($onlyData = false)
 	{
+		$this->context = null;
+		
 		if (!$this->output) {
 			return $this;
 		}
@@ -306,6 +325,8 @@ abstract class Base
 	 */
 	public function print($onlyData = false)
 	{
+		$this->context = null;
+		
 		if (!$this->output) {
 			$this->perform();
 		}
@@ -361,6 +382,38 @@ abstract class Base
 		return $result;
 	}
 	
+	protected function isFunctionContext()
+	{
+		return $this->context instanceof \Weby\Sloth\Func\Base;
+	}
+	
+	protected function ensureFunctionContext()
+	{
+		if (!$this->isFunctionContext()) {
+			throw new Exception('Command can not be used in the current context.');
+		}
+	}
+	
+	public function as($alias)
+	{
+		$this->ensureFunctionContext();
+		
+		$func = \Weby\Sloth\Func\Base::cast($this->context);
+		$func->alias = $alias;
+		
+		return $this;
+	}
+	
+	public function __call($method, $args)
+	{
+		if ($this->isFunctionContext()) {
+			$func = \Weby\Sloth\Func\Base::cast($this->context);
+			$func->setOption($method, $args[0]);
+		}
+		
+		return $this;
+	}
+	
 	/**
 	 * Returns list of functions that will be applied to entire group only.
 	 * 
@@ -368,6 +421,8 @@ abstract class Base
 	 */
 	public function getGroupFuncs()
 	{
+		$this->context = null;
+		
 		return $this->groupFuncs;
 	}
 	
@@ -378,6 +433,8 @@ abstract class Base
 	 */
 	public function getValueFuncs()
 	{
+		$this->context = null;
+		
 		return $this->valueFuncs;
 	}
 	
@@ -388,6 +445,8 @@ abstract class Base
 	 */
 	public function getFuncs()
 	{
+		$this->context = null;
+		
 		return array_merge($this->groupFuncs, $this->valueFuncs);
 	}
 	

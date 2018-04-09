@@ -9,6 +9,7 @@
 
 namespace Weby\Sloth\Func;
 
+use Weby\Sloth\Exception;
 use Weby\Sloth\Sloth;
 use Weby\Sloth\Utils;
 
@@ -52,6 +53,14 @@ abstract class Base
 	 */
 	protected $operation;
 	
+	/**
+	 * @return \Weby\Sloth\Func\Base
+	 */
+	static public function cast($object) : \Weby\Sloth\Func\Base
+	{
+		return $object;
+	}
+	
 	public function __construct(
 		\Weby\Sloth\Operation\Base $operation,
 		string $alias = null,
@@ -93,6 +102,20 @@ abstract class Base
 		$defaultOptions = Utils::normalizeArray($this->defaultOptions);
 		
 		return array_merge($defaultOptions, $options);
+	}
+	
+	private function ensureKnownOption($name)
+	{
+		if (!isset($this->defaultOptions[$name])) {
+			throw new Exception(sprintf('Unknown option "%s".', $name));
+		}
+	}
+	
+	public function setOption($name, $value)
+	{
+		$this->ensureKnownOption($name);
+		
+		$this->options[$name] = $value;
 	}
 	
 	protected function getStoreColumn($groupCol, $dataCol, $storeCol)

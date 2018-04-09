@@ -28,6 +28,8 @@ use Weby\Sloth\Func\Value\Mode;
  */
 class Group extends Base
 {
+	const ASSOC_ALL = -1;
+	
 	private $groups = [];
 	
 	private $assocKeyFieldName = null;
@@ -47,9 +49,11 @@ class Group extends Base
 	public function count($alias = null, $options = null)
 	{
 		if ($alias == '*') {
-			$this->groupFuncs[CountAsterix::class] = new CountAsterix($this, $alias, $options);
+			$this->context = new CountAsterix($this, $alias, $options);
+			$this->groupFuncs[CountAsterix::class] = $this->context;
 		} else {
-			$this->valueFuncs[Count::class] = new Count($this, $alias, $options);
+			$this->context = new Count($this, $alias, $options);
+			$this->valueFuncs[Count::class] = $this->context;
 		}
 		
 		return $this;
@@ -63,7 +67,8 @@ class Group extends Base
 	 */
 	public function sum($alias = null, $options = null)
 	{
-		$this->valueFuncs[Sum::class] = new Sum($this, $alias, $options);
+		$this->context = new Sum($this, $alias, $options);
+		$this->valueFuncs[Sum::class] = $this->context;
 		
 		return $this;
 	}
@@ -76,22 +81,22 @@ class Group extends Base
 	 */
 	public function avg($alias = null, $options = null)
 	{
-		$this->valueFuncs[Avg::class] = new Avg($this, $alias, $options);
+		$this->context = new Avg($this, $alias, $options);
+		$this->valueFuncs[Avg::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to accumulate values for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_accum" will be added to the result.
-	 * The column suffix "accum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function accum($fieldSuffix = null, $options = null)
+	public function accum($alias = null, $options = null)
 	{
-		$this->valueFuncs[Accum::class] = new Accum($this, $fieldSuffix, $options);
+		$this->context = new Accum($this, $alias, $options);
+		$this->valueFuncs[Accum::class] = $this->context;
 		
 		return $this;
 	}
@@ -104,7 +109,8 @@ class Group extends Base
 	 */
 	public function first($alias = null, $options = null)
 	{
-		$this->valueFuncs[First::class] = new First($this, $alias, $options);
+		$this->context = new First($this, $alias, $options);
+		$this->valueFuncs[First::class] = $this->context;
 		
 		return $this;
 	}
@@ -117,7 +123,8 @@ class Group extends Base
 	 */
 	public function min($alias = null, $options = null)
 	{
-		$this->valueFuncs[Min::class] = new Min($this, $alias, $options);
+		$this->context = new Min($this, $alias, $options);
+		$this->valueFuncs[Min::class] = $this->context;
 		
 		return $this;
 	}
@@ -130,7 +137,8 @@ class Group extends Base
 	 */
 	public function max($alias = null, $options = null)
 	{
-		$this->valueFuncs[Max::class] = new Max($this, $alias, $options);
+		$this->context = new Max($this, $alias, $options);
+		$this->valueFuncs[Max::class] = $this->context;
 		
 		return $this;
 	}
@@ -143,7 +151,8 @@ class Group extends Base
 	 */
 	public function median($alias = null, $options = null)
 	{
-		$this->valueFuncs[Median::class] = new Median($this, $alias, $options);
+		$this->context = new Median($this, $alias, $options);
+		$this->valueFuncs[Median::class] = $this->context;
 		
 		return $this;
 	}
@@ -156,7 +165,8 @@ class Group extends Base
 	 */
 	public function mode($alias = null, $options = null)
 	{
-		$this->valueFuncs[Mode::class] = new Mode($this, $alias, $options);
+		$this->context = new Mode($this, $alias, $options);
+		$this->valueFuncs[Mode::class] = $this->context;
 		
 		return $this;
 	}
@@ -174,6 +184,7 @@ class Group extends Base
 	 */
 	public function asAssoc($keyColumn = null, $valueColumn = null)
 	{
+		$this->context = null;
 		$this->outputFormat = self::OUTPUT_ASSOC;
 		
 		if ($keyColumn) {
@@ -190,6 +201,8 @@ class Group extends Base
 		if ($valueColumn) {
 			if ($valueColumn  instanceof \Closure) {
 				$this->assocValueFieldName = $valueColumn;
+			} elseif ($valueColumn == '*') {
+				$this->assocValueFieldName = self::ASSOC_ALL;
 			} else {
 				$this->assocValueFieldName = (string) $valueColumn;
 			}
@@ -201,7 +214,7 @@ class Group extends Base
 					// Use filed name of a first group function.
 					? array_values($this->groupFuncs)[0]->alias
 					// Use all value columns.
-					: '*'
+					: self::ASSOC_ALL
 				)
 			);
 		}
@@ -218,14 +231,14 @@ class Group extends Base
 	{
 		if (
 			   !$this->valueCols
-			&& !(count($this->getFuncs()) == 1 && $this->hasCountAsterixFunc())
+			&& count($this->valueFuncs)
 		) {
 			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
 		}
 		
 		if (
 			   $this->valueCols
-			&& !(count($this->valueFuncs))
+			&& !count($this->valueFuncs)
 		) {
 			throw new \Weby\Sloth\Exception('No functions to apply to value columns.');
 		}
@@ -280,7 +293,7 @@ class Group extends Base
 					$assocValue = call_user_func(
 						$this->assocValueFieldName, $assocKey, $row
 					);
-				} elseif ($this->assocValueFieldName == '*') {
+				} elseif ($this->assocValueFieldName == self::ASSOC_ALL) {
 					$assocValue = &$row;
 				} else {
 					$assocValue = &$row[$this->assocValueFieldName];
