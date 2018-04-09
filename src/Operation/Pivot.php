@@ -48,7 +48,7 @@ class Pivot extends Base
 			array_merge($groupCols, $columnCols),
 			$valueCols
 		);
-		$this->group->setFlatOutput(true);
+		$this->group->setFlattenOutput(true);
 	}
 	
 	protected function assignColumnCols($columnCols)
@@ -61,117 +61,126 @@ class Pivot extends Base
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::count()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function count($fieldName = null, $options = null)
+	public function count($alias = null, $options = null)
 	{
-		$this->group->count($fieldName, $options);
+		$this->group->count($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::accum()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function accum($fieldName = null, $options = null)
+	public function accum($alias = null, $options = null)
 	{
-		$this->group->accum($fieldName, $options);
+		$this->group->accum($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::avg()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function avg($fieldName = null, $options = null)
+	public function avg($alias = null, $options = null)
 	{
-		$this->group->avg($fieldName, $options);
+		$this->group->avg($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::first()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function first($fieldName = null, $options = null)
+	public function first($alias = null, $options = null)
 	{
-		$this->group->first($fieldName, $options);
+		$this->group->first($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::median()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function median($fieldName = null, $options = null)
+	public function median($alias = null, $options = null)
 	{
-		$this->group->median($fieldName, $options);
+		$this->group->median($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::min()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function max($fieldName = null, $options = null)
+	public function max($alias = null, $options = null)
 	{
-		$this->group->max($fieldName, $options);
+		$this->group->max($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::min()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function min($fieldName = null, $options = null)
+	public function min($alias = null, $options = null)
 	{
-		$this->group->min($fieldName, $options);
+		$this->group->min($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::mode()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function mode($fieldName = null, $options = null)
+	public function mode($alias = null, $options = null)
 	{
-		$this->group->mode($fieldName, $options);
+		$this->group->mode($alias, $options);
 		
 		return $this;
 	}
 	
 	/**
 	 * @see \Weby\Sloth\Operation\Group::sum()
-	 * @param string $fieldName
+	 * 
+	 * @param string $alias
 	 * @param array $options
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function sum($fieldName = null, $options = null)
+	public function sum($alias = null, $options = null)
 	{
-		$this->group->sum($fieldName, $options);
+		$this->group->sum($alias, $options);
 		
 		return $this;
 	}
@@ -197,12 +206,12 @@ class Pivot extends Base
 	
 	protected function beginPerform()
 	{
-		if (!$this->group->getFuncs()) {
+		if (!$this->group->getValueFuncs()) {
 			// Apply default function.
 			$this->group->first();
 		}
 		
-		$this->isOneFunc = count($this->group->getFuncs()) == 1;
+		$this->isOneFunc = count($this->group->getValueFuncs()) == 1;
 		$this->isOneCol = count($this->group->getValueCols()) == 1;
 		
 		$this->resetOutput();
@@ -228,19 +237,27 @@ class Pivot extends Base
 		// Do nothing.
 	}
 	
-	protected function buildColumnName($valueCol, $func, $columnCol = null)
+	protected function buildGroupFuncColumnName($groupFunc)
 	{
-		$groupColName = parent::buildColumnName($valueCol, $func);
+		$groupColName = parent::buildGroupFuncColumnName($groupFunc);
+		$pivotColName = $groupColName;
+		
+		return [$groupColName, $pivotColName];
+	}
+	
+	protected function buildValueFuncColumnName($valueCol, $valueFunc, $columnCol = null)
+	{
+		$groupColName = parent::buildValueFuncColumnName($valueCol, $valueFunc);
 		$pivotColName = $columnCol;
 		
 		if ($this->isOptimizeColumnNames) {
 			$pivotColName = (
 				  $this->isOneCol && $this->isOneFunc
 				? $pivotColName
-				: $pivotColName . Sloth::FLAT_FIELD_SEPARATOR . $groupColName
+				: $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName
 			);
 		} else {
-			$pivotColName = $pivotColName . Sloth::FLAT_FIELD_SEPARATOR . $groupColName;
+			$pivotColName = $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName;
 		}
 		
 		return [$groupColName, $pivotColName];
@@ -250,6 +267,18 @@ class Pivot extends Base
 	{
 		$group = [];
 		
+		$this->addGroup_processGroupCols($group, $row);
+		$this->addGroup_processGroupFuncs($group, $row);
+		$this->addGroup_processValueFuncs($group, $row);
+		$this->addGroup_processAddedCols($group, $row);
+		
+		$this->groups[$key] = &$group;
+		
+		return $group;
+	}
+	
+	private function addGroup_processGroupCols(&$group, &$row)
+	{
 		foreach ($this->groupCols as $groupCol) {
 			$group[$groupCol->alias] = $row[$groupCol->alias];
 			
@@ -257,12 +286,30 @@ class Pivot extends Base
 				$this->outputCols[] = $groupCol->alias;
 			}
 		}
-		
+	}
+	
+	private function addGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->group->getGroupFuncs() as $groupFunc) {
+			list($groupColName, $pivotColName) = $this->buildGroupFuncColumnName(
+				$groupFunc
+			);
+			
+			if (!$this->groups) {
+				$this->outputCols[] = $pivotColName;
+			}
+			
+			$group[$pivotColName] = $row[$groupColName];
+		}
+	}
+	
+	private function addGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
-				foreach ($this->group->getFuncs() as $func) {
-					list($groupColName, $pivotColName) = $this->buildColumnName(
-						$valueCol, $func, $row[$columnCol->name]
+				foreach ($this->group->getValueFuncs() as $valueFunc) {
+					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
+						$valueCol, $valueFunc, $row[$columnCol->name]
 					);
 					
 					// If there are different number of cols
@@ -279,7 +326,7 @@ class Pivot extends Base
 					if ($this->isFlatOutput) {
 						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $pivotColName);
+						$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $pivotColName);
 						switch (count($parts)) {
 							case 1:
 								$group[$parts[0]] = $row[$groupColName];
@@ -297,7 +344,10 @@ class Pivot extends Base
 				}
 			}
 		}
-		
+	}
+	
+	private function addGroup_processAddedCols(&$group, &$row)
+	{
 		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
 			if ($colDef instanceof \Closure) {
@@ -312,21 +362,37 @@ class Pivot extends Base
 			
 			$group[$addedCol] = $value;
 		}
-		
-		$this->groups[$key] = &$group;
-		
-		return $group;
 	}
 	
 	private function &updateGroup($key, $row)
 	{
 		$group = &$this->groups[$key];
 		
+		$this->updateGroup_processGroupFuncs($group, $row);
+		$this->updateGroup_processValueFuncs($group, $row);
+		$this->updateGroup_processAddedCols($group, $row);
+		
+		return $group;
+	}
+	
+	private function updateGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->group->getGroupFuncs() as $groupFunc) {
+			list($groupColName, $pivotColName) = $this->buildGroupFuncColumnName(
+				$groupFunc
+			);
+			
+			$group[$pivotColName] = $row[$groupColName];
+		}
+	}
+	
+	private function updateGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
-				foreach ($this->group->getFuncs() as $func) {
-					list($groupColName, $pivotColName) = $this->buildColumnName(
-						$valueCol, $func, $row[$columnCol->name]
+				foreach ($this->group->getValueFuncs() as $valueFunc) {
+					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
+						$valueCol, $valueFunc, $row[$columnCol->name]
 					);
 					
 					if (!isset($this->columnColsAliases[$pivotColName])) {
@@ -340,7 +406,7 @@ class Pivot extends Base
 					if ($this->isFlatOutput) {
 						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $pivotColName);
+						$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $pivotColName);
 						switch (count($parts)) {
 							case 1:
 								$group[$parts[0]] = $row[$groupColName];
@@ -358,18 +424,21 @@ class Pivot extends Base
 				}
 			}
 		}
-		
+	}
+	
+	private function updateGroup_processAddedCols(&$group, &$row)
+	{
 		foreach ($this->addedCols as $addedCol => $colDef) {
 			$value = null;
+			
 			if ($colDef instanceof \Closure) {
 				$value = call_user_func($colDef, $group);
 			} else {
 				$value = $colDef;
 			}
+			
 			$group[$addedCol] = $value;
 		}
-		
-		return $group;
 	}
 	
 	private function backPropagateColumn($col)
@@ -381,7 +450,7 @@ class Pivot extends Base
 				}
 			}
 		} else {
-			$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $col);
+			$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
 			switch (count($parts)) {
 				case 1:
 					foreach ($this->groups as $key => &$group) {
@@ -425,7 +494,7 @@ class Pivot extends Base
 					$group[$columnColAlias] = null;
 				}
 			} else {
-				$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $columnColAlias);
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $columnColAlias);
 				switch (count($parts)) {
 					case 1:
 						if (!array_key_exists($parts[0], $group)) {
@@ -484,6 +553,10 @@ class Pivot extends Base
 		return isset($this->groups[$key]);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::setScale()
+	 */
 	public function setScale(int $scale)
 	{
 		$this->group->setScale($scale);
@@ -491,6 +564,10 @@ class Pivot extends Base
 		return parent::setScale($scale);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::setOptimizeColumnNames()
+	 */
 	public function setOptimizeColumnNames(bool $value)
 	{
 		$this->group->setOptimizeColumnNames($value);
@@ -498,7 +575,11 @@ class Pivot extends Base
 		return parent::setOptimizeColumnNames($value);
 	}
 	
-	public function setFlatOutput(bool $value)
+	/**
+	 * {@inheritDoc}
+	 * @see \Weby\Sloth\Operation\Base::setFlatOutput()
+	 */
+	public function setFlattenOutput(bool $value)
 	{
 		return parent::setFlatOutput($value);
 	}

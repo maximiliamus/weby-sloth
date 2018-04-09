@@ -10,6 +10,7 @@
 namespace Weby\Sloth\Operation;
 
 use Weby\Sloth\Sloth;
+use Weby\Sloth\Exception;
 use Weby\Sloth\Utils;
 use Weby\Sloth\Column;
 
@@ -31,6 +32,9 @@ abstract class Base
 	protected $groupCols = [];
 	protected $valueCols = [];
 	
+	protected $groupFuncs = [];
+	protected $valueFuncs = [];
+	
 	protected $output = [];
 	protected $outputFormat = self::OUTPUT_ARRAY;
 	
@@ -45,6 +49,8 @@ abstract class Base
 	protected $isOneCol = false;
 	
 	protected $isFlatOutput = false;
+	
+	protected $context = null;
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -142,6 +148,11 @@ abstract class Base
 	 */
 	public function perform()
 	{
+		$this->context = null;
+		
+		$this->isOneFunc = count($this->valueFuncs) == 1;
+		$this->isOneCol = count($this->valueCols) == 1;
+		
 		$this->validatePerform();
 		$this->beginPerform();
 		$this->doPerform();
@@ -162,6 +173,8 @@ abstract class Base
 	 */
 	public function getGroupCols()
 	{
+		$this->context = null;
+		
 		return $this->groupCols;
 	}
 	
@@ -172,6 +185,8 @@ abstract class Base
 	 */
 	public function getValueCols()
 	{
+		$this->context = null;
+		
 		return $this->valueCols;
 	}
 	
@@ -182,6 +197,8 @@ abstract class Base
 	 */
 	public function getOutput()
 	{
+		$this->context = null;
+		
 		return $this->output;
 	}
 	
@@ -192,6 +209,8 @@ abstract class Base
 	 */
 	public function getOutputCols()
 	{
+		$this->context = null;
+		
 		return $this->outputCols;
 	}
 	
@@ -202,6 +221,8 @@ abstract class Base
 	 */
 	public function getOutputValueCols()
 	{
+		$this->context = null;
+		
 		return $this->outputValueCols;
 	}
 	
@@ -216,6 +237,8 @@ abstract class Base
 	 */
 	public function fetch()
 	{
+		$this->context = null;
+		
 		if (!$this->output) {
 			$this->perform();
 		}
@@ -231,20 +254,22 @@ abstract class Base
 	 */
 	public function printOutput($onlyData = false)
 	{
+		$this->context = null;
+		
 		if (!$this->output) {
 			return $this;
 		}
 		
 		if ($this->isFlatOutput) {
-			$this->printFlatOutput($onlyData);
+			$this->printArrayOutput($onlyData);
 		} else {
-			$this->printNestedOutput($onlyData);
+			$this->printAssocOutput($onlyData);
 		}
 		
 		return $this;
 	}
 	
-	private function printFlatOutput($onlyData)
+	private function printArrayOutput($onlyData)
 	{
 		if (!$onlyData) {
 			foreach ($this->outputCols as $col) {
@@ -261,12 +286,12 @@ abstract class Base
 		}
 	}
 	
-	private function printNestedOutput($onlyData)
+	private function printAssocOutput($onlyData)
 	{
 		if (!$onlyData) {
 			foreach ($this->outputCols as $col) {
-				$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $col);
-				$col = implode(Sloth::NESTED_FIELD_SEPARATOR, $parts);
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
+				$col = implode(Sloth::ASSOC_OUTPUT_COLUMN_SEPARATOR, $parts);
 				echo $col, "\t";
 			}
 			echo "\n";
@@ -276,7 +301,7 @@ abstract class Base
 			foreach ($this->outputCols as $col) {
 				$value = null;
 				
-				$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $col);
+				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
 				switch (count($parts)) {
 					case 1: $value = $row[$parts[0]]; break;
 					case 2: $value = $row[$parts[0]][$parts[1]]; break;
@@ -300,6 +325,8 @@ abstract class Base
 	 */
 	public function print($onlyData = false)
 	{
+		$this->context = null;
+		
 		if (!$this->output) {
 			$this->perform();
 		}
@@ -322,6 +349,107 @@ abstract class Base
 		return $result;
 	}
 	
+	protected function buildGroupFuncColumnName($groupFunc)
+	{
+		return $groupFunc->alias;
+	}
+	
+	protected function buildValueFuncColumnName($valueCol, $valueFunc)
+	{
+		$result = null;
+		
+		$colName = $valueCol->alias;
+		$funcName = $valueFunc->alias;
+		
+		if ($this->isOptimizeColumnNames) {
+			$result = (
+				  $this->isOneCol && $this->isOneFunc
+				? $colName
+				: (
+					  $this->isOneCol
+					? $funcName
+					: (
+						  $this->isOneFunc
+						? $colName
+						: $colName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $funcName
+					)
+				)
+			);
+		} else {
+			$result = $colName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $funcName;
+		}
+		
+		return $result;
+	}
+	
+	protected function isFunctionContext()
+	{
+		return $this->context instanceof \Weby\Sloth\Func\Base;
+	}
+	
+	protected function ensureFunctionContext()
+	{
+		if (!$this->isFunctionContext()) {
+			throw new Exception('Command can not be used in the current context.');
+		}
+	}
+	
+	public function as($alias)
+	{
+		$this->ensureFunctionContext();
+		
+		$func = \Weby\Sloth\Func\Base::cast($this->context);
+		$func->alias = $alias;
+		
+		return $this;
+	}
+	
+	public function __call($method, $args)
+	{
+		if ($this->isFunctionContext()) {
+			$func = \Weby\Sloth\Func\Base::cast($this->context);
+			$func->setOption($method, $args[0]);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns list of functions that will be applied to entire group only.
+	 * 
+	 * @return array
+	 */
+	public function getGroupFuncs()
+	{
+		$this->context = null;
+		
+		return $this->groupFuncs;
+	}
+	
+	/**
+	 * Returns list of functions that will be applied to value columns only.
+	 * 
+	 * @return array
+	 */
+	public function getValueFuncs()
+	{
+		$this->context = null;
+		
+		return $this->valueFuncs;
+	}
+	
+	/**
+	 * Returns list of all functions that were specified for the operation.
+	 * 
+	 * @return array
+	 */
+	public function getFuncs()
+	{
+		$this->context = null;
+		
+		return array_merge($this->groupFuncs, $this->valueFuncs);
+	}
+	
 	/**
 	 * Sets scale for BC Math operations on double values.
 	 * 
@@ -336,14 +464,10 @@ abstract class Base
 	}
 	
 	/**
-	 * Whether to optimize column names (make them simple)
-	 * when only one column or function were specified.
-	 * Column names generation in accordance with an optimization:
-	 * - One column and one func: colName
-	 * - One column: funcName
-	 * - One func: colName
+	 * Whether to optimize column names (to make them simpler by dropping repeated parts)
+	 * when only one value column or function were specified to perform an operation.
 	 * 
-	 * @param unknown $value
+	 * @param bool $value
 	 * @return \Weby\Sloth\Operation\Base
 	 */
 	public function setOptimizeColumnNames(bool $value)
@@ -355,14 +479,15 @@ abstract class Base
 	
 	/**
 	 * Whether to produce flat output.
-	 * Column names generation in accordance with output type:
-	 * - flat output: parentColName_childColName_funcName
-	 * - nested output: [parentColName][childColName][funcName]
+	 * 
+	 * Flat output - the output is an array of indexed (non-assoc) arrays.
+	 * Non-flat output - the output is an array of assoc arrays.
+	 * By default the output is non-flat.
 	 * 
 	 * @param boolean $value
 	 * @return \Weby\Sloth\Operation\Base
 	 */
-	public function setFlatOutput(bool $value)
+	public function setFlattenOutput(bool $value)
 	{
 		$this->isFlatOutput = $value;
 		
@@ -391,31 +516,35 @@ abstract class Base
 		return $this->store;
 	}
 	
-	protected function buildColumnName($valueCol, $func)
+	/**
+	 * Shortcut for $this->setFlattenOutput(true).
+	 */
+	public function flattenOutput()
 	{
-		$result = null;
-		
-		$colName = $valueCol->alias;
-		$funcName = $func->alias;
-		
-		if ($this->isOptimizeColumnNames) {
-			$result = (
-				  $this->isOneCol && $this->isOneFunc
-				? $colName
-				: (
-					  $this->isOneCol
-					? $funcName
-					: (
-						  $this->isOneFunc
-						? $colName
-						: $colName . Sloth::FLAT_FIELD_SEPARATOR . $funcName
-					)
-				)
-			);
-		} else {
-			$result = $colName . Sloth::FLAT_FIELD_SEPARATOR . $funcName;
-		}
-		
-		return $result;
+		return $this->setFlattenOutput(true);
+	}
+	
+	/**
+	 * Shortcut for $this->setFlattenOutput(false).
+	 */
+	public function dontFlattenOutput()
+	{
+		return $this->setFlattenOutput(false);
+	}
+	
+	/**
+	 * Shorctcut for $this->setOptimizeColumnNames(true);
+	 */
+	public function optimizeColumnNames()
+	{
+		return $this->setOptimizeColumnNames(true);
+	}
+	
+	/**
+	 * Shorctcut for $this->setOptimizeColumnNames(false);
+	 */
+	public function dontOptimizeColumnNames()
+	{
+		return $this->setOptimizeColumnNames(false);
 	}
 }

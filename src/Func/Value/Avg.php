@@ -23,9 +23,13 @@ class Avg extends Base
 		$countCol = $this->getStoreColumn($groupCol, $dataCol, 'count');
 		
 		$store = &$this->operation->getStore();
-		$store[$sumCol] = $nextValue;
-		$store[$countCol] = 1;
-		
+		if (is_null($nextValue)) {
+			$store[$sumCol]   = 0;
+			$store[$countCol] = 0;
+		} else {
+			$store[$sumCol]   = $nextValue;
+			$store[$countCol] = 1;
+		}
 		$currValue = $nextValue;
 	}
 	
@@ -38,6 +42,10 @@ class Avg extends Base
 		$store = &$this->operation->getStore();
 		
 		switch ($valueType = gettype($currValue)) {
+			case 'NULL':
+				// Do nothing.
+				break;
+				
 			case 'integer':
 				$store[$sumCol] = (integer) bcadd(
 					$store[$sumCol],
@@ -54,7 +62,7 @@ class Avg extends Base
 				break;
 				
 			default:
-				throw new Exception('Unsupported value type.');
+				throw new Exception(sprintf('Unsupported value type "%s".', $valueType));
 		}
 		$store[$countCol]++;
 		

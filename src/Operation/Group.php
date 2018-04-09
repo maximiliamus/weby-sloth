@@ -12,6 +12,7 @@ namespace Weby\Sloth\Operation;
 use Weby\Sloth\Sloth;
 use Weby\Sloth\Exception;
 use Weby\Sloth\Utils;
+use Weby\Sloth\Func\Group\Count as CountAsterix;
 use Weby\Sloth\Func\Value\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
@@ -27,8 +28,9 @@ use Weby\Sloth\Func\Value\Mode;
  */
 class Group extends Base
 {
-	private $funcs = [];
-	protected $groups = [];
+	const ASSOC_ALL = -1;
+	
+	private $groups = [];
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
@@ -40,147 +42,133 @@ class Group extends Base
 	
 	/**
 	 * Whether to calculate record count in a group.
-	 * Column with name "${Value Column Name/Alias}_count" will be added to the result.
-	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function count($fieldSuffix = null, $options = null)
+	public function count($alias = null, $options = null)
 	{
-		$this->funcs[Count::class] = new Count($this, $fieldName, $options);
+		if ($alias == '*') {
+			$this->context = new CountAsterix($this, $alias, $options);
+			$this->groupFuncs[CountAsterix::class] = $this->context;
+		} else {
+			$this->context = new Count($this, $alias, $options);
+			$this->valueFuncs[Count::class] = $this->context;
+		}
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to sum values for each value column in a group.
-	 * Column with name "${Value Column Name/Alias}_sum" will be added to the result.
-	 * The column suffix "sum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function sum($fieldSuffix = null, $options = null)
+	public function sum($alias = null, $options = null)
 	{
-		$this->funcs[Sum::class] = new Sum($this, $fieldSuffix, $options);
+		$this->context = new Sum($this, $alias, $options);
+		$this->valueFuncs[Sum::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate average value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_avg" will be added to the result.
-	 * The column suffix "avg" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function avg($fieldSuffix = null, $options = null)
+	public function avg($alias = null, $options = null)
 	{
-		$this->funcs[Avg::class] = new Avg($this, $fieldSuffix, $options);
+		$this->context = new Avg($this, $alias, $options);
+		$this->valueFuncs[Avg::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to accumulate values for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_accum" will be added to the result.
-	 * The column suffix "accum" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function accum($fieldSuffix = null, $options = null)
+	public function accum($alias = null, $options = null)
 	{
-		$this->funcs[Accum::class] = new Accum($this, $fieldSuffix, $options);
+		$this->context = new Accum($this, $alias, $options);
+		$this->valueFuncs[Accum::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to accumulate only a first value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_first" will be added to the result.
-	 * The column suffix "first" may be overwriten if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function first($fieldSuffix = null, $options = null)
+	public function first($alias = null, $options = null)
 	{
-		$this->funcs[First::class] = new First($this, $fieldSuffix, $options);
+		$this->context = new First($this, $alias, $options);
+		$this->valueFuncs[First::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate min value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_min" will be added to the result.
-	 * The column suffix "min" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function min($fieldSuffix = null, $options = null)
+	public function min($alias = null, $options = null)
 	{
-		$this->funcs[Min::class] = new Min($this, $fieldSuffix, $options);
+		$this->context = new Min($this, $alias, $options);
+		$this->valueFuncs[Min::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate max value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_max" will be added to the result.
-	 * The column suffix "max" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function max($fieldSuffix = null, $options = null)
+	public function max($alias = null, $options = null)
 	{
-		$this->funcs[Max::class] = new Max($this, $fieldSuffix, $options);
+		$this->context = new Max($this, $alias, $options);
+		$this->valueFuncs[Max::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate median value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_median" will be added to the result.
-	 * The column suffix "median" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function median($fieldSuffix = null, $options = null)
+	public function median($alias = null, $options = null)
 	{
-		$this->funcs[Median::class] = new Median($this, $fieldSuffix, $options);
+		$this->context = new Median($this, $alias, $options);
+		$this->valueFuncs[Median::class] = $this->context;
 		
 		return $this;
 	}
 	
 	/**
 	 * Whether to caclulate mode value for each value column in group.
-	 * Column with name "${Value Column Name/Alias}_mode" will be added to the result.
-	 * The column suffix "mode" may be overriden if $fieldSuffix is specified.
 	 * 
-	 * @param string $fieldSuffix
+	 * @param string $alias
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function mode($fieldSuffix = null, $options = null)
+	public function mode($alias = null, $options = null)
 	{
-		$this->funcs[Mode::class] = new Mode($this, $fieldSuffix, $options);
+		$this->context = new Mode($this, $alias, $options);
+		$this->valueFuncs[Mode::class] = $this->context;
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns list of functions that were specified for operation.
-	 * 
-	 * @return array
-	 */
-	public function getFuncs()
-	{
-		return $this->funcs;
 	}
 	
 	/**
@@ -196,6 +184,7 @@ class Group extends Base
 	 */
 	public function asAssoc($keyColumn = null, $valueColumn = null)
 	{
+		$this->context = null;
 		$this->outputFormat = self::OUTPUT_ASSOC;
 		
 		if ($keyColumn) {
@@ -212,6 +201,8 @@ class Group extends Base
 		if ($valueColumn) {
 			if ($valueColumn  instanceof \Closure) {
 				$this->assocValueFieldName = $valueColumn;
+			} elseif ($valueColumn == '*') {
+				$this->assocValueFieldName = self::ASSOC_ALL;
 			} else {
 				$this->assocValueFieldName = (string) $valueColumn;
 			}
@@ -219,10 +210,11 @@ class Group extends Base
 			$this->assocValueFieldName = ($this->valueCols
 				// Use alias of a first value column.
 				? $this->valueCols[0]->alias
-				: (isset($this->funcs[Count::class])
-					// Use filed name of a single group function.
-					? $this->funcs[Count::class]->getFieldName()
-					: '*'
+				: ($this->groupFuncs
+					// Use filed name of a first group function.
+					? array_values($this->groupFuncs)[0]->alias
+					// Use all value columns.
+					: self::ASSOC_ALL
 				)
 			);
 		}
@@ -230,19 +222,30 @@ class Group extends Base
 		return $this;
 	}
 	
+	private function hasCountAsterixFunc()
+	{
+		return isset($this->getGroupFuncs()[CountAsterix::class]);
+	}
+	
 	protected function validatePerform()
 	{
-		$funcs = $this->getFuncs();
-		if (!$this->valueCols && count($funcs) && !array_key_exists(Count::class, $funcs)) {
+		if (
+			   !$this->valueCols
+			&& count($this->valueFuncs)
+		) {
 			throw new \Weby\Sloth\Exception('No value columns to apply a function.');
+		}
+		
+		if (
+			   $this->valueCols
+			&& !count($this->valueFuncs)
+		) {
+			throw new \Weby\Sloth\Exception('No functions to apply to value columns.');
 		}
 	}
 	
 	protected function beginPerform()
 	{
-		$this->isOneFunc = count($this->funcs) == 1;
-		$this->isOneCol = count($this->valueCols) == 1;
-		
 		$this->resetOutput();
 		$this->resetStore();
 		$this->resetOutputCols();
@@ -290,7 +293,7 @@ class Group extends Base
 					$assocValue = call_user_func(
 						$this->assocValueFieldName, $assocKey, $row
 					);
-				} elseif ($this->assocValueFieldName == '*') {
+				} elseif ($this->assocValueFieldName == self::ASSOC_ALL) {
 					$assocValue = &$row;
 				} else {
 					$assocValue = &$row[$this->assocValueFieldName];
@@ -326,6 +329,17 @@ class Group extends Base
 			$row = Utils::toArray($row);
 		}
 		
+		$this->addGroup_processGroupCols($group, $row);
+		$this->addGroup_processGroupFuncs($group, $row);
+		$this->addGroup_processValueFuncs($group, $row);
+		
+		$this->groups[$key] = &$group;
+		
+		return $group;
+	}
+	
+	private function addGroup_processGroupCols(&$group, &$row)
+	{
 		foreach ($this->groupCols as $groupCol) {
 			$group[$groupCol->alias] = $row[$groupCol->name];
 			
@@ -333,10 +347,32 @@ class Group extends Base
 				$this->outputCols[] = $groupCol->alias;
 			}
 		}
-		
+	}
+	
+	private function addGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->groupFuncs as $groupFunc) {
+			$colName = $this->buildGroupFuncColumnName($groupFunc);
+			
+			if (!$this->groups) {
+				$this->outputCols[] = $colName;
+			}
+			
+			$group[$colName] = null;
+			$currValue = &$group[$colName];
+			$nextValue = null;
+			
+			$groupFunc->onAddGroup(
+				$group, $colName, $row, null, $currValue, $nextValue
+			);
+		}
+	}
+	
+	private function addGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->valueCols as $valueCol) {
-			foreach ($this->funcs as $func) {
-				$colName = $this->buildColumnName($valueCol, $func);
+			foreach ($this->valueFuncs as $valueFunc) {
+				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc);
 				
 				if (!$this->groups) {
 					$this->outputCols[] = $colName;
@@ -347,12 +383,12 @@ class Group extends Base
 				$currValue = &$group[$colName];
 				$nextValue = &$row[$valueCol->name];
 				
-				$func->onAddGroup(
+				$valueFunc->onAddGroup(
 					$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
+					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
@@ -360,10 +396,6 @@ class Group extends Base
 				}
 			}
 		}
-		
-		$this->groups[$key] = &$group;
-		
-		return $group;
 	}
 	
 	private function &updateGroup($key, $row)
@@ -374,12 +406,34 @@ class Group extends Base
 			$row = Utils::toArray($row);
 		}
 		
+		$this->updateGroup_processGroupFuncs($group, $row);
+		$this->updateGroup_processValueFuncs($group, $row);
+		
+		return $group;
+	}
+	
+	private function updateGroup_processGroupFuncs(&$group, &$row)
+	{
+		foreach ($this->groupFuncs as $groupFunc) {
+			$colName = $this->buildGroupFuncColumnName($groupFunc);
+			
+			$currValue = &$group[$colName];
+			$nextValue = null;
+			
+			$groupFunc->onUpdateGroup(
+				$group, $colName, $row, null, $currValue, $nextValue
+			);
+		}
+	}
+	
+	private function updateGroup_processValueFuncs(&$group, &$row)
+	{
 		foreach ($this->valueCols as $valueCol) {
-			foreach ($this->funcs as $func) {
-				$colName = $this->buildColumnName($valueCol, $func);
+			foreach ($this->valueFuncs as $valueFunc) {
+				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
+					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$colName] = &$group[$parts[0]][$parts[1]];
 					}
@@ -388,12 +442,12 @@ class Group extends Base
 				$currValue = &$group[$colName];
 				$nextValue = &$row[$valueCol->name];
 				
-				$func->onUpdateGroup(
+				$valueFunc->onUpdateGroup(
 					$group, $colName, $row, $valueCol->name, $currValue, $nextValue
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::FLAT_FIELD_SEPARATOR, $colName);
+					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
@@ -401,8 +455,6 @@ class Group extends Base
 				}
 			}
 		}
-		
-		return $group;
 	}
 	
 	protected function endPerform()

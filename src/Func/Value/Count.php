@@ -9,8 +9,6 @@
 
 namespace Weby\Sloth\Func\Value;
 
-use Weby\Sloth\Exception;
-
 /**
  * Calculates average (mean) value of a column.
  */
@@ -23,7 +21,11 @@ class Count extends Base
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		$currValue = 1;
+		if (is_null($nextValue)) {
+			$currValue = 0;
+		} else {
+			$currValue = 1;
+		}
 	}
 	
 	/**
@@ -33,6 +35,8 @@ class Count extends Base
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		$currValue++;
+		if (!is_null($nextValue)) {
+			$currValue++;
+		}
 	}
 }

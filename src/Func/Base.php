@@ -9,6 +9,7 @@
 
 namespace Weby\Sloth\Func;
 
+use Weby\Sloth\Exception;
 use Weby\Sloth\Sloth;
 use Weby\Sloth\Utils;
 
@@ -51,6 +52,14 @@ abstract class Base
 	 * @var \Weby\Sloth\Operation\Base
 	 */
 	protected $operation;
+	
+	/**
+	 * @return \Weby\Sloth\Func\Base
+	 */
+	static public function cast($object) : \Weby\Sloth\Func\Base
+	{
+		return $object;
+	}
 	
 	public function __construct(
 		\Weby\Sloth\Operation\Base $operation,
@@ -95,11 +104,25 @@ abstract class Base
 		return array_merge($defaultOptions, $options);
 	}
 	
+	private function ensureKnownOption($name)
+	{
+		if (!isset($this->defaultOptions[$name])) {
+			throw new Exception(sprintf('Unknown option "%s".', $name));
+		}
+	}
+	
+	public function setOption($name, $value)
+	{
+		$this->ensureKnownOption($name);
+		
+		$this->options[$name] = $value;
+	}
+	
 	protected function getStoreColumn($groupCol, $dataCol, $storeCol)
 	{
 		return ($groupCol
-			. Sloth::FLAT_FIELD_SEPARATOR . $dataCol
-			. Sloth::FLAT_FIELD_SEPARATOR . $storeCol
+			. Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $dataCol
+			. Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $storeCol
 		);
 	}
 }
