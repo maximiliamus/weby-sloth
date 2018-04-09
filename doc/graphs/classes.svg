@@ -34,173 +34,173 @@
 <text text-anchor="middle" x="238.946" y="-891.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Sloth</text>
 </g>
 <g id="clust4" class="cluster"><title>cluster_\Weby\Sloth\Func</title>
-<path fill="none" stroke="gray" d="M44,-32C44,-32 433.892,-32 433.892,-32 439.892,-32 445.892,-38 445.892,-44 445.892,-44 445.892,-586 445.892,-586 445.892,-592 439.892,-598 433.892,-598 433.892,-598 44,-598 44,-598 38,-598 32,-592 32,-586 32,-586 32,-44 32,-44 32,-38 38,-32 44,-32"/>
-<text text-anchor="middle" x="238.946" y="-585.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Func</text>
+<path fill="none" stroke="gray" d="M44,-32C44,-32 433.892,-32 433.892,-32 439.892,-32 445.892,-38 445.892,-44 445.892,-44 445.892,-640 445.892,-640 445.892,-646 439.892,-652 433.892,-652 433.892,-652 44,-652 44,-652 38,-652 32,-646 32,-640 32,-640 32,-44 32,-44 32,-38 38,-32 44,-32"/>
+<text text-anchor="middle" x="238.946" y="-639.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Func</text>
 </g>
 <g id="clust5" class="cluster"><title>cluster_\Weby\Sloth\Func\Group</title>
-<path fill="none" stroke="gray" d="M205.446,-498C205.446,-498 424.392,-498 424.392,-498 430.392,-498 436.392,-504 436.392,-510 436.392,-510 436.392,-558 436.392,-558 436.392,-564 430.392,-570 424.392,-570 424.392,-570 205.446,-570 205.446,-570 199.446,-570 193.446,-564 193.446,-558 193.446,-558 193.446,-510 193.446,-510 193.446,-504 199.446,-498 205.446,-498"/>
-<text text-anchor="middle" x="314.919" y="-557.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Group</text>
+<path fill="none" stroke="gray" d="M205.446,-552C205.446,-552 424.392,-552 424.392,-552 430.392,-552 436.392,-558 436.392,-564 436.392,-564 436.392,-612 436.392,-612 436.392,-618 430.392,-624 424.392,-624 424.392,-624 205.446,-624 205.446,-624 199.446,-624 193.446,-618 193.446,-612 193.446,-612 193.446,-564 193.446,-564 193.446,-558 199.446,-552 205.446,-552"/>
+<text text-anchor="middle" x="314.919" y="-611.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Group</text>
 </g>
 <g id="clust6" class="cluster"><title>cluster_\Weby\Sloth\Func\Value</title>
-<path fill="none" stroke="gray" d="M205.446,-40C205.446,-40 425.892,-40 425.892,-40 431.892,-40 437.892,-46 437.892,-52 437.892,-52 437.892,-478 437.892,-478 437.892,-484 431.892,-490 425.892,-490 425.892,-490 205.446,-490 205.446,-490 199.446,-490 193.446,-484 193.446,-478 193.446,-478 193.446,-52 193.446,-52 193.446,-46 199.446,-40 205.446,-40"/>
-<text text-anchor="middle" x="315.669" y="-477.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Value</text>
+<path fill="none" stroke="gray" d="M205.446,-40C205.446,-40 425.892,-40 425.892,-40 431.892,-40 437.892,-46 437.892,-52 437.892,-52 437.892,-532 437.892,-532 437.892,-538 431.892,-544 425.892,-544 425.892,-544 205.446,-544 205.446,-544 199.446,-544 193.446,-538 193.446,-532 193.446,-532 193.446,-52 193.446,-52 193.446,-46 199.446,-40 205.446,-40"/>
+<text text-anchor="middle" x="315.669" y="-531.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Value</text>
 </g>
 <g id="clust7" class="cluster"><title>cluster_\Weby\Sloth\Operation</title>
-<path fill="none" stroke="gray" d="M378.392,-706C378.392,-706 424.392,-706 424.392,-706 430.392,-706 436.392,-712 436.392,-718 436.392,-718 436.392,-820 436.392,-820 436.392,-826 430.392,-832 424.392,-832 424.392,-832 378.392,-832 378.392,-832 372.392,-832 366.392,-826 366.392,-820 366.392,-820 366.392,-718 366.392,-718 366.392,-712 372.392,-706 378.392,-706"/>
+<path fill="none" stroke="gray" d="M378.392,-760C378.392,-760 424.392,-760 424.392,-760 430.392,-760 436.392,-766 436.392,-772 436.392,-772 436.392,-820 436.392,-820 436.392,-826 430.392,-832 424.392,-832 424.392,-832 378.392,-832 378.392,-832 372.392,-832 366.392,-826 366.392,-820 366.392,-820 366.392,-772 366.392,-772 366.392,-766 372.392,-760 378.392,-760"/>
 <text text-anchor="middle" x="401.392" y="-819.2" font-family="Times New Roman,serif" font-size="11.00" fill="gray">Operation</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Group\\Count -->
 <g id="node1" class="node"><title>\\Weby\\Sloth\\Func\\Group\\Count</title>
-<polygon fill="none" stroke="black" points="428.392,-542 374.392,-542 374.392,-506 428.392,-506 428.392,-542"/>
-<text text-anchor="middle" x="401.392" y="-521.2" font-family="Courier,monospace" font-size="11.00">Count</text>
+<polygon fill="none" stroke="black" points="428.392,-596 374.392,-596 374.392,-560 428.392,-560 428.392,-596"/>
+<text text-anchor="middle" x="401.392" y="-575.2" font-family="Courier,monospace" font-size="11.00">Count</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Group\\Base -->
 <g id="node2" class="node"><title>\\Weby\\Sloth\\Func\\Group\\Base</title>
-<polygon fill="none" stroke="black" points="285.446,-542 201.446,-542 201.446,-506 285.446,-506 285.446,-542"/>
-<text text-anchor="start" x="209.446" y="-527.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
-<text text-anchor="start" x="229.446" y="-515.2" font-family="Courier,monospace" font-size="11.00">Base</text>
+<polygon fill="none" stroke="black" points="285.446,-596 201.446,-596 201.446,-560 285.446,-560 285.446,-596"/>
+<text text-anchor="start" x="209.446" y="-581.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
+<text text-anchor="start" x="229.446" y="-569.2" font-family="Courier,monospace" font-size="11.00">Base</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Group\\Count&#45;&gt;\\Weby\\Sloth\\Func\\Group\\Base -->
 <g id="edge1" class="edge"><title>\\Weby\\Sloth\\Func\\Group\\Count&#45;&gt;\\Weby\\Sloth\\Func\\Group\\Base</title>
-<path fill="none" stroke="black" d="M374.29,-524C352.933,-524 322.076,-524 295.801,-524"/>
-<polygon fill="none" stroke="black" points="295.612,-520.5 285.612,-524 295.612,-527.5 295.612,-520.5"/>
+<path fill="none" stroke="black" d="M374.29,-578C352.933,-578 322.076,-578 295.801,-578"/>
+<polygon fill="none" stroke="black" points="295.612,-574.5 285.612,-578 295.612,-581.5 295.612,-574.5"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Base -->
-<g id="node12" class="node"><title>\\Weby\\Sloth\\Func\\Base</title>
-<polygon fill="none" stroke="black" points="124,-421 40,-421 40,-385 124,-385 124,-421"/>
-<text text-anchor="start" x="48" y="-406.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
-<text text-anchor="start" x="68" y="-394.2" font-family="Courier,monospace" font-size="11.00">Base</text>
+<g id="node13" class="node"><title>\\Weby\\Sloth\\Func\\Base</title>
+<polygon fill="none" stroke="black" points="124,-461 40,-461 40,-425 124,-425 124,-461"/>
+<text text-anchor="start" x="48" y="-446.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
+<text text-anchor="start" x="68" y="-434.2" font-family="Courier,monospace" font-size="11.00">Base</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Group\\Base&#45;&gt;\\Weby\\Sloth\\Func\\Base -->
 <g id="edge2" class="edge"><title>\\Weby\\Sloth\\Func\\Group\\Base&#45;&gt;\\Weby\\Sloth\\Func\\Base</title>
-<path fill="none" stroke="black" d="M209.429,-505.955C203.136,-502.195 196.693,-498.118 190.848,-494 161.902,-473.606 131.263,-447.234 110.07,-428.134"/>
-<polygon fill="none" stroke="black" points="112.189,-425.33 102.434,-421.197 107.483,-430.512 112.189,-425.33"/>
+<path fill="none" stroke="black" d="M208.643,-559.953C202.547,-556.253 196.378,-552.198 190.848,-548 159.011,-523.83 126.715,-491.056 105.876,-468.59"/>
+<polygon fill="none" stroke="black" points="108.344,-466.102 99.0023,-461.104 103.188,-470.837 108.344,-466.102"/>
+</g>
+<!-- \\Weby\\Sloth\\Func\\Value\\Count -->
+<g id="node3" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Count</title>
+<polygon fill="none" stroke="black" points="428.392,-516 374.392,-516 374.392,-480 428.392,-480 428.392,-516"/>
+<text text-anchor="middle" x="401.392" y="-495.2" font-family="Courier,monospace" font-size="11.00">Count</text>
+</g>
+<!-- \\Weby\\Sloth\\Func\\Value\\Base -->
+<g id="node9" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Base</title>
+<polygon fill="none" stroke="black" points="285.446,-327 201.446,-327 201.446,-291 285.446,-291 285.446,-327"/>
+<text text-anchor="start" x="209.446" y="-312.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
+<text text-anchor="start" x="229.446" y="-300.2" font-family="Courier,monospace" font-size="11.00">Base</text>
+</g>
+<!-- \\Weby\\Sloth\\Func\\Value\\Count&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
+<g id="edge3" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Count&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
+<path fill="none" stroke="black" d="M374.113,-480.718C370.182,-477.676 366.308,-474.391 362.892,-471 320.402,-428.819 281.585,-370.271 260.655,-336.335"/>
+<polygon fill="none" stroke="black" points="263.432,-334.167 255.238,-327.45 257.455,-337.811 263.432,-334.167"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Sum -->
-<g id="node3" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Sum</title>
+<g id="node4" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Sum</title>
 <polygon fill="none" stroke="black" points="428.392,-462 374.392,-462 374.392,-426 428.392,-426 428.392,-462"/>
 <text text-anchor="middle" x="401.392" y="-441.2" font-family="Courier,monospace" font-size="11.00">Sum</text>
 </g>
-<!-- \\Weby\\Sloth\\Func\\Value\\Base -->
-<g id="node8" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Base</title>
-<polygon fill="none" stroke="black" points="285.446,-300 201.446,-300 201.446,-264 285.446,-264 285.446,-300"/>
-<text text-anchor="start" x="209.446" y="-285.2" font-family="Courier,monospace" font-size="11.00">«abstract»</text>
-<text text-anchor="start" x="229.446" y="-273.2" font-family="Courier,monospace" font-size="11.00">Base</text>
-</g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Sum&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
-<g id="edge3" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Sum&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.372,-426.445C370.408,-423.438 366.455,-420.236 362.892,-417 325.031,-382.615 287.06,-336.869 264.664,-308.438"/>
-<polygon fill="none" stroke="black" points="267.145,-305.929 258.23,-300.202 261.628,-310.238 267.145,-305.929"/>
+<g id="edge4" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Sum&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
+<path fill="none" stroke="black" d="M374.278,-425.791C370.406,-422.921 366.505,-419.932 362.892,-417 329.886,-390.219 294.103,-356.951 270.605,-334.47"/>
+<polygon fill="none" stroke="black" points="272.764,-331.69 263.129,-327.284 267.913,-336.737 272.764,-331.69"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Min -->
-<g id="node4" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Min</title>
+<g id="node5" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Min</title>
 <polygon fill="none" stroke="black" points="428.392,-408 374.392,-408 374.392,-372 428.392,-372 428.392,-408"/>
 <text text-anchor="middle" x="401.392" y="-387.2" font-family="Courier,monospace" font-size="11.00">Min</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Min&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
-<g id="edge4" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Min&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.29,-371.923C348.202,-353.856 307.936,-325.97 279.164,-306.044"/>
-<polygon fill="none" stroke="black" points="280.846,-302.952 270.633,-300.136 276.861,-308.707 280.846,-302.952"/>
+<g id="edge5" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Min&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
+<path fill="none" stroke="black" d="M374.29,-376.442C350.842,-364.263 315.94,-346.135 288.225,-331.739"/>
+<polygon fill="none" stroke="black" points="289.616,-328.518 279.129,-327.015 286.39,-334.73 289.616,-328.518"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Max -->
-<g id="node5" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Max</title>
+<g id="node6" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Max</title>
 <polygon fill="none" stroke="black" points="428.392,-354 374.392,-354 374.392,-318 428.392,-318 428.392,-354"/>
 <text text-anchor="middle" x="401.392" y="-333.2" font-family="Courier,monospace" font-size="11.00">Max</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Max&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
 <g id="edge6" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Max&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.29,-326.962C352.744,-319.501 321.529,-308.692 295.104,-299.542"/>
-<polygon fill="none" stroke="black" points="296.207,-296.22 285.612,-296.255 293.917,-302.834 296.207,-296.22"/>
+<path fill="none" stroke="black" d="M374.29,-331.481C352.933,-327.783 322.076,-322.441 295.801,-317.891"/>
+<polygon fill="none" stroke="black" points="296.063,-314.385 285.612,-316.127 294.869,-321.282 296.063,-314.385"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Avg -->
-<g id="node6" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Avg</title>
+<g id="node7" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Avg</title>
 <polygon fill="none" stroke="black" points="428.392,-300 374.392,-300 374.392,-264 428.392,-264 428.392,-300"/>
 <text text-anchor="middle" x="401.392" y="-279.2" font-family="Courier,monospace" font-size="11.00">Avg</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Avg&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
 <g id="edge7" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Avg&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.29,-282C352.933,-282 322.076,-282 295.801,-282"/>
-<polygon fill="none" stroke="black" points="295.612,-278.5 285.612,-282 295.612,-285.5 295.612,-278.5"/>
+<path fill="none" stroke="black" d="M374.29,-286.519C352.933,-290.217 322.076,-295.559 295.801,-300.109"/>
+<polygon fill="none" stroke="black" points="294.869,-296.718 285.612,-301.873 296.063,-303.615 294.869,-296.718"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Accum -->
-<g id="node7" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Accum</title>
+<g id="node8" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Accum</title>
 <polygon fill="none" stroke="black" points="428.392,-246 374.392,-246 374.392,-210 428.392,-210 428.392,-246"/>
 <text text-anchor="middle" x="401.392" y="-225.2" font-family="Courier,monospace" font-size="11.00">Accum</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Accum&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
 <g id="edge9" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Accum&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.29,-237.038C352.744,-244.499 321.529,-255.308 295.104,-264.458"/>
-<polygon fill="none" stroke="black" points="293.917,-261.166 285.612,-267.745 296.207,-267.78 293.917,-261.166"/>
+<path fill="none" stroke="black" d="M374.29,-241.558C350.842,-253.737 315.94,-271.865 288.225,-286.261"/>
+<polygon fill="none" stroke="black" points="286.39,-283.27 279.129,-290.985 289.616,-289.482 286.39,-283.27"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Base&#45;&gt;\\Weby\\Sloth\\Func\\Base -->
 <g id="edge11" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Base&#45;&gt;\\Weby\\Sloth\\Func\\Base</title>
-<path fill="none" stroke="black" d="M218.575,-300.115C191.02,-321.026 145.576,-355.513 114.981,-378.73"/>
-<polygon fill="none" stroke="black" points="112.623,-376.126 106.773,-384.959 116.855,-381.702 112.623,-376.126"/>
+<path fill="none" stroke="black" d="M220.942,-327.072C193.007,-350.549 144.103,-391.649 112.657,-418.076"/>
+<polygon fill="none" stroke="black" points="110.076,-415.673 104.672,-424.787 114.579,-421.032 110.076,-415.673"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Median -->
-<g id="node9" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Median</title>
+<g id="node10" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Median</title>
 <polygon fill="none" stroke="black" points="429.892,-192 372.892,-192 372.892,-156 429.892,-156 429.892,-192"/>
 <text text-anchor="middle" x="401.392" y="-171.2" font-family="Courier,monospace" font-size="11.00">Median</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Median&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
 <g id="edge12" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Median&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.29,-192.077C348.202,-210.144 307.936,-238.03 279.164,-257.956"/>
-<polygon fill="none" stroke="black" points="276.861,-255.293 270.633,-263.864 280.846,-261.048 276.861,-255.293"/>
+<path fill="none" stroke="black" d="M374.278,-192.209C370.406,-195.079 366.505,-198.068 362.892,-201 329.886,-227.781 294.103,-261.049 270.605,-283.53"/>
+<polygon fill="none" stroke="black" points="267.913,-281.263 263.129,-290.716 272.764,-286.31 267.913,-281.263"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Mode -->
-<g id="node10" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Mode</title>
+<g id="node11" class="node"><title>\\Weby\\Sloth\\Func\\Value\\Mode</title>
 <polygon fill="none" stroke="black" points="428.392,-138 374.392,-138 374.392,-102 428.392,-102 428.392,-138"/>
 <text text-anchor="middle" x="401.392" y="-117.2" font-family="Courier,monospace" font-size="11.00">Mode</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\Mode&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
 <g id="edge13" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\Mode&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.372,-137.555C370.408,-140.562 366.455,-143.764 362.892,-147 325.031,-181.385 287.06,-227.131 264.664,-255.562"/>
-<polygon fill="none" stroke="black" points="261.628,-253.762 258.23,-263.798 267.145,-258.071 261.628,-253.762"/>
+<path fill="none" stroke="black" d="M374.113,-137.282C370.182,-140.324 366.308,-143.609 362.892,-147 320.402,-189.181 281.585,-247.729 260.655,-281.665"/>
+<polygon fill="none" stroke="black" points="257.455,-280.189 255.238,-290.55 263.432,-283.833 257.455,-280.189"/>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\First -->
-<g id="node11" class="node"><title>\\Weby\\Sloth\\Func\\Value\\First</title>
+<g id="node12" class="node"><title>\\Weby\\Sloth\\Func\\Value\\First</title>
 <polygon fill="none" stroke="black" points="428.392,-84 374.392,-84 374.392,-48 428.392,-48 428.392,-84"/>
 <text text-anchor="middle" x="401.392" y="-63.2" font-family="Courier,monospace" font-size="11.00">First</text>
 </g>
 <!-- \\Weby\\Sloth\\Func\\Value\\First&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base -->
 <g id="edge14" class="edge"><title>\\Weby\\Sloth\\Func\\Value\\First&#45;&gt;\\Weby\\Sloth\\Func\\Value\\Base</title>
-<path fill="none" stroke="black" d="M374.287,-82.7654C370.248,-85.9174 366.294,-89.3719 362.892,-93 315.518,-143.517 276.528,-215.693 257.328,-254.611"/>
-<polygon fill="none" stroke="black" points="254.107,-253.231 252.88,-263.755 260.402,-256.293 254.107,-253.231"/>
+<path fill="none" stroke="black" d="M374.102,-82.5974C370.086,-85.7696 366.187,-89.2744 362.892,-93 310.712,-151.994 272.311,-237.887 254.867,-281.451"/>
+<polygon fill="none" stroke="black" points="251.582,-280.241 251.176,-290.828 258.095,-282.805 251.582,-280.241"/>
 </g>
-<!-- \\Weby\\Sloth\\Operation\\Pivot -->
-<g id="node13" class="node"><title>\\Weby\\Sloth\\Operation\\Pivot</title>
+<!-- \\Weby\\Sloth\\Operation\\Group -->
+<g id="node14" class="node"><title>\\Weby\\Sloth\\Operation\\Group</title>
 <polygon fill="none" stroke="black" points="428.392,-804 374.392,-804 374.392,-768 428.392,-768 428.392,-804"/>
-<text text-anchor="middle" x="401.392" y="-783.2" font-family="Courier,monospace" font-size="11.00">Pivot</text>
+<text text-anchor="middle" x="401.392" y="-783.2" font-family="Courier,monospace" font-size="11.00">Group</text>
 </g>
 <!-- Base -->
 <g id="node18" class="node"><title>Base</title>
 <ellipse fill="none" stroke="black" cx="243.446" cy="-982" rx="28.6953" ry="18"/>
 <text text-anchor="middle" x="243.446" y="-978.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Base</text>
 </g>
-<!-- \\Weby\\Sloth\\Operation\\Pivot&#45;&gt;Base -->
-<g id="edge5" class="edge"><title>\\Weby\\Sloth\\Operation\\Pivot&#45;&gt;Base</title>
+<!-- \\Weby\\Sloth\\Operation\\Group&#45;&gt;Base -->
+<g id="edge8" class="edge"><title>\\Weby\\Sloth\\Operation\\Group&#45;&gt;Base</title>
 <path fill="none" stroke="black" d="M374.314,-799.247C370.272,-801.865 366.31,-804.804 362.892,-808 315.356,-852.447 276.638,-919.259 257.473,-955.809"/>
 <polygon fill="none" stroke="black" points="254.285,-954.354 252.811,-964.846 260.506,-957.563 254.285,-954.354"/>
 </g>
-<!-- \\Weby\\Sloth\\Operation\\Group -->
-<g id="node14" class="node"><title>\\Weby\\Sloth\\Operation\\Group</title>
-<polygon fill="none" stroke="black" points="428.392,-750 374.392,-750 374.392,-714 428.392,-714 428.392,-750"/>
-<text text-anchor="middle" x="401.392" y="-729.2" font-family="Courier,monospace" font-size="11.00">Group</text>
-</g>
-<!-- \\Weby\\Sloth\\Operation\\Group&#45;&gt;Base -->
-<g id="edge8" class="edge"><title>\\Weby\\Sloth\\Operation\\Group&#45;&gt;Base</title>
-<path fill="none" stroke="black" d="M374.059,-748.56C370.048,-751.736 366.162,-755.252 362.892,-759 309.276,-820.438 271.041,-910.327 254.142,-954.886"/>
-<polygon fill="none" stroke="black" points="250.795,-953.846 250.584,-964.439 257.355,-956.289 250.795,-953.846"/>
-</g>
 <!-- \\Weby\\Sloth\\Sloth -->
 <g id="node15" class="node"><title>\\Weby\\Sloth\\Sloth</title>
-<polygon fill="none" stroke="black" points="428.392,-696 374.392,-696 374.392,-660 428.392,-660 428.392,-696"/>
-<text text-anchor="middle" x="401.392" y="-675.2" font-family="Courier,monospace" font-size="11.00">Sloth</text>
+<polygon fill="none" stroke="black" points="428.392,-750 374.392,-750 374.392,-714 428.392,-714 428.392,-750"/>
+<text text-anchor="middle" x="401.392" y="-729.2" font-family="Courier,monospace" font-size="11.00">Sloth</text>
 </g>
 <!-- \\Weby\\Sloth\\Utils -->
 <g id="node16" class="node"><title>\\Weby\\Sloth\\Utils</title>
-<polygon fill="none" stroke="black" points="428.392,-642 374.392,-642 374.392,-606 428.392,-606 428.392,-642"/>
-<text text-anchor="middle" x="401.392" y="-621.2" font-family="Courier,monospace" font-size="11.00">Utils</text>
+<polygon fill="none" stroke="black" points="428.392,-696 374.392,-696 374.392,-660 428.392,-660 428.392,-696"/>
+<text text-anchor="middle" x="401.392" y="-675.2" font-family="Courier,monospace" font-size="11.00">Utils</text>
 </g>
 <!-- \\Weby\\Sloth\\Exception -->
 <g id="node17" class="node"><title>\\Weby\\Sloth\\Exception</title>
