@@ -61,15 +61,14 @@ abstract class Base
 		return $object;
 	}
 	
-	public function __construct(
-		\Weby\Sloth\Operation\Base $operation,
-		string $alias = null,
-		array $options = null
-	) {
-		$this->name = $this->getFuncName();
-		$this->alias = $alias ? $alias : $this->name;
+	public function __construct(\Weby\Sloth\Operation\Base $operation)
+	{
 		$this->operation = $operation;
-		$this->options = $this->setOptions($options);
+		$this->name = $this->getFuncName();
+		$this->alias = $this->name;
+		
+		$this->options = [];
+		$this->setOptions($this->defaultOptions);
 	}
 	
 	/**
@@ -99,9 +98,8 @@ abstract class Base
 	protected function setOptions($options)
 	{
 		$options = Utils::normalizeArray($options);
-		$defaultOptions = Utils::normalizeArray($this->defaultOptions);
 		
-		return array_merge($defaultOptions, $options);
+		$this->options = array_merge($this->options, $options);
 	}
 	
 	private function ensureKnownOption($name)

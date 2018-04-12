@@ -40,20 +40,34 @@ class Group extends Base
 		parent::__construct($sloth, $groupCols, $valueCols);
 	}
 	
+	private function mapColsToFunc($cols, $func)
+	{
+		$cols = ($cols
+			? (array) $cols
+			: array_map(function ($col) {return $col->alias;}, $this->valueCols)
+		);
+		
+		foreach ($cols as $col) {
+			$this->colToFuncMap[$col][$func] = $this->context;
+		}
+	}
+	
 	/**
 	 * Whether to calculate record count in a group.
 	 * 
-	 * @param string $alias
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function count($alias = null, $options = null)
+	public function count($cols = null)
 	{
-		if ($alias == '*') {
-			$this->context = new CountAsterix($this, $alias, $options);
+		if ($cols == '*') {
+			$this->context = new CountAsterix($this);
+			$this->context->alias = $cols;
 			$this->groupFuncs[CountAsterix::class] = $this->context;
 		} else {
-			$this->context = new Count($this, $alias, $options);
+			$this->context = new Count($this);
 			$this->valueFuncs[Count::class] = $this->context;
+			$this->mapColsToFunc($cols, Sum::class);
 		}
 		
 		return $this;
@@ -62,13 +76,14 @@ class Group extends Base
 	/**
 	 * Whether to sum values for each value column in a group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function sum($alias = null, $options = null)
+	public function sum($cols = null)
 	{
-		$this->context = new Sum($this, $alias, $options);
+		$this->context = new Sum($this);
 		$this->valueFuncs[Sum::class] = $this->context;
+		$this->mapColsToFunc($cols, Sum::class);
 		
 		return $this;
 	}
@@ -76,13 +91,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate average value for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function avg($alias = null, $options = null)
+	public function avg($cols = null)
 	{
-		$this->context = new Avg($this, $alias, $options);
+		$this->context = new Avg($this);
 		$this->valueFuncs[Avg::class] = $this->context;
+		$this->mapColsToFunc($cols, Avg::class);
 		
 		return $this;
 	}
@@ -90,13 +106,14 @@ class Group extends Base
 	/**
 	 * Whether to accumulate values for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function accum($alias = null, $options = null)
+	public function accum($cols = null)
 	{
-		$this->context = new Accum($this, $alias, $options);
+		$this->context = new Accum($this);
 		$this->valueFuncs[Accum::class] = $this->context;
+		$this->mapColsToFunc($cols, Accum::class);
 		
 		return $this;
 	}
@@ -104,13 +121,14 @@ class Group extends Base
 	/**
 	 * Whether to accumulate only a first value for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function first($alias = null, $options = null)
+	public function first($cols = null)
 	{
-		$this->context = new First($this, $alias, $options);
+		$this->context = new First($this);
 		$this->valueFuncs[First::class] = $this->context;
+		$this->mapColsToFunc($cols, First::class);
 		
 		return $this;
 	}
@@ -118,13 +136,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate min value for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function min($alias = null, $options = null)
+	public function min($cols = null)
 	{
-		$this->context = new Min($this, $alias, $options);
+		$this->context = new Min($this);
 		$this->valueFuncs[Min::class] = $this->context;
+		$this->mapColsToFunc($cols, Min::class);
 		
 		return $this;
 	}
@@ -132,13 +151,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate max value for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function max($alias = null, $options = null)
+	public function max($cols = null)
 	{
-		$this->context = new Max($this, $alias, $options);
+		$this->context = new Max($this);
 		$this->valueFuncs[Max::class] = $this->context;
+		$this->mapColsToFunc($cols, Max::class);
 		
 		return $this;
 	}
@@ -146,13 +166,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate median value for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function median($alias = null, $options = null)
+	public function median($cols = null)
 	{
-		$this->context = new Median($this, $alias, $options);
+		$this->context = new Median($this);
 		$this->valueFuncs[Median::class] = $this->context;
+		$this->mapColsToFunc($cols, Median::class);
 		
 		return $this;
 	}
@@ -160,13 +181,14 @@ class Group extends Base
 	/**
 	 * Whether to caclulate mode value for each value column in group.
 	 * 
-	 * @param string $alias
+	 * @param string $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
-	public function mode($alias = null, $options = null)
+	public function mode($cols = null)
 	{
-		$this->context = new Mode($this, $alias, $options);
+		$this->context = new Mode($this);
 		$this->valueFuncs[Mode::class] = $this->context;
+		$this->mapColsToFunc($cols, Mode::class);
 		
 		return $this;
 	}

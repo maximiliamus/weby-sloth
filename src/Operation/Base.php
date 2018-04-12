@@ -51,6 +51,7 @@ abstract class Base
 	protected $isFlatOutput = false;
 	
 	protected $context = null;
+	protected $colToFuncMap = null;
 	
 	private $assocKeyFieldName = null;
 	private $assocValueFieldName = null;
