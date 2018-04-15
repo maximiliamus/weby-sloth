@@ -62,13 +62,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::count()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function count($alias = null, $options = null)
+	public function count($cols = null)
 	{
-		$this->group->count($alias, $options);
+		$this->group->count($cols);
 		
 		return $this;
 	}
@@ -76,13 +75,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::accum()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function accum($alias = null, $options = null)
+	public function accum($cols = null)
 	{
-		$this->group->accum($alias, $options);
+		$this->group->accum($cols);
 		
 		return $this;
 	}
@@ -90,13 +88,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::avg()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function avg($alias = null, $options = null)
+	public function avg($cols = null)
 	{
-		$this->group->avg($alias, $options);
+		$this->group->avg($cols);
 		
 		return $this;
 	}
@@ -104,13 +101,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::first()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function first($alias = null, $options = null)
+	public function first($cols = null)
 	{
-		$this->group->first($alias, $options);
+		$this->group->first($cols);
 		
 		return $this;
 	}
@@ -118,13 +114,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::median()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function median($alias = null, $options = null)
+	public function median($cols = null)
 	{
-		$this->group->median($alias, $options);
+		$this->group->median($cols);
 		
 		return $this;
 	}
@@ -132,13 +127,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::min()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function max($alias = null, $options = null)
+	public function max($cols = null)
 	{
-		$this->group->max($alias, $options);
+		$this->group->max($cols);
 		
 		return $this;
 	}
@@ -146,13 +140,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::min()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function min($alias = null, $options = null)
+	public function min($cols = null)
 	{
-		$this->group->min($alias, $options);
+		$this->group->min($cols);
 		
 		return $this;
 	}
@@ -160,13 +153,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::mode()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function mode($alias = null, $options = null)
+	public function mode($cols = null)
 	{
-		$this->group->mode($alias, $options);
+		$this->group->mode($cols);
 		
 		return $this;
 	}
@@ -174,13 +166,12 @@ class Pivot extends Base
 	/**
 	 * @see \Weby\Sloth\Operation\Group::sum()
 	 * 
-	 * @param string $alias
-	 * @param array $options
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Pivot
 	 */
-	public function sum($alias = null, $options = null)
+	public function sum($cols = null)
 	{
-		$this->group->sum($alias, $options);
+		$this->group->sum($cols);
 		
 		return $this;
 	}
@@ -211,7 +202,6 @@ class Pivot extends Base
 			$this->group->first();
 		}
 		
-		$this->isOneFunc = count($this->group->getValueFuncs()) == 1;
 		$this->isOneCol = count($this->group->getValueCols()) == 1;
 		
 		$this->resetOutput();
@@ -221,6 +211,7 @@ class Pivot extends Base
 	protected function doPerform()
 	{
 		$groupedData = $this->group->fetch();
+		//print_r($groupedData);
 		foreach ($groupedData as $row) {
 			$key = $this->getGroupKey($row);
 			if (!$this->isGroup($key)) {
@@ -245,14 +236,14 @@ class Pivot extends Base
 		return [$groupColName, $pivotColName];
 	}
 	
-	protected function buildValueFuncColumnName($valueCol, $valueFunc, $columnCol = null)
+	protected function buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc, $columnCol = null)
 	{
-		$groupColName = parent::buildValueFuncColumnName($valueCol, $valueFunc);
+		$groupColName = parent::buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc);
 		$pivotColName = $columnCol;
 		
 		if ($this->isOptimizeColumnNames) {
 			$pivotColName = (
-				  $this->isOneCol && $this->isOneFunc
+				  $this->isOneCol && $isOneFunc
 				? $pivotColName
 				: $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName
 			);
@@ -307,9 +298,11 @@ class Pivot extends Base
 	{
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
-				foreach ($this->group->getValueFuncs() as $valueFunc) {
+				$valueFuncs = $this->group->getColToFuncMap()[$valueCol->alias];
+				$isOneFunc = count($valueFuncs) == 1;
+				foreach ($valueFuncs as $valueFunc) {
 					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
-						$valueCol, $valueFunc, $row[$columnCol->name]
+						$valueCol, $valueFunc, $isOneFunc, $row[$columnCol->name]
 					);
 					
 					// If there are different number of cols
@@ -390,9 +383,11 @@ class Pivot extends Base
 	{
 		foreach ($this->columnCols as $columnCol) {
 			foreach ($this->valueCols as $valueCol) {
-				foreach ($this->group->getValueFuncs() as $valueFunc) {
+				$valueFuncs = $this->group->getColToFuncMap()[$valueCol->alias];
+				$isOneFunc = count($valueFuncs) == 1;
+				foreach ($valueFuncs as $valueFunc) {
 					list($groupColName, $pivotColName) = $this->buildValueFuncColumnName(
-						$valueCol, $valueFunc, $row[$columnCol->name]
+						$valueCol, $valueFunc, $isOneFunc, $row[$columnCol->name]
 					);
 					
 					if (!isset($this->columnColsAliases[$pivotColName])) {

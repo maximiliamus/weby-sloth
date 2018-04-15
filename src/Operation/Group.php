@@ -67,7 +67,7 @@ class Group extends Base
 		} else {
 			$this->context = new Count($this);
 			$this->valueFuncs[Count::class] = $this->context;
-			$this->mapColsToFunc($cols, Sum::class);
+			$this->mapColsToFunc($cols, Count::class);
 		}
 		
 		return $this;
@@ -76,7 +76,7 @@ class Group extends Base
 	/**
 	 * Whether to sum values for each value column in a group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function sum($cols = null)
@@ -91,7 +91,7 @@ class Group extends Base
 	/**
 	 * Whether to caclulate average value for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function avg($cols = null)
@@ -106,7 +106,7 @@ class Group extends Base
 	/**
 	 * Whether to accumulate values for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function accum($cols = null)
@@ -121,7 +121,7 @@ class Group extends Base
 	/**
 	 * Whether to accumulate only a first value for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function first($cols = null)
@@ -136,7 +136,7 @@ class Group extends Base
 	/**
 	 * Whether to caclulate min value for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function min($cols = null)
@@ -151,7 +151,7 @@ class Group extends Base
 	/**
 	 * Whether to caclulate max value for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function max($cols = null)
@@ -166,7 +166,7 @@ class Group extends Base
 	/**
 	 * Whether to caclulate median value for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function median($cols = null)
@@ -181,7 +181,7 @@ class Group extends Base
 	/**
 	 * Whether to caclulate mode value for each value column in group.
 	 * 
-	 * @param string $cols
+	 * @param mixed $cols
 	 * @return \Weby\Sloth\Operation\Group
 	 */
 	public function mode($cols = null)
@@ -393,8 +393,10 @@ class Group extends Base
 	private function addGroup_processValueFuncs(&$group, &$row)
 	{
 		foreach ($this->valueCols as $valueCol) {
-			foreach ($this->valueFuncs as $valueFunc) {
-				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc);
+			$valueFuncs = $this->colToFuncMap[$valueCol->alias];
+			$isOneFunc = count($valueFuncs) == 1;
+			foreach ($valueFuncs as $valueFunc) {
+				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc);
 				
 				if (!$this->groups) {
 					$this->outputCols[] = $colName;
@@ -451,8 +453,10 @@ class Group extends Base
 	private function updateGroup_processValueFuncs(&$group, &$row)
 	{
 		foreach ($this->valueCols as $valueCol) {
-			foreach ($this->valueFuncs as $valueFunc) {
-				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc);
+			$valueFuncs = $this->colToFuncMap[$valueCol->alias];
+			$isOneFunc = count($valueFuncs) == 1;
+			foreach ($valueFuncs as $valueFunc) {
+				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc);
 				
 				if (!$this->isFlatOutput) {
 					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);

@@ -45,7 +45,6 @@ abstract class Base
 	protected $scale = 2;
 	
 	protected $isOptimizeColumnNames = true;
-	protected $isOneFunc = false;
 	protected $isOneCol = false;
 	
 	protected $isFlatOutput = false;
@@ -153,7 +152,6 @@ abstract class Base
 	{
 		$this->context = null;
 		
-		$this->isOneFunc = count($this->valueFuncs) == 1;
 		$this->isOneCol = count($this->valueCols) == 1;
 		
 		$this->validatePerform();
@@ -168,6 +166,16 @@ abstract class Base
 	abstract protected function beginPerform();
 	abstract protected function doPerform();
 	abstract protected function endPerform();
+	
+	/**
+	 * Returns info about what functions will be applied to each value column.
+	 * 
+	 * @return array
+	 */
+	public function getColToFuncMap()
+	{
+		return $this->colToFuncMap;
+	}
 	
 	/**
 	 * Returns list of group columns that were specified for operation.
@@ -357,7 +365,7 @@ abstract class Base
 		return $groupFunc->alias;
 	}
 	
-	protected function buildValueFuncColumnName($valueCol, $valueFunc)
+	protected function buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc)
 	{
 		$result = null;
 		
@@ -366,13 +374,13 @@ abstract class Base
 		
 		if ($this->isOptimizeColumnNames) {
 			$result = (
-				  $this->isOneCol && $this->isOneFunc
+				  $this->isOneCol && $isOneFunc
 				? $colName
 				: (
 					  $this->isOneCol
 					? $funcName
 					: (
-						  $this->isOneFunc
+						  $isOneFunc
 						? $colName
 						: $colName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $funcName
 					)
@@ -416,8 +424,8 @@ abstract class Base
 	/**
 	 * Sets single function's option via fluent "manner".
 	 * 
-	 * @param unknown $method
-	 * @param unknown $args
+	 * @param string $method
+	 * @param array $args
 	 * @return \Weby\Sloth\Operation\Base
 	 */
 	public function __call($method, $args)
