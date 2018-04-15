@@ -54,6 +54,11 @@ abstract class Base
 	protected $operation;
 	
 	/**
+	 * "Casts" mixed variable to func.
+	 * Auxiliary method for dev purposes.
+	 * After such cast IDE undestands type of var
+	 * and we can use code completion functionallity.
+	 * 
 	 * @return \Weby\Sloth\Func\Base
 	 */
 	static public function cast($object) : \Weby\Sloth\Func\Base
@@ -66,9 +71,7 @@ abstract class Base
 		$this->operation = $operation;
 		$this->name = $this->getFuncName();
 		$this->alias = $this->name;
-		
-		$this->options = [];
-		$this->setOptions($this->defaultOptions);
+		$this->options = $this->defaultOptions;
 	}
 	
 	/**
@@ -95,13 +98,6 @@ abstract class Base
 		return lcfirst($lastPart);
 	}
 	
-	protected function setOptions($options)
-	{
-		$options = Utils::normalizeArray($options);
-		
-		$this->options = array_merge($this->options, $options);
-	}
-	
 	private function ensureKnownOption($name)
 	{
 		if (!isset($this->defaultOptions[$name])) {
@@ -109,11 +105,31 @@ abstract class Base
 		}
 	}
 	
+	/**
+	 * Sets single function's option.
+	 * 
+	 * @param string $name
+	 * @param mixed $value
+	 */
 	public function setOption($name, $value)
 	{
 		$this->ensureKnownOption($name);
 		
 		$this->options[$name] = $value;
+	}
+	
+	/**
+	 * Sets multiple function's options.
+	 * 
+	 * @param array $options
+	 */
+	public function setOptions($options)
+	{
+		$options = Utils::normalizeArray($options);
+		
+		foreach ($options as $name => $value) {
+			$this->setOption($name, $value);
+		}
 	}
 	
 	protected function getStoreColumn($groupCol, $dataCol, $storeCol)

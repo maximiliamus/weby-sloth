@@ -146,6 +146,8 @@ abstract class Base
 	
 	/**
 	 * Performs operation.
+	 * 
+	 * @return \Weby\Sloth\Operation\Base
 	 */
 	public function perform()
 	{
@@ -395,6 +397,12 @@ abstract class Base
 		}
 	}
 	
+	/**
+	 * Sets alias for function.
+	 * 
+	 * @param string $alias
+	 * @return \Weby\Sloth\Operation\Base
+	 */
 	public function as($alias)
 	{
 		$this->ensureFunctionContext();
@@ -405,12 +413,45 @@ abstract class Base
 		return $this;
 	}
 	
+	/**
+	 * Sets single function's option via fluent "manner".
+	 * 
+	 * @param unknown $method
+	 * @param unknown $args
+	 * @return \Weby\Sloth\Operation\Base
+	 */
 	public function __call($method, $args)
 	{
-		if ($this->isFunctionContext()) {
-			$func = \Weby\Sloth\Func\Base::cast($this->context);
-			$func->setOption($method, $args[0]);
-		}
+		$this->ensureFunctionContext();
+		
+		$func = \Weby\Sloth\Func\Base::cast($this->context);
+		$func->setOption($method, $args[0]);
+		
+		return $this;
+	}
+	
+	/**
+	 * 
+	 * @param string $name
+	 * @param mixed $value
+	 * @return \Weby\Sloth\Operation\Base
+	 */
+	public function setOption($name, $value)
+	{
+		$this->ensureFunctionContext();
+		
+		$func = \Weby\Sloth\Func\Base::cast($this->context);
+		$func->setOption($name, $value);
+		
+		return $this;
+	}
+	
+	public function setOptions($options)
+	{
+		$this->ensureFunctionContext();
+		
+		$func = \Weby\Sloth\Func\Base::cast($this->context);
+		$func->setOptions($options);
 		
 		return $this;
 	}
