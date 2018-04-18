@@ -23,8 +23,10 @@ class Min extends Base
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		if ($nextValue < $currValue) {
-			$currValue = $nextValue;
+		if (!is_null($nextValue)) {
+			if ($nextValue < $currValue) {
+				$currValue = $nextValue;
+			}
 		}
 	}
 }

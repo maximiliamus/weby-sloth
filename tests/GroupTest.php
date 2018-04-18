@@ -9,11 +9,13 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		[
 			[
 				[
-					[1, 'group1', 's1', 1, 0.1, true,  ['a1']],
-					[3, 'group1', 's3', 1, 0.1, true,  ['a3']],
-					[2, 'group2', 's2', 2, 0.2, true,  ['a2']],
-					[5, 'group2', 's5', 2, 0.2, false, ['a5']],
-					[4, 'group2', 's4', 2, 0.2, true,  ['a4']],
+					[1, 'group1', 's1',    1,  0.1,  true,  ['a1']],
+					[3, 'group1', 's3',    1,  0.1,  true,  ['a3']],
+					[2, 'group2', 's2',    2,  0.2,  true,  ['a2']],
+					[5, 'group2', 's5',    2,  0.2, false,  ['a5']],
+					[4, 'group2', 's4',    2,  0.2,  true,  ['a4']],
+					[6, 'group1', null, null, null,  null,    null],
+					[7, 'group2', null, null, null,  null,    null],
 				],
 			],
 		];
@@ -25,11 +27,13 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		[
 			[
 				[
-					['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a1']],
-					['id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a3']],
-					['id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a2']],
-					['id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' => 2, 'double' => 0.2, 'boolean' => false, 'array' => ['a5']],
-					['id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a4']],
+					['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' =>    1, 'double' =>  0.1, 'boolean' =>  true,  'array' => ['a1']],
+					['id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' =>    1, 'double' =>  0.1, 'boolean' =>  true,  'array' => ['a3']],
+					['id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' =>    2, 'double' =>  0.2, 'boolean' =>  true,  'array' => ['a2']],
+					['id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' =>    2, 'double' =>  0.2, 'boolean' => false,  'array' => ['a5']],
+					['id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' =>    2, 'double' =>  0.2, 'boolean' =>  true,  'array' => ['a4']],
+					['id' => 6, 'group' => 'group1', 'string' => null, 'integer' => null, 'double' => null, 'boolean' =>  null,  'array' =>   null],
+					['id' => 7, 'group' => 'group2', 'string' => null, 'integer' => null, 'double' => null, 'boolean' =>  null,  'array' =>   null],
 				],
 			],
 		];
@@ -41,11 +45,13 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		[
 			[
 				[
-					(object) ['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a1']],
-					(object) ['id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' => 1, 'double' => 0.1, 'boolean' => true,  'array' => ['a3']],
-					(object) ['id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a2']],
-					(object) ['id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' => 2, 'double' => 0.2, 'boolean' => false, 'array' => ['a5']],
-					(object) ['id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' => 2, 'double' => 0.2, 'boolean' => true,  'array' => ['a4']],
+					(object) ['id' => 1, 'group' => 'group1', 'string' => 's1', 'integer' =>    1, 'double' =>  0.1, 'boolean' =>  true,  'array' => ['a1']],
+					(object) ['id' => 3, 'group' => 'group1', 'string' => 's3', 'integer' =>    1, 'double' =>  0.1, 'boolean' =>  true,  'array' => ['a3']],
+					(object) ['id' => 2, 'group' => 'group2', 'string' => 's2', 'integer' =>    2, 'double' =>  0.2, 'boolean' =>  true,  'array' => ['a2']],
+					(object) ['id' => 5, 'group' => 'group2', 'string' => 's5', 'integer' =>    2, 'double' =>  0.2, 'boolean' => false,  'array' => ['a5']],
+					(object) ['id' => 4, 'group' => 'group2', 'string' => 's4', 'integer' =>    2, 'double' =>  0.2, 'boolean' =>  true,  'array' => ['a4']],
+					(object) ['id' => 6, 'group' => 'group1', 'string' => null, 'integer' => null, 'double' => null, 'boolean' =>  null,  'array' =>   null],
+					(object) ['id' => 7, 'group' => 'group2', 'string' => null, 'integer' => null, 'double' => null, 'boolean' =>  null,  'array' =>   null],
 				],
 			],
 		];
@@ -55,7 +61,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		'groupCount' => 2,
 		'groupNames' => ['group1', 'group2'],
 		
-		'count' => [2, 3],
+		'count' => [3, 4],
 		
 		'sumInteger' => [2, 6],
 		'sumDouble' => [0.2, 0.6],

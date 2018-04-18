@@ -23,6 +23,7 @@ class Avg extends Base
 		$countCol = $this->getStoreColumn($groupCol, $dataCol, 'count');
 		
 		$store = &$this->operation->getStore();
+		
 		if (is_null($nextValue)) {
 			$store[$sumCol]   = 0;
 			$store[$countCol] = 0;
@@ -30,6 +31,7 @@ class Avg extends Base
 			$store[$sumCol]   = $nextValue;
 			$store[$countCol] = 1;
 		}
+		
 		$currValue = $nextValue;
 	}
 	
@@ -41,7 +43,7 @@ class Avg extends Base
 		
 		$store = &$this->operation->getStore();
 		
-		switch ($valueType = gettype($currValue)) {
+		switch ($valueType = gettype($nextValue)) {
 			case 'NULL':
 				// Do nothing.
 				break;
@@ -64,12 +66,15 @@ class Avg extends Base
 			default:
 				throw new Exception(sprintf('Unsupported value type "%s".', $valueType));
 		}
-		$store[$countCol]++;
 		
-		$currValue = (double) bcdiv(
-			$store[$sumCol],
-			$store[$countCol],
-			$this->operation->getScale()
-		);
+		if (!is_null($nextValue)) {
+			$store[$countCol]++;
+			
+			$currValue = (double) bcdiv(
+				$store[$sumCol],
+				$store[$countCol],
+				$this->operation->getScale()
+			);
+		}
 	}
 }

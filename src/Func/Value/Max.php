@@ -23,8 +23,10 @@ class Max extends Base
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		if ($currValue < $nextValue) {
-			$currValue = $nextValue;
+		if (!is_null($nextValue)) {
+			if ($currValue < $nextValue) {
+				$currValue = $nextValue;
+			}
 		}
 	}
 }
