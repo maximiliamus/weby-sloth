@@ -21,7 +21,9 @@ class Mode extends Base
 		
 		$store = &$this->operation->getStore();
 		$store[$storeCol] = [];
-		$store[$storeCol][] = (string) $nextValue;
+		if (!is_null($nextValue)) {
+			$store[$storeCol][] = (string) $nextValue;
+		}
 		
 		$currValue = $nextValue;
 	}
@@ -29,6 +31,9 @@ class Mode extends Base
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
+		if (is_null($nextValue))
+			return;
+		
 		$storeCol = $this->getStoreColumn($groupCol, $dataCol, 'accum');
 		
 		$store = &$this->operation->getStore();
@@ -39,10 +44,15 @@ class Mode extends Base
 	
 	private function mode(&$data)
 	{
-		$vals = array_count_values($data);
-		arsort($vals);
-		reset($vals);
+		$result = null;
 		
-		return key($vals);
+		$vals = array_count_values($data);
+		if ($vals) {
+			arsort($vals);
+			reset($vals);
+			$result = key($vals);
+		}
+		
+		return $result;
 	}
 }

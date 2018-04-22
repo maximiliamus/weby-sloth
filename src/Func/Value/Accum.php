@@ -24,10 +24,18 @@ class Accum extends Base
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		if ($this->options['flat']) {
-			$currValue = $nextValue;
+		if (is_null($nextValue)) {
+			if ($this->options['flat']) {
+				$currValue = $nextValue;
+			} else {
+				$currValue = [];
+			}
 		} else {
-			$currValue = [$nextValue];
+			if ($this->options['flat']) {
+				$currValue = $nextValue;
+			} else {
+				$currValue = [$nextValue];
+			}
 		}
 	}
 	
