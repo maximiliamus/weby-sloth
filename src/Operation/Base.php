@@ -284,6 +284,8 @@ abstract class Base
 	{
 		if (!$onlyData) {
 			foreach ($this->outputCols as $col) {
+				$parts = explode(Sloth::COLUMN_SEPARATOR, $col);
+				$col = implode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $parts);
 				echo $col, "\t";
 			}
 			echo "\n";
@@ -301,7 +303,7 @@ abstract class Base
 	{
 		if (!$onlyData) {
 			foreach ($this->outputCols as $col) {
-				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
+				$parts = explode(Sloth::COLUMN_SEPARATOR, $col);
 				$col = implode(Sloth::ASSOC_OUTPUT_COLUMN_SEPARATOR, $parts);
 				echo $col, "\t";
 			}
@@ -312,7 +314,7 @@ abstract class Base
 			foreach ($this->outputCols as $col) {
 				$value = null;
 				
-				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
+				$parts = explode(Sloth::COLUMN_SEPARATOR, $col);
 				switch (count($parts)) {
 					case 1: $value = $row[$parts[0]]; break;
 					case 2: $value = $row[$parts[0]][$parts[1]]; break;
@@ -382,12 +384,12 @@ abstract class Base
 					: (
 						  $isOneFunc
 						? $colName
-						: $colName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $funcName
+						: $colName . Sloth::COLUMN_SEPARATOR . $funcName
 					)
 				)
 			);
 		} else {
-			$result = $colName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $funcName;
+			$result = $colName . Sloth::COLUMN_SEPARATOR . $funcName;
 		}
 		
 		return $result;

@@ -245,10 +245,10 @@ class Pivot extends Base
 			$pivotColName = (
 				  $this->isOneCol && $isOneFunc
 				? $pivotColName
-				: $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName
+				: $pivotColName . Sloth::COLUMN_SEPARATOR . $groupColName
 			);
 		} else {
-			$pivotColName = $pivotColName . Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR . $groupColName;
+			$pivotColName = $pivotColName . Sloth::COLUMN_SEPARATOR . $groupColName;
 		}
 		
 		return [$groupColName, $pivotColName];
@@ -309,7 +309,7 @@ class Pivot extends Base
 					// in rows then add missed ones.
 					$this->propagateColumns($group);
 					if (!isset($this->columnColsAliases[$pivotColName])) {
-						$this->columnColsAliases[$pivotColName] = true;
+						$this->columnColsAliases[(string) $pivotColName] = true;
 						$this->backPropagateColumn($pivotColName);
 						
 						$this->outputCols[] = $pivotColName;
@@ -319,7 +319,7 @@ class Pivot extends Base
 					if ($this->isFlatOutput) {
 						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $pivotColName);
+						$parts = explode(Sloth::COLUMN_SEPARATOR, $pivotColName);
 						switch (count($parts)) {
 							case 1:
 								$group[$parts[0]] = $row[$groupColName];
@@ -391,7 +391,7 @@ class Pivot extends Base
 					);
 					
 					if (!isset($this->columnColsAliases[$pivotColName])) {
-						$this->columnColsAliases[$pivotColName] = true;
+						$this->columnColsAliases[(string) $pivotColName] = true;
 						$this->backPropagateColumn($pivotColName);
 						
 						$this->outputCols[] = $pivotColName;
@@ -401,7 +401,7 @@ class Pivot extends Base
 					if ($this->isFlatOutput) {
 						$group[$pivotColName] = $row[$groupColName];
 					} else {
-						$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $pivotColName);
+						$parts = explode(Sloth::COLUMN_SEPARATOR, $pivotColName);
 						switch (count($parts)) {
 							case 1:
 								$group[$parts[0]] = $row[$groupColName];
@@ -445,7 +445,7 @@ class Pivot extends Base
 				}
 			}
 		} else {
-			$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $col);
+			$parts = explode(Sloth::COLUMN_SEPARATOR, $col);
 			switch (count($parts)) {
 				case 1:
 					foreach ($this->groups as $key => &$group) {
@@ -489,7 +489,7 @@ class Pivot extends Base
 					$group[$columnColAlias] = null;
 				}
 			} else {
-				$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $columnColAlias);
+				$parts = explode(Sloth::COLUMN_SEPARATOR, $columnColAlias);
 				switch (count($parts)) {
 					case 1:
 						if (!array_key_exists($parts[0], $group)) {

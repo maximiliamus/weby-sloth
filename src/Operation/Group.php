@@ -412,7 +412,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
+					$parts = explode(Sloth::COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);
@@ -459,7 +459,7 @@ class Group extends Base
 				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
+					$parts = explode(Sloth::COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$colName] = &$group[$parts[0]][$parts[1]];
 					}
@@ -473,7 +473,7 @@ class Group extends Base
 				);
 				
 				if (!$this->isFlatOutput) {
-					$parts = explode(Sloth::ARRAY_OUTPUT_COLUMN_SEPARATOR, $colName);
+					$parts = explode(Sloth::COLUMN_SEPARATOR, $colName);
 					if (count($parts) == 2) {
 						$group[$parts[0]][$parts[1]] = &$group[$colName];
 						unset($group[$colName]);

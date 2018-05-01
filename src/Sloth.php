@@ -19,6 +19,7 @@ class Sloth
 	const DATA_ASSOC   = 2;
 	const DATA_OBJECT  = 3;
 	
+	const COLUMN_SEPARATOR = "\u{241F}"; // "Unit Separator" unicode symbol.
 	const ARRAY_OUTPUT_COLUMN_SEPARATOR = '.';
 	const ASSOC_OUTPUT_COLUMN_SEPARATOR = '|';
 	
