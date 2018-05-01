@@ -471,7 +471,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider providerObjectOrdered
 	 */
-	public function testGroup_ObjectInput_SingleGroup($data)
+	public function testGroup_ObjectInput_SingleGroup_Count($data)
 	{
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
@@ -499,7 +499,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider providerObjectOrdered
 	 */
-	public function testGroup_ObjectInput_SingleGroup_Count($data)
+	public function testGroup_ObjectInput_SingleGroup($data)
 	{
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
@@ -537,7 +537,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
 			->group('group', 'integer')
-			->sum('')
+			->sum()
 			->fetch();
 		
 		$this->assertEquals(true, count($groupedData) == $this->testResults['groupCount']);
@@ -549,7 +549,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group('group', 'integer')
-			->sum('')
+			->sum()
 			->asAssoc()
 			->fetch();
 		
@@ -559,7 +559,7 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		
 		$groupedData = $sloth
 			->group('group', 'integer', 'double')
-			->sum('')
+			->sum()
 			->asAssoc()
 			->fetch();
 		

@@ -30,27 +30,27 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 	public function testPivot_AssocInput_SingleGroup($data)
 	{
 		$sloth = Sloth::from($data);
-		$goupedData = $sloth
+		$pivotedData = $sloth
 			->pivot('group', 'date', 'integer')
 			->sum()
 			->fetch();
 		
-		$this->assertEquals(true, count($goupedData) == $this->testResults['groupCount']);
-		$this->assertEquals(true, $goupedData[0]['group'] == $this->testResults['groupNames'][0]);
-		$this->assertEquals(true, $goupedData[1]['group'] == $this->testResults['groupNames'][1]);
+		$this->assertEquals(true, count($pivotedData) == $this->testResults['groupCount']);
+		$this->assertEquals(true, $pivotedData[0]['group'] == $this->testResults['groupNames'][0]);
+		$this->assertEquals(true, $pivotedData[1]['group'] == $this->testResults['groupNames'][1]);
 		
-		$this->assertEquals(true, $goupedData[0]['2000-01-01'] == $this->testResults['sum'][0][0]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-03'] == $this->testResults['sum'][0][1]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-02'] == $this->testResults['sum'][0][2]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-04'] == $this->testResults['sum'][0][3]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-01'] == $this->testResults['sum'][0][0]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-03'] == $this->testResults['sum'][0][1]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-02'] == $this->testResults['sum'][0][2]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-04'] == $this->testResults['sum'][0][3]);
 		
-		$this->assertEquals(true, $goupedData[1]['2000-01-01'] == $this->testResults['sum'][1][0]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-03'] == $this->testResults['sum'][1][1]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-02'] == $this->testResults['sum'][1][2]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-04'] == $this->testResults['sum'][1][3]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-01'] == $this->testResults['sum'][1][0]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-03'] == $this->testResults['sum'][1][1]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-02'] == $this->testResults['sum'][1][2]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-04'] == $this->testResults['sum'][1][3]);
 		
 		// Alias for column
-		$goupedData = $sloth
+		$pivotedData = $sloth
 			->pivot(
 				array('group' => 'groupA'),
 				array('date'),
@@ -59,19 +59,18 @@ class PivotTest extends \PHPUnit\Framework\TestCase
 			->sum('')
 			->fetch();
 		
-		$this->assertEquals(true, count($goupedData) == $this->testResults['groupCount']);
-		$this->assertEquals(true, $goupedData[0]['groupA'] == $this->testResults['groupNames'][0]);
-		$this->assertEquals(true, $goupedData[1]['groupA'] == $this->testResults['groupNames'][1]);
+		$this->assertEquals(true, count($pivotedData) == $this->testResults['groupCount']);
+		$this->assertEquals(true, $pivotedData[0]['groupA'] == $this->testResults['groupNames'][0]);
+		$this->assertEquals(true, $pivotedData[1]['groupA'] == $this->testResults['groupNames'][1]);
 		
-		$this->assertEquals(true, $goupedData[0]['2000-01-01'] == $this->testResults['sum'][0][0]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-03'] == $this->testResults['sum'][0][1]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-02'] == $this->testResults['sum'][0][2]);
-		$this->assertEquals(true, $goupedData[0]['2000-01-04'] == $this->testResults['sum'][0][3]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-01'] == $this->testResults['sum'][0][0]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-03'] == $this->testResults['sum'][0][1]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-02'] == $this->testResults['sum'][0][2]);
+		$this->assertEquals(true, $pivotedData[0]['2000-01-04'] == $this->testResults['sum'][0][3]);
 		
-		$this->assertEquals(true, $goupedData[1]['2000-01-01'] == $this->testResults['sum'][1][0]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-03'] == $this->testResults['sum'][1][1]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-02'] == $this->testResults['sum'][1][2]);
-		$this->assertEquals(true, $goupedData[1]['2000-01-04'] == $this->testResults['sum'][1][3]);
-		
+		$this->assertEquals(true, $pivotedData[1]['2000-01-01'] == $this->testResults['sum'][1][0]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-03'] == $this->testResults['sum'][1][1]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-02'] == $this->testResults['sum'][1][2]);
+		$this->assertEquals(true, $pivotedData[1]['2000-01-04'] == $this->testResults['sum'][1][3]);
 	}
 }
