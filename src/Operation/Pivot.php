@@ -192,16 +192,14 @@ class Pivot extends Base
 	
 	protected function validatePerform()
 	{
-		// Do nothing.
-	}
-	
-	protected function beginPerform()
-	{
 		if (!$this->group->getValueFuncs()) {
 			// Apply default function.
 			$this->group->first();
 		}
-		
+	}
+	
+	protected function beginPerform()
+	{
 		$this->isOneCol = count($this->group->getValueCols()) == 1;
 		
 		$this->resetOutput();
@@ -297,6 +295,10 @@ class Pivot extends Base
 	private function addGroup_processValueFuncs(&$group, &$row)
 	{
 		foreach ($this->columnCols as $columnCol) {
+			if (is_null($row[$columnCol->name])) {
+				// Skip null column values.
+				continue;
+			}
 			foreach ($this->valueCols as $valueCol) {
 				$valueFuncs = $this->group->getColToFuncMap()[$valueCol->alias];
 				$isOneFunc = count($valueFuncs) == 1;
@@ -382,6 +384,10 @@ class Pivot extends Base
 	private function updateGroup_processValueFuncs(&$group, &$row)
 	{
 		foreach ($this->columnCols as $columnCol) {
+			if (is_null($row[$columnCol->name])) {
+				// Skip null column values.
+				continue;
+			}
 			foreach ($this->valueCols as $valueCol) {
 				$valueFuncs = $this->group->getColToFuncMap()[$valueCol->alias];
 				$isOneFunc = count($valueFuncs) == 1;

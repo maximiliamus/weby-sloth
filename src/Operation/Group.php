@@ -260,9 +260,10 @@ class Group extends Base
 		
 		if (
 			   $this->valueCols
-			&& !count($this->valueFuncs)
+			&& !count($this->getFuncs())
 		) {
-			throw new \Weby\Sloth\Exception('No functions to apply to value columns.');
+			// Apply default function.
+			$this->first();
 		}
 	}
 	
@@ -393,7 +394,7 @@ class Group extends Base
 	private function addGroup_processValueFuncs(&$group, &$row)
 	{
 		foreach ($this->valueCols as $valueCol) {
-			$valueFuncs = $this->colToFuncMap[$valueCol->alias];
+			$valueFuncs = (array) $this->colToFuncMap[$valueCol->alias];
 			$isOneFunc = count($valueFuncs) == 1;
 			foreach ($valueFuncs as $valueFunc) {
 				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc);
@@ -453,7 +454,7 @@ class Group extends Base
 	private function updateGroup_processValueFuncs(&$group, &$row)
 	{
 		foreach ($this->valueCols as $valueCol) {
-			$valueFuncs = $this->colToFuncMap[$valueCol->alias];
+			$valueFuncs = (array) $this->colToFuncMap[$valueCol->alias];
 			$isOneFunc = count($valueFuncs) == 1;
 			foreach ($valueFuncs as $valueFunc) {
 				$colName = $this->buildValueFuncColumnName($valueCol, $valueFunc, $isOneFunc);
