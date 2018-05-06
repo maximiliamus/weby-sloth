@@ -346,7 +346,18 @@ class Group extends Base
 	
 	private function &addGroup($key, $row)
 	{
-		$group = [];
+		$group = null;
+		
+		switch ($this->sloth->dataType) {
+			case Sloth::DATA_ARRAY:
+			case Sloth::DATA_ASSOC:
+				$group = [];
+				break;
+				
+			case Sloth::DATA_OBJECT:
+				$group = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+				break;
+		}
 		
 		if (is_object($row)) {
 			$row = Utils::toArray($row);
