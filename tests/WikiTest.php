@@ -79,6 +79,10 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		'pivotCount' => [
 			0 => [1, 1, 1, null],
 			1 => [1, 1, 1, 1]
+		],
+		'accum' => [
+			[1, 2, 3],
+			[4, 5, 6, 7]
 		]
 	];
 	
@@ -151,7 +155,6 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 			->group('foo')
 			->fetch();
 		
-		$this->assertEquals(true, count($result) == $this->testResults['count']);
 		$this->assertEquals(true, $result[0]['foo'] == $this->testResults['groupNames'][0]);
 		$this->assertEquals(true, $result[1]['foo'] == $this->testResults['groupNames'][1]);
 	}
@@ -182,6 +185,20 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		
 		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['valueCount'][0]);
 		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['valueCount'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Accum($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->accum()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['accum'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['accum'][1]);
 	}
 	
 	/**

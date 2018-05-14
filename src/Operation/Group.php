@@ -16,6 +16,7 @@ use Weby\Sloth\Func\Group\Count as CountAsterix;
 use Weby\Sloth\Func\Value\Count;
 use Weby\Sloth\Func\Value\Accum;
 use Weby\Sloth\Func\Value\First;
+use Weby\Sloth\Func\Value\Concat;
 use Weby\Sloth\Func\Value\Sum;
 use Weby\Sloth\Func\Value\Avg;
 use Weby\Sloth\Func\Value\Min;
@@ -129,6 +130,24 @@ class Group extends Base
 		$this->context = new First($this);
 		$this->valueFuncs[First::class] = $this->context;
 		$this->mapColsToFunc($cols, First::class);
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether to concatinate values of the value columns for each group.
+	 * 
+	 * If a column list is specified in $cols parameter the function will be applied
+	 * only to that column list. The column list should be a subset of the value columns.
+	 * 
+	 * @param mixed $cols
+	 * @return \Weby\Sloth\Operation\Group
+	 */
+	public function concat($cols = null)
+	{
+		$this->context = new Concat($this);
+		$this->valueFuncs[Concat::class] = $this->context;
+		$this->mapColsToFunc($cols, Concat::class);
 		
 		return $this;
 	}

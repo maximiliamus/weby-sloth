@@ -29,7 +29,7 @@ class Sum extends Base
 	public function onUpdateGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
-		switch ($valueType = gettype($currValue)) {
+		switch ($valueType = gettype($nextValue)) {
 			case 'NULL':
 				// Do nothing.
 				break;

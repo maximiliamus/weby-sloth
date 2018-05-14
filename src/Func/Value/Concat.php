@@ -9,19 +9,21 @@
 
 namespace Weby\Sloth\Func\Value;
 
+use Weby\Sloth\Utils;
+use Weby\Sloth\Exception;
 
 /**
  * Accumulates values of a column.
  */
-class Accum extends Base
+class Concat extends Base
 {
 	public function onAddGroup(
 		&$group, $groupCol, &$data, $dataCol, &$currValue, &$nextValue
 	) {
 		if (is_null($nextValue)) {
-			$currValue = [];
+			$currValue = '';
 		} else {
-			$currValue = [$nextValue];
+			$currValue = $nextValue;
 		}
 	}
 	
@@ -31,6 +33,17 @@ class Accum extends Base
 		if (is_null($nextValue))
 			return;
 		
-		$currValue[] = $nextValue;
+		switch ($valueType = gettype($nextValue)) {
+			case 'array':
+				$currValue = array_merge(
+					$currValue,
+					Utils::normalizeArray($nextValue)
+				);
+				break;
+				
+			default:
+				$currValue .= (string) $nextValue;
+				break;
+		}
 	}
 }
