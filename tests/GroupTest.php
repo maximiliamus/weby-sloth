@@ -93,17 +93,11 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 		'firstBoolean' => [true, true],
 		'firstArray'   => [['a1'], ['a2']],
 		
-		'accumFlatString'  => ['s1s3', 's2s5s4'],
-		'accumFlatInteger' => [2, 6],
-		'accumFlatDouble'  => [0.2, 0.6],
-		'accumFlatBoolean' => [true, false],
-		'accumFlatArray'   => [['a1', 'a3'], ['a2', 'a5', 'a4']],
-		
-		'firstNonFlatInteger' => [[1], [2]],
-		'firstNonFlatDouble'  => [[0.1], [0.2]],
-		'firstNonFlatString'  => [['s1'], ['s2']],
-		'firstNonFlatBoolean' => [[true], [true]],
-		'firstNonFlatArray'   => [[['a1']], [['a2']]],
+		'concatString'  => ['s1s3', 's2s5s4'],
+		'concatInteger' => ['11', '222'],
+		'concatDouble'  => ['0.10.1', '0.20.20.2'],
+		'concatBoolean' => ['11', '101'],
+		'concatArray'   => [['a1', 'a3'], ['a2', 'a5', 'a4']],
 	];
 	
 	/**
@@ -425,47 +419,66 @@ class GroupTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider providerAssocOrdered
 	 */
-	public function testGroup_AssocInput_SingleGroup_Accum_Flat($data)
+	public function testGroup_AssocInput_SingleGroup_Concat($data)
 	{
 		$sloth = Sloth::from($data);
 		$groupedData = $sloth
-			->group('group', 'string')
-			->accum()->flat(true)
+			->group('group',
+				[
+					'string',
+					'integer',
+					'double',
+					'boolean',
+					'array'
+				]
+			)
+			->concat()
 			->fetch();
 		
-		$this->assertEquals(true, $groupedData[0]['string'] == $this->testResults['accumFlatString'][0]);
-		$this->assertEquals(true, $groupedData[1]['string'] == $this->testResults['accumFlatString'][1]);
+		$this->assertEquals(true, $groupedData[0]['string'] == $this->testResults['concatString'][0]);
+		$this->assertEquals(true, $groupedData[1]['string'] == $this->testResults['concatString'][1]);
 		
+		$this->assertEquals(true, $groupedData[0]['integer'] == $this->testResults['concatInteger'][0]);
+		$this->assertEquals(true, $groupedData[1]['integer'] == $this->testResults['concatInteger'][1]);
+		
+		$this->assertEquals(true, $groupedData[0]['double'] == $this->testResults['concatDouble'][0]);
+		$this->assertEquals(true, $groupedData[1]['double'] == $this->testResults['concatDouble'][1]);
+		
+		$this->assertEquals(true, $groupedData[0]['boolean'] == $this->testResults['concatBoolean'][0]);
+		$this->assertEquals(true, $groupedData[1]['boolean'] == $this->testResults['concatBoolean'][1]);
+		
+		$this->assertEquals(true, $groupedData[0]['array'] == $this->testResults['concatArray'][0]);
+		$this->assertEquals(true, $groupedData[1]['array'] == $this->testResults['concatArray'][1]);
+		
+		// Alias for column
 		$groupedData = $sloth
-			->group('group', 'integer')
-			->accum()->flat(true)
+			->group(
+				['group' => 'groupA'],
+				[
+					'string'  => 'stringA',
+					'integer' => 'integerA',
+					'double'  => 'doubleA',
+					'boolean' => 'booleanA',
+					'array'   => 'arrayA',
+				]
+			)
+			->concat()
 			->fetch();
 		
-		$this->assertEquals(true, $groupedData[0]['integer'] == $this->testResults['accumFlatInteger'][0]);
-		$this->assertEquals(true, $groupedData[1]['integer'] == $this->testResults['accumFlatInteger'][1]);
-	}
-	
-	/**
-	 * @dataProvider providerAssocOrdered
-	 */
-	public function testGroup_AssocInput_SingleGroup_First_NonFlat($data)
-	{
-		$sloth = Sloth::from($data);
-		$groupedData = $sloth
-			->group('group', 'string')
-			->first()->flat(false)
-			->fetch();
+		$this->assertEquals(true, $groupedData[0]['stringA'] == $this->testResults['concatString'][0]);
+		$this->assertEquals(true, $groupedData[1]['stringA'] == $this->testResults['concatString'][1]);
 		
-		$this->assertEquals(true, $groupedData[0]['string'] == $this->testResults['firstNonFlatString'][0]);
-		$this->assertEquals(true, $groupedData[1]['string'] == $this->testResults['firstNonFlatString'][1]);
+		$this->assertEquals(true, $groupedData[0]['integerA'] == $this->testResults['concatInteger'][0]);
+		$this->assertEquals(true, $groupedData[1]['integerA'] == $this->testResults['concatInteger'][1]);
 		
-		$groupedData = $sloth
-			->group('group', 'integer')
-			->first()->flat(false)
-			->fetch();
+		$this->assertEquals(true, $groupedData[0]['doubleA'] == $this->testResults['concatDouble'][0]);
+		$this->assertEquals(true, $groupedData[1]['doubleA'] == $this->testResults['concatDouble'][1]);
 		
-		$this->assertEquals(true, $groupedData[0]['integer'] == $this->testResults['firstNonFlatInteger'][0]);
-		$this->assertEquals(true, $groupedData[1]['integer'] == $this->testResults['firstNonFlatInteger'][1]);
+		$this->assertEquals(true, $groupedData[0]['booleanA'] == $this->testResults['concatBoolean'][0]);
+		$this->assertEquals(true, $groupedData[1]['booleanA'] == $this->testResults['concatBoolean'][1]);
+		
+		$this->assertEquals(true, $groupedData[0]['arrayA'] == $this->testResults['concatArray'][0]);
+		$this->assertEquals(true, $groupedData[1]['arrayA'] == $this->testResults['concatArray'][1]);
 	}
 	
 	/**
