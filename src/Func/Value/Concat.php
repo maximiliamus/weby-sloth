@@ -34,6 +34,10 @@ class Concat extends Base
 			return;
 		
 		switch ($valueType = gettype($nextValue)) {
+			case 'boolean':
+				$currValue .= $nextValue ? '1' : '0';
+				break;
+				
 			case 'array':
 				$currValue = array_merge(
 					$currValue,
