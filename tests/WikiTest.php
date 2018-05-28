@@ -84,6 +84,10 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 			[1, 2, 3],
 			[4, 5, 6, 7]
 		],
+		'avg' => [
+			2,
+			5.5
+		],
 		'concat' => [
 			'123',
 			'4567'
@@ -203,6 +207,20 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		
 		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['accum'][0]);
 		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['accum'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Avg($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->avg()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['avg'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['avg'][1]);
 	}
 	
 	/**
