@@ -83,6 +83,10 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		'accum' => [
 			[1, 2, 3],
 			[4, 5, 6, 7]
+		],
+		'concat' => [
+			'123',
+			'4567'
 		]
 	];
 	
@@ -199,6 +203,20 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		
 		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['accum'][0]);
 		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['accum'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Concat($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->concat()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['concat'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['concat'][1]);
 	}
 	
 	/**
