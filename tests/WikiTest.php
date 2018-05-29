@@ -92,6 +92,10 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		],
 		'countRows' => [4, 5],
 		'countValues' => [3, 4],
+		'first' => [
+			1,
+			4
+		],
 	];
 	
 	/**
@@ -207,6 +211,20 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		
 		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['accum'][0]);
 		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['accum'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_First($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->first()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['first'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['first'][1]);
 	}
 	
 	/**
