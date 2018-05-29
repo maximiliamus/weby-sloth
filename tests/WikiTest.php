@@ -96,6 +96,26 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 			1,
 			4
 		],
+		'max' => [
+			3,
+			7
+		],
+		'min' => [
+			1,
+			4
+		],
+		'median' => [
+			2,
+			5.5
+		],
+		'mode' => [
+			1,
+			4
+		],
+		'sum' => [
+			6,
+			22
+		],
 	];
 	
 	/**
@@ -294,5 +314,75 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(true, $result[1]['B'] == $this->testResults['pivotCount'][1][1]);
 		$this->assertEquals(true, $result[1]['C'] == $this->testResults['pivotCount'][1][2]);
 		$this->assertEquals(true, $result[1]['D'] == $this->testResults['pivotCount'][1][3]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Max($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->max()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['max'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['max'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Min($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->min()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['min'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['min'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Median($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->median()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['median'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['median'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Mode($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->mode()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['mode'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['mode'][1]);
+	}
+	
+	/**
+	 * @dataProvider providerAssocData
+	 */
+	public function testGroup_Sum($data)
+	{
+		$result = Sloth::from($data)
+			->group('foo', 'baz')
+			->sum()
+			->fetch();
+		
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['sum'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['sum'][1]);
 	}
 }
