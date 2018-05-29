@@ -70,8 +70,6 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 			1 => ['two', 'A', 4]
 		],
 		'groupNames' => ['one', 'two'],
-		'rowCount' => [4, 5],
-		'valueCount' => [3, 4],
 		'pivotFirst' => [
 			0 => [1, 2, 3, null],
 			1 => [4, 5, 6, 7]
@@ -91,7 +89,9 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 		'concat' => [
 			'123',
 			'4567'
-		]
+		],
+		'countRows' => [4, 5],
+		'countValues' => [3, 4],
 	];
 	
 	/**
@@ -177,8 +177,8 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 			->count('*')
 			->fetch();
 		
-		$this->assertEquals(true, $result[0]['*'] == $this->testResults['rowCount'][0]);
-		$this->assertEquals(true, $result[1]['*'] == $this->testResults['rowCount'][1]);
+		$this->assertEquals(true, $result[0]['*'] == $this->testResults['countRows'][0]);
+		$this->assertEquals(true, $result[1]['*'] == $this->testResults['countRows'][1]);
 	}
 	
 	/**
@@ -191,8 +191,8 @@ class WikiTest extends \PHPUnit\Framework\TestCase
 			->count()
 			->fetch();
 		
-		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['valueCount'][0]);
-		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['valueCount'][1]);
+		$this->assertEquals(true, $result[0]['baz'] == $this->testResults['countValues'][0]);
+		$this->assertEquals(true, $result[1]['baz'] == $this->testResults['countValues'][1]);
 	}
 	
 	/**
