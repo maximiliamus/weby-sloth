@@ -8,7 +8,7 @@ functions that may be applied to this operations.
 ## Installation
 
 ```bash
-composer require weby/sloth:v0.x-dev
+composer require weby/sloth:v0.1
 ```
 
 ## Usage
