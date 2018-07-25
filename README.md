@@ -13,7 +13,7 @@ composer require weby/sloth:v0.1
 
 ## Usage
 
-See **examples** folder for more info.
+See [examples](https://github.com/maximiliamus/weby-sloth/tree/master/examples) folder for more info.
 
 ### Input data
 
