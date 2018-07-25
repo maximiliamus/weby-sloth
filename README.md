@@ -80,6 +80,10 @@ Running the tests is simple:
 vendor/bin/phpunit
 ```
 
+## Documentation
+
+The documentation is located in this repo's [wiki](https://github.com/maximiliamus/weby-sloth/wiki/Documentation).
+
 ## License
 
 Weby\Sloth is distributed under the MIT license.
