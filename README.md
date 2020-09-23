@@ -29,7 +29,7 @@ $data = [
 ];
 ```
 
-### "Goup" operation
+### "Group" operation
 
 ```php
 // examples/group.php:
